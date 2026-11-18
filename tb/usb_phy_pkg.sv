@@ -29,6 +29,8 @@ package usb_phy_tb_pkg;
   `include "phy_agent/phy_transaction.sv"
   `include "phy_agent/phy_agent_config.sv"
   `include "phy_agent/phy_sequencer.sv"
+`include "phy_agent/phy_simple_tx_seq.sv"
+  
   `include "phy_agent/phy_driver.sv"
   `include "phy_agent/phy_monitor.sv"
   `include "phy_agent/phy_agent.sv"

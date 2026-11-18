@@ -1,17 +1,17 @@
 
 module tb_top;
 
-         
-  // PACKAGE IMPORTS
-         
+              
+  // 1. PACKAGE IMPORTS
+              
 
   import uvm_pkg::*;
   import usb_phy_tb_pkg::*;
 
 
-         
-  // CLOCK
-         
+              
+  // 2. CLOCK
+              
 
   logic clk;
 
@@ -21,44 +21,72 @@ module tb_top;
   end
 
 
-         
-  // INTERFACE INSTANCES
-         
+              
+  // 3. INTERFACE INSTANCES
+              
 
   usb_phy_if phy_if(clk);
 
   usb_bus_if usb_if(clk);
 
 
-         
-  // RESET AND INITIAL CONFIGURATION
-         
+              
+  // 4. RESET AND INITIAL CONFIGURATION
+              
 
   initial begin
 
-    // Initial reset
+    // Assert reset
     phy_if.rst_n = 1'b0;
 
-    // Initialize USB speed to reserved (2'b11)
-    // The PHY driver will configure the selected speed.
-    phy_if.usb_speed = '1;
+    // Initialize RTL speed to Low Speed
+    phy_if.usb_speed = usb_phy_pkg::LS;
 
-    // Initialize USB BFM interface reset
-    usb_if.rst_n = 1'b0;
+    // Initialize external USB partner drive
+    usb_if.device_oe = 1'b0;
+    usb_if.device_dp = 1'b0;
+    usb_if.device_dm = 1'b0;
 
     // Wait for reset duration
     #100;
 
     // Release reset
     phy_if.rst_n = 1'b1;
-    usb_if.rst_n = 1'b1;
 
   end
 
 
-         
-  // PASS VIRTUAL INTERFACES TO UVM
-         
+              
+  // 5. COMMON RESET CONNECTION
+              
+
+  // Both interfaces use the same reset
+  assign usb_if.rst_n = phy_if.rst_n;
+
+
+              
+  // 6. DUT TX -> USB BUS CONNECTION
+              
+
+  assign usb_if.phy_dp       = phy_if.dp;
+  assign usb_if.phy_dm       = phy_if.dm;
+  assign usb_if.phy_tx_valid = phy_if.tx_valid;
+
+
+              
+  // 7. USB BUS -> DUT CDR RX CONNECTION
+              
+
+  assign phy_if.analog_d_plus  = usb_if.bus_dp;
+  assign phy_if.analog_d_minus = usb_if.bus_dm;
+
+
+              
+
+
+              
+  //  PASS VIRTUAL INTERFACES TO UVM
+              
 
   initial begin
 
@@ -84,9 +112,9 @@ module tb_top;
   end
 
 
-         
-  // DUT INSTANTIATION
-         
+              
+  //  DUT INSTANTIATION
+              
 
   phy_top dut (
 
@@ -135,5 +163,13 @@ module tb_top;
 
   );
 
+
+
+ initial begin
+    $shm_open("wave.shm");
+    $shm_probe("ACTMF");
+  end
+
+  
 endmodule
 

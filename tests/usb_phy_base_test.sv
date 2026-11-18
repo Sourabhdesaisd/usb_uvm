@@ -217,5 +217,38 @@ class usb_phy_base_test extends uvm_test;
   endfunction
 
 
+task run_phase(uvm_phase phase);
+
+  phy_simple_tx_seq tx_seq;
+
+  phase.raise_objection(this);
+
+  `uvm_info("BASE_TEST",
+            "Starting simple PHY TX sequence",
+            UVM_LOW)
+
+  tx_seq = phy_simple_tx_seq::type_id::create("tx_seq");
+
+  if (env.phy_ag == null ||
+      env.phy_ag.sequencer == null) begin
+
+    `uvm_fatal("BASE_TEST",
+               "PHY agent or sequencer is NULL")
+
+  end
+
+  tx_seq.start(env.phy_ag.sequencer);
+
+  `uvm_info("BASE_TEST",
+            "Simple PHY TX sequence completed",
+            UVM_LOW)
+
+  // Allow a few clocks for final DUT observations
+  repeat (10) @(posedge phy_vif.clk);
+
+  phase.drop_objection(this);
+
+endtask
+  
 endclass
 
