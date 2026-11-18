@@ -1,0 +1,4 @@
+s1(18Nov2026:17:05:38):  xrun -64bit -uvm -sv -f filelist.f -top tb_top +UVM_TESTNAME=usb_phy_base_test +USB_SPEED=0 -l ls.log 
+s2(18Nov2026:17:06:20):  xrun -64bit -uvm -sv -f filelist.f -top tb_top +UVM_TESTNAME=usb_phy_base_test +USB_SPEED=0 -l ls.log 
+s3(18Nov2026:17:06:56):  xrun -64bit -uvm -sv -f filelist.f -top tb_top +UVM_TESTNAME=usb_phy_base_test +USB_SPEED=0 -l ls.log 
+s4(18Nov2026:17:07:22):  xrun -64bit -uvm -sv -f filelist.f -top tb_top +UVM_TESTNAME=usb_phy_base_test +USB_SPEED=0 -l ls.log 

@@ -1,96 +1,149 @@
 
+
 class phy_agent extends uvm_agent;
 
-  `uvm_component_utils(phy_agent)
+    `uvm_component_utils(phy_agent)
 
-  phy_agent_config cfg;
+       
+    // Configuration
+       
 
-phy_sequencer sequencer;
-  phy_driver    driver;
-  phy_monitor   monitor;
+    phy_agent_config cfg;
 
-function new(string name = "phy_agent",
-               uvm_component parent = null);
+       
+    // UVM Components
+       
 
-    super.new(name, parent);
+    phy_sequencer sequencer;
+    phy_driver    driver;
+    phy_monitor   monitor;
 
-  endfunction
 
-// ------------------------------------------------
-  // Build phase
-  // ------------------------------------------------
-  function void build_phase(uvm_phase phase);
+       
+    // Constructor
+       
 
-    super.build_phase(phase);
+    function new(string name = "phy_agent",
+                 uvm_component parent = null);
 
-if (!uvm_config_db#(phy_agent_config)::get(
-          this, "", "cfg", cfg)) begin
+        super.new(name, parent);
 
-`uvm_fatal("PHY_AGENT_CFG",
-                 "PHY agent configuration not found")
+    endfunction
 
-    end
 
-    if (cfg.vif == null) begin
+       
+    // Build Phase
+       
 
-`uvm_fatal("PHY_AGENT_VIF",
-                 "PHY virtual interface is NULL")
+    function void build_phase(uvm_phase phase);
 
-    end
+        super.build_phase(phase);
 
-    is_active = cfg.is_active;
+        // Get PHY agent configuration
+        if (!uvm_config_db#(phy_agent_config)::get(
+                this, "", "cfg", cfg)) begin
 
-// Pass interface and configuration to monitor
-    uvm_config_db#(virtual usb_phy_if)::set(
-      this, "monitor", "vif", cfg.vif);
+            `uvm_fatal("PHY_AGENT_CFG",
+                       "PHY agent configuration not found")
 
-uvm_config_db#(phy_agent_config)::set(
-      this, "monitor", "cfg", cfg);
+        end
 
-monitor = phy_monitor::type_id::create(
-      "monitor", this);
+        // Check configuration handle
+        if (cfg == null) begin
 
-// Create driver and sequencer only in active mode
-    if (is_active == UVM_ACTIVE) begin
+            `uvm_fatal("PHY_AGENT_CFG",
+                       "PHY agent configuration handle is NULL")
 
-uvm_config_db#(virtual usb_phy_if)::set(
-        this, "driver", "vif", cfg.vif);
+        end
 
-uvm_config_db#(phy_agent_config)::set(
-        this, "driver", "cfg", cfg);
+        // Check virtual interface
+        if (cfg.vif == null) begin
 
-sequencer = phy_sequencer::type_id::create(
-        "sequencer", this);
+            `uvm_fatal("PHY_AGENT_VIF",
+                       "PHY virtual interface is NULL")
 
-driver = phy_driver::type_id::create(
-        "driver", this);
+        end
 
-    end
+        // Configure active/passive mode
+        is_active = cfg.is_active;
 
-`uvm_info("PHY_AGENT",
-              "PHY agent build completed",
-              UVM_LOW)
 
-  endfunction
+         
+        // Create Monitor in both active and passive modes
+         
 
-// ------------------------------------------------
-  // Connect phase
-  // ------------------------------------------------
-  function void connect_phase(uvm_phase phase);
+        uvm_config_db#(virtual usb_phy_if)::set(
+            this, "monitor", "vif", cfg.vif);
 
-    super.connect_phase(phase);
+        uvm_config_db#(phy_agent_config)::set(
+            this, "monitor", "cfg", cfg);
 
-    if (is_active == UVM_ACTIVE) begin
+        monitor = phy_monitor::type_id::create(
+            "monitor", this);
 
-driver.seq_item_port.connect(
-        sequencer.seq_item_export);
 
-`uvm_info("PHY_AGENT",
-                "PHY driver connected to sequencer",
-                UVM_LOW)
+         
+        // Active Agent: Create Driver and Sequencer
+         
 
-    end
+        if (is_active == UVM_ACTIVE) begin
 
-  endfunction
+            // Pass interface to driver
+            uvm_config_db#(virtual usb_phy_if)::set(
+                this, "driver", "vif", cfg.vif);
 
-endclass
+            // Pass configuration to driver
+            uvm_config_db#(phy_agent_config)::set(
+                this, "driver", "cfg", cfg);
+
+            // Create sequencer
+            sequencer = phy_sequencer::type_id::create(
+                "sequencer", this);
+
+            // Create driver
+            driver = phy_driver::type_id::create(
+                "driver", this);
+
+        end
+
+
+        `uvm_info("PHY_AGENT",
+                  $sformatf(
+                      "PHY agent build completed. Mode = %s",
+                      is_active.name()),
+                  UVM_LOW)
+
+    endfunction
+
+
+       
+    // Connect Phase
+       
+
+    function void connect_phase(uvm_phase phase);
+
+        super.connect_phase(phase);
+
+        // Connect driver and sequencer in active mode
+        if (is_active == UVM_ACTIVE) begin
+
+            if (driver == null || sequencer == null) begin
+
+                `uvm_fatal("PHY_AGENT_CONNECT",
+                           "Driver or Sequencer handle is NULL")
+
+            end
+
+            driver.seq_item_port.connect(
+                sequencer.seq_item_export);
+
+            `uvm_info("PHY_AGENT",
+                      "PHY driver connected to sequencer",
+                      UVM_LOW)
+
+        end
+
+    endfunction
+
+endclass : phy_agent
+

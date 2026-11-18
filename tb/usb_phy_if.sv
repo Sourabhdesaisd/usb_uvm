@@ -1,80 +1,179 @@
 
-interface usb_phy_if(input logic clk);
 
-  // Reset
-  logic rst_n;
+interface usb_phy_if #(
+    parameter int WIDTH = 8
+)(
+    input logic clk
+);
 
-  // USB speed configuration
-  logic [1:0] usb_speed;
+    // Import the package containing speed_t.
+    // Assuming the package declared in pkg.sv is named "pkg".
+    import pkg::*;
 
-  // SIE inputs
-  logic       sie_valid;
-  logic [7:0] sie_data;
-  logic       sop;
-  logic       eop;
-  logic       sof_packet;
+     
+    // RESET AND USB CONFIGURATION
+     
 
-  // SIE output
-  logic sie_ready;
-
-  // TX outputs
-  logic [1:0] tx_line_state;
-  logic       tx_valid;
-
-  // RX inputs
-  logic rx_dp;
-  logic rx_dm;
-
-  // RX outputs
-  logic [7:0] Rx_data;
-  logic       Rx_valid;
-  logic [1:0] line_state;
+    logic   rst_n;
+    speed_t usb_speed;
 
 
-  // Driver clocking block
-  clocking cb_drv @(posedge clk);
+     
+    // SIE -> DUT TX PHY INPUTS
+     
 
-    default input #1step output #0;
+    logic             sof_packet;
+    logic [WIDTH-1:0] sie_data;
+    logic             sie_valid;
+    logic             sie_sop;
+    logic             sie_eop;
 
-    input rst_n;
-    input sie_ready;
-
-    output usb_speed;
-
-    output sie_valid;
-    output sie_data;
-    output sop;
-    output eop;
-    output sof_packet;
-
-  endclocking
+    // DUT TX handshake output
+    logic             sie_ready;
 
 
-  // Monitor clocking block
-  clocking cb_mon @(posedge clk);
+     
+    // DUT TX PHY -> EXTERNAL USB PARTNER OUTPUTS
+     
 
-    default input #1step;
+    logic dp;
+    logic dm;
+    logic tx_valid;
 
-    input rst_n;
-    input usb_speed;
 
-    input sie_valid;
-    input sie_data;
-    input sie_ready;
-    input sop;
-    input eop;
-    input sof_packet;
+     
+    // EXTERNAL USB PARTNER -> DUT CDR INPUTS
+     
 
-    input tx_line_state;
-    input tx_valid;
+    logic analog_d_plus;
+    logic analog_d_minus;
+    logic analog_enable;
+    logic analog_serial;
 
-    input rx_dp;
-    input rx_dm;
 
-    input Rx_data;
-    input Rx_valid;
-    input line_state;
+     
+    // DUT RX PHY -> SIE OUTPUTS
+     
 
-  endclocking
+    logic [WIDTH-1:0] DataOut;
+
+    logic             RxValid;
+    logic             RxActive;
+    logic             RxError;
+
+    logic [1:0]       LineState;
+
+    logic             rx_sop;
+    logic             rx_eop;
+
+
+     
+    // DUT RX DEBUG / STATUS OUTPUTS
+     
+
+    logic rx_stuff_err;
+    logic rx_align_err;
+    logic rx_line_err;
+    logic rx_babble_err;
+    logic rx_sync_err;
+    logic rx_bus_reset;
+
+
+     
+    // CLOCKING BLOCK 1: SIE DRIVER
+     
+
+    clocking cb_drv @(posedge clk);
+
+        default input #1step output #0;
+
+        // Inputs to driver
+        input rst_n;
+        input sie_ready;
+
+        // Outputs driven by PHY driver
+        output usb_speed;
+
+        output sof_packet;
+        output sie_data;
+        output sie_valid;
+        output sie_sop;
+        output sie_eop;
+
+    endclocking
+
+
+     
+    // CLOCKING BLOCK 2: EXTERNAL USB BFM DRIVER
+     
+
+    clocking cb_bfm_drv @(posedge clk);
+
+        default input #1step output #0;
+
+        // Reset observation
+        input rst_n;
+
+        // Signals driven by external USB partner
+        output analog_d_plus;
+        output analog_d_minus;
+        output analog_enable;
+        output analog_serial;
+
+    endclocking
+
+
+     
+    // CLOCKING BLOCK 3: PHY MONITOR
+     
+
+    clocking cb_mon @(posedge clk);
+
+        default input #1step;
+
+        // Configuration
+        input rst_n;
+        input usb_speed;
+
+        // SIE TX observation
+        input sof_packet;
+        input sie_data;
+        input sie_valid;
+        input sie_sop;
+        input sie_eop;
+        input sie_ready;
+
+        // DUT TX physical outputs
+        input dp;
+        input dm;
+        input tx_valid;
+
+        // External partner inputs to CDR
+        input analog_d_plus;
+        input analog_d_minus;
+        input analog_enable;
+        input analog_serial;
+
+        // DUT RX outputs
+        input DataOut;
+        input RxValid;
+        input RxActive;
+        input RxError;
+        input LineState;
+
+        input rx_sop;
+        input rx_eop;
+
+        // RX debug/status
+        input rx_stuff_err;
+        input rx_align_err;
+        input rx_line_err;
+        input rx_babble_err;
+        input rx_sync_err;
+        input rx_bus_reset;
+
+    endclocking
+
 
 endinterface
+

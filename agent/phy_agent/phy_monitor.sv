@@ -1,35 +1,41 @@
 
 
-class phy_driver extends uvm_driver #(phy_transaction);
+class phy_monitor extends uvm_monitor;
 
-  `uvm_component_utils(phy_driver)
+  `uvm_component_utils(phy_monitor)
+
+       
+  // Virtual interface and configuration
+       
 
   virtual usb_phy_if vif;
 
   phy_agent_config cfg;
 
-  int unsigned ready_timeout;
+       
+  // Analysis port
+       
 
-  bit transaction_accepted;
+  uvm_analysis_port #(phy_transaction) ap;
 
-
-  // ------------------------------------------------
+       
   // Constructor
-  // ------------------------------------------------
-  function new(string name = "phy_driver",
+       
+
+  function new(string name = "phy_monitor",
                uvm_component parent = null);
 
     super.new(name, parent);
 
-    ready_timeout = 50;
-    transaction_accepted = 0;
+    ap = new("ap", this);
 
   endfunction
 
 
-  // ------------------------------------------------
+       
   // Build phase
-  // ------------------------------------------------
+       
+
   function void build_phase(uvm_phase phase);
 
     super.build_phase(phase);
@@ -37,222 +43,196 @@ class phy_driver extends uvm_driver #(phy_transaction);
     if (!uvm_config_db#(virtual usb_phy_if)::get(
           this, "", "vif", vif)) begin
 
-      `uvm_fatal("PHY_DRV_VIF",
-                 "PHY virtual interface not found")
+      `uvm_fatal("PHY_MON_VIF",
+                 "PHY monitor virtual interface not found")
+
+    end
+
+    if (vif == null) begin
+
+      `uvm_fatal("PHY_MON_VIF_NULL",
+                 "PHY monitor virtual interface is NULL")
 
     end
 
     if (!uvm_config_db#(phy_agent_config)::get(
           this, "", "cfg", cfg)) begin
 
-      `uvm_fatal("PHY_DRV_CFG",
-                 "PHY agent configuration not found")
+      `uvm_fatal("PHY_MON_CFG",
+                 "PHY monitor configuration not found")
 
     end
 
-    if (cfg.speed == USB_SPEED_RESERVED) begin
+    if (cfg == null) begin
 
-      `uvm_fatal("PHY_DRV_SPEED",
-                 "Reserved USB speed selected")
+      `uvm_fatal("PHY_MON_CFG_NULL",
+                 "PHY monitor configuration is NULL")
 
     end
 
-    `uvm_info("PHY_DRV",
-              $sformatf("PHY driver configured for speed %0d",
-                        cfg.speed),
+    `uvm_info("PHY_MON",
+              "PHY monitor build completed",
               UVM_LOW)
 
   endfunction
 
 
-  // ------------------------------------------------
-  // Drive idle values
-  // ------------------------------------------------
-  task drive_idle();
+       
+  // Main monitor process
+       
 
-    vif.cb_drv.sie_valid  <= 1'b0;
-    vif.cb_drv.sie_data   <= 8'h00;
-    vif.cb_drv.sop        <= 1'b0;
-    vif.cb_drv.eop        <= 1'b0;
-    vif.cb_drv.sof_packet <= 1'b0;
-
-  endtask
-
-
-  // ------------------------------------------------
-  // Wait for reset release
-  // ------------------------------------------------
-  task wait_for_reset_release();
-
-    while (vif.rst_n !== 1'b1) begin
-
-      @(vif.cb_drv);
-
-    end
-
-  endtask
-
-
-  // ------------------------------------------------
-  // Main driver process
-  // ------------------------------------------------
   task run_phase(uvm_phase phase);
 
-    phy_transaction req;
+    phy_transaction tx_tr;
 
-    int unsigned wait_count;
-
-    bit accepted;
-    bit reset_abort;
-
-    // Initialize SIE inputs
-    drive_idle();
-
-    `uvm_info("PHY_DRV",
-              "PHY driver started",
+    `uvm_info("PHY_MON",
+              "PHY monitor started",
               UVM_LOW)
 
     forever begin
 
-      // Get transaction from sequencer
-      seq_item_port.get_next_item(req);
+      @(vif.cb_mon);
 
-      accepted    = 0;
-      reset_abort = 0;
-      wait_count  = 0;
+           
+      // Ignore activity during reset
+           
 
-      transaction_accepted = 0;
-
-      // Wait for reset release
-      wait_for_reset_release();
-
-      // Apply runtime speed configuration
-      @(vif.cb_drv);
-
-      vif.cb_drv.usb_speed <= cfg.speed;
-
-      // Drive transaction only when valid
-      if (req.sie_valid !== 1'b1) begin
-
-        `uvm_error("PHY_DRV",
-                   "Invalid transaction: sie_valid must be 1")
-
-        drive_idle();
-
-        seq_item_port.item_done();
+      if (vif.cb_mon.rst_n !== 1'b1) begin
 
         continue;
 
       end
 
-      vif.cb_drv.sie_data   <= req.sie_data;
-      vif.cb_drv.sie_valid  <= req.sie_valid;
-      vif.cb_drv.sop        <= req.sop;
-      vif.cb_drv.eop        <= req.eop;
-      vif.cb_drv.sof_packet <= req.sof_packet;
+           
+      // Monitor SIE TX handshake
+      //
+      // A transfer is accepted when:
+      // sie_valid = 1
+      // sie_ready = 1
+           
 
-      `uvm_info("PHY_DRV",
-                $sformatf(
-                  "Driving SIE data=0x%02h SOP=%0b EOP=%0b SOF=%0b Speed=%0d",
-                  req.sie_data,
-                  req.sop,
-                  req.eop,
-                  req.sof_packet,
-                  cfg.speed),
-                UVM_MEDIUM)
+      if ((vif.cb_mon.sie_valid === 1'b1) &&
+          (vif.cb_mon.sie_ready === 1'b1)) begin
 
-      // Wait until DUT accepts transaction
-      while ((wait_count < ready_timeout) &&
-             !accepted &&
-             !reset_abort) begin
+        tx_tr = phy_transaction::type_id::create(
+                  "tx_tr", this);
 
-        @(vif.cb_drv);
+        // Capture accepted SIE transaction
+        tx_tr.sie_data   = vif.cb_mon.sie_data;
+        tx_tr.sie_valid  = vif.cb_mon.sie_valid;
+        tx_tr.sop        = vif.cb_mon.sie_sop;
+        tx_tr.eop        = vif.cb_mon.sie_eop;
+        tx_tr.sof_packet = vif.cb_mon.sof_packet;
 
-        // Check reset
-        if (vif.cb_drv.rst_n !== 1'b1) begin
+        // Publish observed transaction
+        ap.write(tx_tr);
 
-          reset_abort = 1;
-
-          `uvm_warning("PHY_DRV",
-                       "Reset asserted during SIE transaction")
-
-        end
-
-        // Check handshake
-        else if (vif.cb_drv.sie_ready === 1'b1) begin
-
-          accepted = 1;
-
-          transaction_accepted = 1;
-
-          `uvm_info("PHY_DRV",
-                    "SIE transaction accepted by DUT",
-                    UVM_MEDIUM)
-
-        end
-
-        else if (vif.cb_drv.sie_ready !== 1'b0) begin
-
-          `uvm_error("PHY_DRV",
-                     "Unknown value detected on sie_ready")
-
-          wait_count++;
-
-        end
-
-        else begin
-
-          wait_count++;
-
-        end
-
-      end
-
-      // Deassert SIE inputs
-      @(vif.cb_drv);
-
-      drive_idle();
-
-      // Report transaction result
-      if (accepted) begin
-
-        `uvm_info("PHY_DRV",
-                  "PHY transaction completed successfully",
+        `uvm_info("PHY_MON",
+                  $sformatf(
+                    "SIE TX accepted: DATA=0x%02h SOP=%0b EOP=%0b SOF=%0b SPEED=%0d",
+                    vif.cb_mon.sie_data,
+                    vif.cb_mon.sie_sop,
+                    vif.cb_mon.sie_eop,
+                    vif.cb_mon.sof_packet,
+                    vif.cb_mon.usb_speed),
                   UVM_MEDIUM)
 
       end
-      else if (reset_abort) begin
 
-        `uvm_warning("PHY_DRV",
-                     "PHY transaction aborted due to reset")
+           
+      // Monitor physical TX outputs
+           
+
+      if (vif.cb_mon.tx_valid === 1'b1) begin
+
+        `uvm_info("PHY_MON",
+                  $sformatf(
+                    "PHY TX activity: DP=%0b DM=%0b TX_VALID=%0b",
+                    vif.cb_mon.dp,
+                    vif.cb_mon.dm,
+                    vif.cb_mon.tx_valid),
+                  UVM_HIGH)
 
       end
-      else begin
 
-        `uvm_error("PHY_DRV",
-                   $sformatf(
-                     "Timeout waiting for sie_ready after %0d cycles",
-                     ready_timeout))
+           
+      // Monitor DUT RX outputs
+           
+
+      if (vif.cb_mon.RxValid === 1'b1) begin
+
+        `uvm_info("PHY_MON",
+                  $sformatf(
+                    "PHY RX data: DATA=0x%02h RX_VALID=%0b RX_ACTIVE=%0b RX_ERROR=%0b LINE_STATE=%0b",
+                    vif.cb_mon.DataOut,
+                    vif.cb_mon.RxValid,
+                    vif.cb_mon.RxActive,
+                    vif.cb_mon.RxError,
+                    vif.cb_mon.LineState),
+                  UVM_MEDIUM)
 
       end
 
-      // Complete sequencer-driver handshake
-      seq_item_port.item_done();
+           
+      // Monitor RX packet markers
+           
+
+      if (vif.cb_mon.rx_sop === 1'b1) begin
+
+        `uvm_info("PHY_MON",
+                  "RX packet start detected",
+                  UVM_MEDIUM)
+
+      end
+
+      if (vif.cb_mon.rx_eop === 1'b1) begin
+
+        `uvm_info("PHY_MON",
+                  "RX packet end detected",
+                  UVM_MEDIUM)
+
+      end
+
+           
+      // Monitor RX error and status signals
+           
+
+      if ((vif.cb_mon.RxError      === 1'b1) ||
+          (vif.cb_mon.rx_stuff_err === 1'b1) ||
+          (vif.cb_mon.rx_align_err === 1'b1) ||
+          (vif.cb_mon.rx_line_err  === 1'b1) ||
+          (vif.cb_mon.rx_babble_err === 1'b1) ||
+          (vif.cb_mon.rx_sync_err  === 1'b1) ||
+          (vif.cb_mon.rx_bus_reset === 1'b1)) begin
+
+        `uvm_warning("PHY_MON",
+                     $sformatf(
+                       "RX STATUS: RxError=%0b StuffErr=%0b AlignErr=%0b LineErr=%0b BabbleErr=%0b SyncErr=%0b BusReset=%0b",
+                       vif.cb_mon.RxError,
+                       vif.cb_mon.rx_stuff_err,
+                       vif.cb_mon.rx_align_err,
+                       vif.cb_mon.rx_line_err,
+                       vif.cb_mon.rx_babble_err,
+                       vif.cb_mon.rx_sync_err,
+                       vif.cb_mon.rx_bus_reset))
+
+      end
 
     end
 
   endtask
 
 
-  // ------------------------------------------------
+       
   // Report phase
-  // ------------------------------------------------
+       
+
   function void report_phase(uvm_phase phase);
 
     super.report_phase(phase);
 
-    `uvm_info("PHY_DRV_REPORT",
-              "PHY driver simulation completed",
+    `uvm_info("PHY_MON_REPORT",
+              "PHY monitor simulation completed",
               UVM_LOW)
 
   endfunction

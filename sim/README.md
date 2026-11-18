@@ -134,5 +134,24 @@ xrun -64bit -uvm -sv -access +rwc -f filelist.f -top tb_top +UVM_TESTNAME=usb_ph
 
 xrun -64bit -uvm -sv -access +rwc -f filelist.f -top tb_top +UVM_TESTNAME=usb_phy_hs_test -l usb_phy_hs.log
 ```
+# Low Speed
+xrun -64bit -uvm -sv -f filelist.f \
+     -top tb_top \
+     +UVM_TESTNAME=usb_phy_base_test \
+     +USB_SPEED=0 \
+     -l ls.log
 
+# Full Speed
+xrun -64bit -uvm -sv -f filelist.f \
+     -top tb_top \
+     +UVM_TESTNAME=usb_phy_base_test \
+     +USB_SPEED=1 \
+     -l fs.log
+
+# High Speed
+xrun -64bit -uvm -sv -f filelist.f \
+     -top tb_top \
+     +UVM_TESTNAME=usb_phy_base_test \
+     +USB_SPEED=2 \
+     -l hs.log
 

@@ -1,0 +1,103 @@
+xrun(64): 20.09-s009: (c) Copyright 1995-2021 Cadence Design Systems, Inc.
+TOOL:	xrun(64)	20.09-s009: Started on Nov 18, 2026 at 17:07:21 IST
+xrun
+	-64bit
+	-uvm
+	-sv
+	-f filelist.f
+		+incdir+../tb
+		+incdir+../agent
+		+incdir+../agent/phy_agent
+		+incdir+../agent/usb_bfm_agent
+		+incdir+../env
+		+incdir+../tests
+		../rtl/pkg.sv
+		../rtl/bit_enable.sv
+		../rtl/tx_holding_reg.sv
+		../rtl/piso.sv
+		../rtl/bit_stuffer.sv
+		../rtl/nrzi_encoder.sv
+		../rtl/tx_data_line_state_converter.sv
+		../rtl/eop.sv
+		../rtl/tx_phy_mux.sv
+		../rtl/phy_tx_top.sv
+		../rtl/line_state_detector.sv
+		../rtl/bus_reset.sv
+		../rtl/rx_ctrl.sv
+		../rtl/sync_eop_detector.sv
+		../rtl/nrzi_decoder.sv
+		../rtl/bit_unstuffer.sv
+		../rtl/sipo.sv
+		../rtl/phy_rx_top.sv
+		../rtl/edge_err_detection.sv
+		../rtl/FSM.sv
+		../rtl/loop_filter.sv
+		../rtl/oversampler.sv
+		../rtl/phase_acc.sv
+		../rtl/sampler.sv
+		../rtl/sync_deglitch.sv
+		../rtl/top.sv
+		../rtl/phy_top.sv
+		../tb/usb_phy_if.sv
+		../tb/usb_bus_if.sv
+		../tb/usb_phy_pkg.sv
+		../tb/tb_top.sv
+	-top tb_top
+	+UVM_TESTNAME=usb_phy_base_test
+	+USB_SPEED=0
+	-l ls.log
+
+   User defined plus("+") options:
+	+USB_SPEED=0
+
+Compiling UVM packages (uvm_pkg.sv cdns_uvm_pkg.sv) using uvmhome location /tools/cadence_march2021/XCELIUM2009/tools/methodology/UVM/CDNS-1.1d
+file: ../tb/usb_phy_if.sv
+    import pkg::*;
+             |
+xmvlog: *E,NOPBIND (../tb/usb_phy_if.sv,11|13): Package pkg could not be bound.
+	interface worklib.usb_phy_if:sv
+		errors: 1, warnings: 0
+file: ../tb/usb_phy_pkg.sv
+package usb_phy_pkg;
+                  |
+xmvlog: *W,RECOME (../tb/usb_phy_pkg.sv,1|18): recompiling design unit worklib.usb_phy_pkg:sv.
+	First compiled from line 1 of ../rtl/pkg.sv.
+  `include "usb_bfm_agent/usb_bfm_config.sv"
+                                           |
+xmvlog: *E,COFILX (../tb/usb_phy_pkg.sv,30|43): cannot open include file 'usb_bfm_agent/usb_bfm_config.sv'.
+  usb_bfm_config cfg;
+               |
+xmvlog: *E,NOIPRT (../agent/usb_bfm_agent/usb_bfm_driver.sv,13|15): Unrecognized declaration 'usb_bfm_config' could be an unsupported keyword, a spelling mistake or missing instance port list '()' [SystemVerilog].
+(`include file: ../agent/usb_bfm_agent/usb_bfm_driver.sv line 13, file: ../tb/usb_phy_pkg.sv line 32)
+  usb_bfm_config cfg;
+               |
+xmvlog: *E,NOIPRT (../agent/usb_bfm_agent/usb_bfm_monitor.sv,13|15): Unrecognized declaration 'usb_bfm_config' could be an unsupported keyword, a spelling mistake or missing instance port list '()' [SystemVerilog].
+(`include file: ../agent/usb_bfm_agent/usb_bfm_monitor.sv line 13, file: ../tb/usb_phy_pkg.sv line 33)
+  usb_bfm_config cfg;
+               |
+xmvlog: *E,NOIPRT (../agent/usb_bfm_agent/usb_bfm_agent.sv,5|15): Unrecognized declaration 'usb_bfm_config' could be an unsupported keyword, a spelling mistake or missing instance port list '()' [SystemVerilog].
+(`include file: ../agent/usb_bfm_agent/usb_bfm_agent.sv line 5, file: ../tb/usb_phy_pkg.sv line 34)
+  `include "usb_phy_scoreboard.sv"
+                                 |
+xmvlog: *E,COFILX (../tb/usb_phy_pkg.sv,36|33): cannot open include file 'usb_phy_scoreboard.sv'.
+  usb_bfm_config   usb_cfg;
+               |
+xmvlog: *E,NOIPRT (../env/usb_phy_env.sv,21|15): Unrecognized declaration 'usb_bfm_config' could be an unsupported keyword, a spelling mistake or missing instance port list '()' [SystemVerilog].
+(`include file: ../env/usb_phy_env.sv line 21, file: ../tb/usb_phy_pkg.sv line 38)
+  usb_phy_scoreboard scoreboard;
+                   |
+xmvlog: *E,NOIPRT (../env/usb_phy_env.sv,36|19): Unrecognized declaration 'usb_phy_scoreboard' could be an unsupported keyword, a spelling mistake or missing instance port list '()' [SystemVerilog].
+(`include file: ../env/usb_phy_env.sv line 36, file: ../tb/usb_phy_pkg.sv line 38)
+	package worklib.usb_phy_pkg:sv
+		errors: 7, warnings: 1
+file: ../tb/tb_top.sv
+    phy_if.usb_speed   = usb_phy_if::USB_SPEED_RESERVED;
+                                  |
+xmvlog: *E,NOPBIND (../tb/tb_top.sv,24|34): Package usb_phy_if could not be bound.
+	module worklib.tb_top:sv
+		errors: 1, warnings: 0
+xmvlog: *W,SPDUSD: Include directory ../tb given but not used.
+	Total errors/warnings found outside modules and primitives:
+		errors: 0, warnings: 1
+xrun: *E,VLGERR: An error occurred during parsing.  Review the log file for errors with the code *E and fix those identified problems to proceed.  Exiting with code (status 1).
+TOOL:	xrun(64)	20.09-s009: Exiting on Nov 18, 2026 at 17:07:23 IST  (total: 00:00:02)

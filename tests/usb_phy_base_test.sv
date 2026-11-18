@@ -1,17 +1,43 @@
 
+
 class usb_phy_base_test extends uvm_test;
 
   `uvm_component_utils(usb_phy_base_test)
 
+
+    
+  // 1. ENVIRONMENT
+    
+
   usb_phy_env env;
+
+
+    
+  // 2. ENVIRONMENT CONFIGURATION
+    
 
   usb_phy_env_config env_cfg;
 
-  int unsigned speed_arg;
+
+    
+  // 3. VIRTUAL INTERFACES
+    
 
   virtual usb_phy_if phy_vif;
+
   virtual usb_bus_if usb_vif;
 
+
+    
+  // 4. USB SPEED ARGUMENT
+    
+
+  int unsigned speed_arg;
+
+
+    
+  // 5. CONSTRUCTOR
+    
 
   function new(string name = "usb_phy_base_test",
                uvm_component parent = null);
@@ -21,13 +47,19 @@ class usb_phy_base_test extends uvm_test;
   endfunction
 
 
+    
+  // 6. BUILD PHASE
+    
+
   function void build_phase(uvm_phase phase);
 
     super.build_phase(phase);
 
-    // --------------------------------------------
+
+     
     // Get PHY virtual interface
-    // --------------------------------------------
+     
+
     if (!uvm_config_db#(virtual usb_phy_if)::get(
           this, "", "phy_vif", phy_vif)) begin
 
@@ -36,9 +68,11 @@ class usb_phy_base_test extends uvm_test;
 
     end
 
-    // --------------------------------------------
+
+     
     // Get USB bus virtual interface
-    // --------------------------------------------
+     
+
     if (!uvm_config_db#(virtual usb_bus_if)::get(
           this, "", "usb_vif", usb_vif)) begin
 
@@ -47,29 +81,68 @@ class usb_phy_base_test extends uvm_test;
 
     end
 
-    // --------------------------------------------
-    // Read speed from command line
-    // --------------------------------------------
-    if (!$value$plusargs("USB_SPEED=%d", speed_arg))
-      speed_arg = 1;  // Default FS
 
-    // --------------------------------------------
+     
+    // Read USB speed from command line
+    //
+    // 0 = Low Speed
+    // 1 = Full Speed
+    // 2 = High Speed
+     
+
+    if (!$value$plusargs("USB_SPEED=%d", speed_arg)) begin
+
+      speed_arg = 1;
+
+    end
+
+
+     
     // Create environment configuration
-    // --------------------------------------------
-    env_cfg = usb_phy_env_config::type_id::create(
-      "env_cfg"
-    );
+     
 
-    // --------------------------------------------
-    // Configure selected speed
-    // --------------------------------------------
+    env_cfg = usb_phy_env_config::type_id::create(
+                "env_cfg");
+
+
+     
+    // Configure USB speed
+     
+
     case (speed_arg)
 
-      0: env_cfg.speed = USB_SPEED_LS;
+      0: begin
 
-      1: env_cfg.speed = USB_SPEED_FS;
+        env_cfg.speed = USB_SPEED_LS;
 
-      2: env_cfg.speed = USB_SPEED_HS;
+        `uvm_info("BASE_TEST",
+                  "USB Low Speed selected",
+                  UVM_LOW)
+
+      end
+
+
+      1: begin
+
+        env_cfg.speed = USB_SPEED_FS;
+
+        `uvm_info("BASE_TEST",
+                  "USB Full Speed selected",
+                  UVM_LOW)
+
+      end
+
+
+      2: begin
+
+        env_cfg.speed = USB_SPEED_HS;
+
+        `uvm_info("BASE_TEST",
+                  "USB High Speed selected",
+                  UVM_LOW)
+
+      end
+
 
       default: begin
 
@@ -80,19 +153,36 @@ class usb_phy_base_test extends uvm_test;
 
     endcase
 
-    // --------------------------------------------
+
+     
     // Assign virtual interfaces
-    // --------------------------------------------
+     
+
     env_cfg.phy_vif = phy_vif;
+
     env_cfg.usb_vif = usb_vif;
 
-    // --------------------------------------------
+
+     
     // Agent activity configuration
-    // --------------------------------------------
+     
+
     env_cfg.phy_is_active = UVM_ACTIVE;
+
     env_cfg.usb_is_active = UVM_ACTIVE;
 
-    // Pass environment configuration
+
+     
+    // Validate environment configuration
+     
+
+    env_cfg.validate_config();
+
+
+     
+    // Pass configuration to environment
+     
+
     uvm_config_db#(usb_phy_env_config)::set(
       this,
       "env",
@@ -100,18 +190,32 @@ class usb_phy_base_test extends uvm_test;
       env_cfg
     );
 
-    // --------------------------------------------
-    // Create environment
-    // --------------------------------------------
+
+     
+    // Create USB PHY environment
+     
+
     env = usb_phy_env::type_id::create(
-      "env", this
-    );
+            "env",
+            this
+          );
+
+
+     
+    // Configuration summary
+     
 
     `uvm_info("BASE_TEST",
-              $sformatf("USB speed selected: %0d", speed_arg),
+              $sformatf(
+                "USB PHY Base Test Configuration: SPEED=%0d PHY_ACTIVE=%0d USB_ACTIVE=%0d",
+                env_cfg.speed,
+                env_cfg.phy_is_active,
+                env_cfg.usb_is_active
+              ),
               UVM_LOW)
 
   endfunction
+
 
 endclass
 
