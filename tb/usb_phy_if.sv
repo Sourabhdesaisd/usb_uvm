@@ -1,26 +1,28 @@
 
 
+
 interface usb_phy_if #(
     parameter int WIDTH = 8
 )(
     input logic clk
 );
 
-    // Import the package containing speed_t.
-    // Assuming the package declared in pkg.sv is named "pkg".
-    import pkg::*;
+    // Import the actual RTL package.
+    // Confirm its declaration in ../rtl/pkg.sv.
+    import usb_phy_pkg::*;
 
-     
+
+       
     // RESET AND USB CONFIGURATION
-     
+       
 
     logic   rst_n;
     speed_t usb_speed;
 
 
-     
+       
     // SIE -> DUT TX PHY INPUTS
-     
+       
 
     logic             sof_packet;
     logic [WIDTH-1:0] sie_data;
@@ -28,22 +30,21 @@ interface usb_phy_if #(
     logic             sie_sop;
     logic             sie_eop;
 
-    // DUT TX handshake output
     logic             sie_ready;
 
 
-     
+       
     // DUT TX PHY -> EXTERNAL USB PARTNER OUTPUTS
-     
+       
 
     logic dp;
     logic dm;
     logic tx_valid;
 
 
-     
+       
     // EXTERNAL USB PARTNER -> DUT CDR INPUTS
-     
+       
 
     logic analog_d_plus;
     logic analog_d_minus;
@@ -51,9 +52,9 @@ interface usb_phy_if #(
     logic analog_serial;
 
 
-     
+       
     // DUT RX PHY -> SIE OUTPUTS
-     
+       
 
     logic [WIDTH-1:0] DataOut;
 
@@ -67,9 +68,9 @@ interface usb_phy_if #(
     logic             rx_eop;
 
 
-     
+       
     // DUT RX DEBUG / STATUS OUTPUTS
-     
+       
 
     logic rx_stuff_err;
     logic rx_align_err;
@@ -79,19 +80,17 @@ interface usb_phy_if #(
     logic rx_bus_reset;
 
 
-     
+       
     // CLOCKING BLOCK 1: SIE DRIVER
-     
+       
 
     clocking cb_drv @(posedge clk);
 
         default input #1step output #0;
 
-        // Inputs to driver
         input rst_n;
         input sie_ready;
 
-        // Outputs driven by PHY driver
         output usb_speed;
 
         output sof_packet;
@@ -103,18 +102,16 @@ interface usb_phy_if #(
     endclocking
 
 
-     
+       
     // CLOCKING BLOCK 2: EXTERNAL USB BFM DRIVER
-     
+       
 
     clocking cb_bfm_drv @(posedge clk);
 
         default input #1step output #0;
 
-        // Reset observation
         input rst_n;
 
-        // Signals driven by external USB partner
         output analog_d_plus;
         output analog_d_minus;
         output analog_enable;
@@ -123,9 +120,9 @@ interface usb_phy_if #(
     endclocking
 
 
-     
+       
     // CLOCKING BLOCK 3: PHY MONITOR
-     
+       
 
     clocking cb_mon @(posedge clk);
 
@@ -148,7 +145,7 @@ interface usb_phy_if #(
         input dm;
         input tx_valid;
 
-        // External partner inputs to CDR
+        // External partner inputs
         input analog_d_plus;
         input analog_d_minus;
         input analog_enable;
@@ -164,7 +161,7 @@ interface usb_phy_if #(
         input rx_sop;
         input rx_eop;
 
-        // RX debug/status
+        // RX status
         input rx_stuff_err;
         input rx_align_err;
         input rx_line_err;
@@ -173,7 +170,6 @@ interface usb_phy_if #(
         input rx_bus_reset;
 
     endclocking
-
 
 endinterface
 
