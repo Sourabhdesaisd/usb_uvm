@@ -1,5 +1,5 @@
 xrun(64): 20.09-s009: (c) Copyright 1995-2021 Cadence Design Systems, Inc.
-TOOL:	xrun(64)	20.09-s009: Started on Nov 18, 2026 at 17:14:55 IST
+TOOL:	xrun(64)	20.09-s009: Started on Nov 18, 2026 at 17:27:48 IST
 xrun
 	-64bit
 	-uvm
@@ -51,50 +51,383 @@ xrun
 	+USB_SPEED=0
 
 Compiling UVM packages (uvm_pkg.sv cdns_uvm_pkg.sv) using uvmhome location /tools/cadence_march2021/XCELIUM2009/tools/methodology/UVM/CDNS-1.1d
+file: ../rtl/pkg.sv
+	package worklib.usb_phy_pkg:sv
+		errors: 0, warnings: 0
+file: ../rtl/bit_enable.sv
+	module worklib.usb_speed_tick:sv
+		errors: 0, warnings: 0
+file: ../rtl/tx_holding_reg.sv
+	module worklib.usb2_tx_fifo:sv
+		errors: 0, warnings: 0
+file: ../rtl/piso.sv
+	module worklib.usb_piso:sv
+		errors: 0, warnings: 0
+file: ../rtl/bit_stuffer.sv
+	module worklib.usb2_bit_stuffer:sv
+		errors: 0, warnings: 0
+file: ../rtl/nrzi_encoder.sv
+	module worklib.usb_nrzi_encoder:sv
+		errors: 0, warnings: 0
+file: ../rtl/tx_data_line_state_converter.sv
+	module worklib.tx_line_state_converter:sv
+		errors: 0, warnings: 0
+file: ../rtl/eop.sv
+	module worklib.usb_eop_gen:sv
+		errors: 0, warnings: 0
+file: ../rtl/tx_phy_mux.sv
+	module worklib.usb_tx_line_mux:sv
+		errors: 0, warnings: 0
+file: ../rtl/phy_tx_top.sv
+	module worklib.phy_tx_top:sv
+		errors: 0, warnings: 0
+file: ../rtl/line_state_detector.sv
+	module worklib.usb2_rx_line_state_detector:sv
+		errors: 0, warnings: 0
+file: ../rtl/bus_reset.sv
+	module worklib.usb2_rx_reset_detect:sv
+		errors: 0, warnings: 0
+file: ../rtl/rx_ctrl.sv
+	module worklib.usb2_rx_ctrl:sv
+		errors: 0, warnings: 0
+file: ../rtl/sync_eop_detector.sv
+	module worklib.usb2_rx_sync_eop_detector:sv
+		errors: 0, warnings: 0
+file: ../rtl/nrzi_decoder.sv
+	module worklib.usb2_nrzi_decoder:sv
+		errors: 0, warnings: 0
+file: ../rtl/bit_unstuffer.sv
+	module worklib.usb2_bit_unstuffer:sv
+		errors: 0, warnings: 0
+file: ../rtl/sipo.sv
+	module worklib.usb_sipo:sv
+		errors: 0, warnings: 0
+file: ../rtl/phy_rx_top.sv
+	module worklib.phy_rx_top:sv
+		errors: 0, warnings: 0
+file: ../rtl/edge_err_detection.sv
+	module worklib.usb2_cdr_error_detection:sv
+		errors: 0, warnings: 0
+file: ../rtl/FSM.sv
+	module worklib.usb2_cdr_lock_fsm:sv
+		errors: 0, warnings: 0
+file: ../rtl/loop_filter.sv
+	module worklib.usb2_cdr_loop_filter:sv
+		errors: 0, warnings: 0
+file: ../rtl/oversampler.sv
+	module worklib.usb2_cdr_oversampler:sv
+		errors: 0, warnings: 0
+file: ../rtl/phase_acc.sv
+	module worklib.usb2_cdr_phase_acc:sv
+		errors: 0, warnings: 0
+file: ../rtl/sampler.sv
+	module worklib.usb2_cdr_sampler:sv
+		errors: 0, warnings: 0
+file: ../rtl/sync_deglitch.sv
+	module worklib.usb2_cdr_sync_deglitch:sv
+		errors: 0, warnings: 0
+file: ../rtl/top.sv
+	module worklib.usb2_cdr_top:sv
+		errors: 0, warnings: 0
+file: ../rtl/phy_top.sv
+	module worklib.phy_top:sv
+		errors: 0, warnings: 0
+file: ../tb/usb_phy_if.sv
+	interface worklib.usb_phy_if:sv
+		errors: 0, warnings: 0
+file: ../tb/usb_bus_if.sv
+	interface worklib.usb_bus_if:sv
+		errors: 0, warnings: 0
 file: ../tb/usb_phy_pkg.sv
-                    is_active, UVM_ALL_ON)
-                                         |
-xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,7|41): 'is_active': undeclared identifier [12.5(IEEE)].
-                    is_active, UVM_ALL_ON)
-                                         |
-xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,7|41): 'is_active': undeclared identifier [12.5(IEEE)].
-                    is_active, UVM_ALL_ON)
-                                         |
-xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,7|41): 'is_active': undeclared identifier [12.5(IEEE)].
-                    is_active, UVM_ALL_ON)
-                                         |
-xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,7|41): 'is_active': undeclared identifier [12.5(IEEE)].
-                    is_active, UVM_ALL_ON)
-                                         |
-xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,7|41): 'is_active': undeclared identifier [12.5(IEEE)].
-                    speed, UVM_ALL_ON)
-                                     |
-xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,10|37): 'speed': undeclared identifier [12.5(IEEE)].
-                    speed, UVM_ALL_ON)
-                                     |
-xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,10|37): 'speed': undeclared identifier [12.5(IEEE)].
-                    speed, UVM_ALL_ON)
-                                     |
-xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,10|37): 'speed': undeclared identifier [12.5(IEEE)].
-                    speed, UVM_ALL_ON)
-                                     |
-xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,10|37): 'speed': undeclared identifier [12.5(IEEE)].
-                    speed, UVM_ALL_ON)
-                                     |
-xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,10|37): 'speed': undeclared identifier [12.5(IEEE)].
-    phy_cfg.validate_config();
-                          |
-xmvlog: *E,NOTCLM (../env/usb_phy_env.sv,98|26): validate_config is not a class item.
 	package worklib.usb_phy_tb_pkg:sv
-		errors: 11, warnings: 0
+		errors: 0, warnings: 0
 file: ../tb/tb_top.sv
-    phy_if.usb_speed   = usb_phy_if::USB_SPEED_RESERVED;
-                                  |
-xmvlog: *E,NOPBIND (../tb/tb_top.sv,24|34): Package usb_phy_if could not be bound.
 	module worklib.tb_top:sv
-		errors: 1, warnings: 0
+		errors: 0, warnings: 0
 xmvlog: *W,SPDUSD: Include directory ../tb given but not used.
 	Total errors/warnings found outside modules and primitives:
 		errors: 0, warnings: 1
-xrun: *E,VLGERR: An error occurred during parsing.  Review the log file for errors with the code *E and fix those identified problems to proceed.  Exiting with code (status 1).
-TOOL:	xrun(64)	20.09-s009: Exiting on Nov 18, 2026 at 17:14:56 IST  (total: 00:00:01)
+	Elaborating the design hierarchy:
+		Caching library 'worklib' ....... Done
+	Top level design units:
+		usb_phy_pkg
+		$unit_0x003fe2c5
+		uvm_pkg
+		cdns_uvmapi
+		cdns_assert2uvm_pkg
+		cdns_uvm_pkg
+		usb_phy_tb_pkg
+		tb_top
+xmelab: *W,DSEMEL: This SystemVerilog design will be simulated as per IEEE 1800-2009 SystemVerilog simulation semantics. Use -disable_sem2009 option for turning off SV 2009 simulation semantics.
+    phy_if.usb_speed = '1;
+                        |
+xmelab: *W,ENUMERR (../tb/tb_top.sv,44|24): This assignment is a violation of SystemVerilog strong typing rules for enumeration datatypes.
+      vif.cb_drv.usb_speed <= cfg.speed;
+                                      |
+xmelab: *W,ENUMERR (../agent/phy_agent/phy_driver.sv,170|38): This assignment is a violation of SystemVerilog strong typing rules for enumeration datatypes.
+	Building instance overlay tables: .................... Done
+	Generating native compiled code:
+		worklib.usb2_cdr_lock_fsm:sv <0x7280bdd7>
+			streams:  17, words:  7212
+		worklib.usb2_cdr_sampler:sv <0x3303646a>
+			streams:  10, words:  3200
+		worklib.usb2_cdr_phase_acc:sv <0x67085303>
+			streams:  11, words:  3633
+		worklib.usb2_cdr_loop_filter:sv <0x3aba21fa>
+			streams:  15, words:  4890
+		worklib.usb2_cdr_error_detection:sv <0x64950cd5>
+			streams:  10, words:  2516
+		worklib.usb2_cdr_oversampler:sv <0x76d4d437>
+			streams:   3, words:  1721
+		worklib.usb2_cdr_sync_deglitch:sv <0x59abf4e8>
+			streams:   9, words:  2317
+		worklib.usb2_cdr_top:sv <0x4e9c66ad>
+			streams:   9, words:  2492
+		worklib.usb_sipo:sv <0x26336af6>
+			streams:   7, words:  2039
+		worklib.usb2_bit_unstuffer:sv <0x2437826f>
+			streams:   7, words:  2567
+		worklib.usb2_nrzi_decoder:sv <0x0347bab7>
+			streams:   6, words:  1780
+		worklib.usb2_rx_ctrl:sv <0x5f4cb8d8>
+			streams:  47, words: 18391
+		worklib.usb2_rx_sync_eop_detector:sv <0x062f6aaf>
+			streams:  17, words: 10703
+		worklib.usb2_rx_reset_detect:sv <0x774f7a22>
+			streams:   4, words:  1149
+		worklib.usb2_rx_line_state_detector:sv <0x446e6f3b>
+			streams:   1, words:  1414
+		worklib.phy_rx_top:sv <0x3ff03c69>
+			streams:  61, words: 14588
+		worklib.usb_tx_line_mux:sv <0x1a1388f8>
+			streams:   1, words:   823
+		worklib.usb_eop_gen:sv <0x5c64c1d2>
+			streams:   9, words:  4695
+		worklib.tx_line_state_converter:sv <0x57af0053>
+			streams:   3, words:   677
+		worklib.usb_nrzi_encoder:sv <0x7f23d5cb>
+			streams:   6, words:  1817
+		worklib.usb2_bit_stuffer:sv <0x7588ccd8>
+			streams:  11, words:  3160
+		worklib.usb_piso:sv <0x6ad764fc>
+			streams:  15, words:  8434
+		worklib.usb2_tx_fifo:sv <0x225880e6>
+			streams:  11, words:  4265
+		worklib.usb_speed_tick:sv <0x2cb9ee90>
+			streams:   5, words:  1311
+		worklib.phy_tx_top:sv <0x5f520cd6>
+			streams:  52, words: 12550
+		worklib.phy_top:sv <0x055a9a20>
+			streams:  24, words:  8007
+		worklib.uvm_pkg:sv <0x7b8f8296>
+			streams:   6, words:  3460
+		worklib.uvm_pkg:sv <0x11b6066e>
+			streams:   6, words:  3120
+		worklib.uvm_pkg:sv <0x58e3bc1c>
+			streams:   5, words:  2530
+		worklib.uvm_pkg:sv <0x3a49d23e>
+			streams:   7, words:  1927
+		worklib.uvm_pkg:sv <0x5fb5424a>
+			streams:   8, words:  2774
+		worklib.uvm_pkg:sv <0x2cb0e426>
+			streams:  21, words: 50037
+		worklib.uvm_pkg:sv <0x5d5aae55>
+			streams:   7, words:  1927
+		worklib.uvm_pkg:sv <0x2b933770>
+			streams:  24, words: 19795
+		worklib.uvm_pkg:sv <0x6e8b5ba5>
+			streams:  24, words: 18809
+		worklib.uvm_pkg:sv <0x3bd9a878>
+			streams:  20, words: 18289
+		worklib.uvm_pkg:sv <0x59f30c0f>
+			streams:  11, words:  4048
+		worklib.uvm_pkg:sv <0x50ed30d0>
+			streams:  23, words: 27132
+		worklib.uvm_pkg:sv <0x455d6f96>
+			streams:   7, words:  2431
+		worklib.uvm_pkg:sv <0x0d8680e5>
+			streams:  12, words: 14984
+		worklib.uvm_pkg:sv <0x7efd490c>
+			streams:  23, words: 23531
+		worklib.uvm_pkg:sv <0x24efada2>
+			streams:  22, words: 50123
+		worklib.uvm_pkg:sv <0x7a0ee8f7>
+			streams:  25, words: 31420
+		worklib.uvm_pkg:sv <0x167b060b>
+			streams:  24, words: 45729
+		worklib.uvm_pkg:sv <0x015bafc6>
+			streams:  25, words: 34203
+		worklib.uvm_pkg:sv <0x08455844>
+			streams:  23, words: 51285
+		worklib.uvm_pkg:sv <0x031a1951>
+			streams:  25, words: 36281
+		worklib.uvm_pkg:sv <0x6c8c1138>
+			streams:  23, words: 56904
+		worklib.uvm_pkg:sv <0x05af1978>
+			streams:  25, words: 40813
+		worklib.uvm_pkg:sv <0x71b43fd3>
+			streams:  23, words: 50021
+		worklib.uvm_pkg:sv <0x119b6348>
+			streams:  23, words: 52999
+		worklib.uvm_pkg:sv <0x701275e1>
+			streams:  25, words: 33487
+		worklib.uvm_pkg:sv <0x62629936>
+			streams:  23, words: 49429
+		worklib.uvm_pkg:sv <0x685321c1>
+			streams:  25, words: 74455
+		worklib.uvm_pkg:sv <0x407b0ac0>
+			streams:  53, words: 71563
+		worklib.cdns_uvm_pkg:sv <0x64cbdbc2>
+			streams:  26, words: 33776
+		worklib.cdns_uvm_pkg:sv <0x6e9de6f3>
+			streams:   8, words:  3879
+		worklib.cdns_uvm_pkg:sv <0x237fbac2>
+			streams:  10, words:  8596
+		worklib.uvm_pkg:sv <0x2421e659>
+			streams:  20, words: 25528
+		worklib.uvm_pkg:sv <0x60779772>
+			streams:   7, words:  3064
+		worklib.uvm_pkg:sv <0x0e24aeee>
+			streams:  78, words: 109296
+		worklib.uvm_pkg:sv <0x3510397b>
+			streams:  23, words: 47766
+		worklib.uvm_pkg:sv <0x3aca94d4>
+			streams:  22, words: 29821
+		worklib.uvm_pkg:sv <0x3f42a0e4>
+			streams:  23, words: 41538
+		worklib.uvm_pkg:sv <0x5253640f>
+			streams: 101, words: 147776
+		worklib.uvm_pkg:sv <0x2003d756>
+			streams:  23, words: 38116
+		worklib.uvm_pkg:sv <0x0b85b197>
+			streams:  22, words: 26536
+		worklib.uvm_pkg:sv <0x04c15f15>
+			streams:   8, words:  4079
+		worklib.uvm_pkg:sv <0x5f4126fe>
+			streams:  26, words: 45730
+		worklib.uvm_pkg:sv <0x0fe87a09>
+			streams:   7, words:  3064
+		worklib.uvm_pkg:sv <0x516de683>
+			streams: 103, words: 156826
+		worklib.uvm_pkg:sv <0x2c0be926>
+			streams:  23, words: 38116
+		worklib.uvm_pkg:sv <0x0d1f7de8>
+			streams:  54, words: 53597
+		worklib.uvm_pkg:sv <0x37b0f9a0>
+			streams:   7, words:  3064
+		worklib.uvm_pkg:sv <0x54ced84f>
+			streams: 257, words: 302998
+		worklib.uvm_pkg:sv <0x75231467>
+			streams: 257, words: 302998
+		worklib.uvm_pkg:sv <0x41965ec0>
+			streams:  22, words: 104891
+		worklib.uvm_pkg:sv <0x18827ba8>
+			streams:  22, words: 56033
+		worklib.tb_top:sv <0x74f3a1a1>
+			streams: 139, words: 162369
+		worklib.usb_phy_tb_pkg:sv <0x49714940>
+			streams:   0, words:     0
+		worklib.cdns_uvm_pkg:sv <0x05f89352>
+			streams: 128, words: 214638
+		worklib.cdns_uvmapi:svp <0x3163b063>
+			streams:  27, words: 30379
+		worklib.cdns_assert2uvm_pkg:sv <0x4ea7f298>
+			streams:   3, words:  2148
+		worklib.uvm_pkg:sv <0x6a921d4c>
+			streams: 3935, words: 6256633
+		worklib.usb_phy_if:sv <0x595088c3>
+			streams:  55, words: 28768
+		worklib.usb_bus_if:sv <0x635cc7a4>
+			streams:  23, words: 12321
+	Building instance specific data structures.
+	Loading native compiled code:     .................... Done
+	Design hierarchy summary:
+		                       Instances  Unique
+		Modules:                      27      27
+		Interfaces:                    2       2
+		Verilog packages:              6       6
+		Registers:                 15660   10675
+		Scalar wires:                345       -
+		Vectored wires:               78       -
+		Named events:                  4      12
+		Always blocks:                34      34
+		Initial blocks:              319     163
+		Clocking blocks:               5       5
+		Clocking items:               51      56
+		Parallel blocks:              27      28
+		Cont. assignments:            96     127
+		Pseudo assignments:          164     164
+		Assertions:                    2       2
+		Compilation units:             1       1
+		SV Class declarations:       206     319
+		SV Class specializations:    433     433
+	Writing initial simulation snapshot: worklib.tb_top:sv
+Loading snapshot worklib.tb_top:sv .................... Done
+SVSEED default: 1
+xmsim: *W,RNDXCELON: A newer version of the SystemVerilog constraint solver is being used which has better support for array-solving, new solve-order mechanism, and seed stability enhancements..
+xmsim: *W,DSEM2009: This SystemVerilog design is simulated as per IEEE 1800-2009 SystemVerilog simulation semantics. Use -disable_sem2009 option for turning off SV 2009 simulation semantics.
+xcelium> source /tools/cadence_march2021/XCELIUM2009/tools/xcelium/files/xmsimrc
+xcelium> source /tools/cadence_march2021/XCELIUM2009/tools/methodology/UVM/CDNS-1.1d/additions/sv/files/tcl/uvm_sim.tcl
+xcelium> run
+----------------------------------------------------------------
+CDNS-UVM-1.1d (20.09-s009)
+(C) 2007-2013 Mentor Graphics Corporation
+(C) 2007-2013 Cadence Design Systems, Inc.
+(C) 2006-2013 Synopsys, Inc.
+(C) 2011-2013 Cypress Semiconductor Corp.
+----------------------------------------------------------------
+
+  ***********       IMPORTANT RELEASE NOTES         ************
+
+  You are using a version of the UVM library that has been compiled
+  with `UVM_NO_DEPRECATED undefined.
+  See http://www.eda.org/svdb/view.php?id=3313 for more details.
+
+  You are using a version of the UVM library that has been compiled
+  with `UVM_OBJECT_MUST_HAVE_CONSTRUCTOR undefined.
+  See http://www.eda.org/svdb/view.php?id=3770 for more details.
+
+      (Specify +UVM_NO_RELNOTES to turn off this notice)
+
+UVM_INFO @ 0: reporter [RNTST] Running test usb_phy_base_test...
+UVM_INFO ../tests/usb_phy_base_test.sv(120) @ 0: uvm_test_top [BASE_TEST] USB Low Speed selected
+UVM_INFO ../tests/usb_phy_base_test.sv(215) @ 0: uvm_test_top [BASE_TEST] USB PHY Base Test Configuration: SPEED=0 PHY_ACTIVE=1 USB_ACTIVE=1
+UVM_INFO ../env/usb_phy_env.sv(176) @ 0: uvm_test_top.env [USB_ENV] Environment configured: SPEED=0 PHY_ACTIVE=1 USB_ACTIVE=1
+UVM_INFO ../agent/phy_agent/phy_agent.sv(114) @ 0: uvm_test_top.env.phy_ag [PHY_AGENT] PHY agent build completed. Mode = UVM_ACTIVE
+UVM_INFO ../agent/phy_agent/phy_driver.sv(86) @ 0: uvm_test_top.env.phy_ag.driver [PHY_DRV] PHY driver configured for speed 0
+UVM_INFO ../agent/phy_agent/phy_monitor.sv(75) @ 0: uvm_test_top.env.phy_ag.monitor [PHY_MON] PHY monitor build completed
+UVM_INFO ../agent/usb_bfm_agent/usb_bfm_agent.sv(65) @ 0: uvm_test_top.env.usb_ag [USB_AGENT] USB BFM agent build completed
+UVM_INFO ../agent/usb_bfm_agent/usb_bfm_driver.sv(86) @ 0: uvm_test_top.env.usb_ag.driver [USB_DRV] USB BFM driver configured. Speed=0
+UVM_FATAL ../agent/usb_bfm_agent/usb_bfm_monitor.sv(73) @ 0: uvm_test_top.env.usb_ag.monitor [USB_MON_CFG] USB BFM configuration not found
+
+--- UVM Report catcher Summary ---
+
+
+Number of demoted UVM_FATAL reports  :    0
+Number of demoted UVM_ERROR reports  :    0
+Number of demoted UVM_WARNING reports:    0
+Number of caught UVM_FATAL reports   :    0
+Number of caught UVM_ERROR reports   :    0
+Number of caught UVM_WARNING reports :    0
+
+--- UVM Report Summary ---
+
+** Report counts by severity
+UVM_INFO :    9
+UVM_WARNING :    0
+UVM_ERROR :    0
+UVM_FATAL :    1
+** Report counts by id
+[BASE_TEST]     2
+[PHY_AGENT]     1
+[PHY_DRV]     1
+[PHY_MON]     1
+[RNTST]     1
+[USB_AGENT]     1
+[USB_DRV]     1
+[USB_ENV]     1
+[USB_MON_CFG]     1
+Simulation complete via $finish(1) at time 0 FS + 6
+/tools/cadence_march2021/XCELIUM2009/tools/methodology/UVM/CDNS-1.1d/sv/src/base/uvm_report_object.svh:292     $finish;
+xcelium> exit
+TOOL:	xrun(64)	20.09-s009: Exiting on Nov 18, 2026 at 17:27:56 IST  (total: 00:00:08)

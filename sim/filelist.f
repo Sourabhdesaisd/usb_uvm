@@ -88,6 +88,3 @@
 //TESTBENCH TOP
 
 ../tb/tb_top.sv
-
-
-

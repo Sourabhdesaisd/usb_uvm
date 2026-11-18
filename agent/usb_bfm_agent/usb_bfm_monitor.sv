@@ -1,35 +1,37 @@
 
 
+
 class usb_bfm_monitor extends uvm_monitor;
 
   `uvm_component_utils(usb_bfm_monitor)
 
-   
+
+           
   // 1. VIRTUAL INTERFACE AND CONFIGURATION
-   
+           
 
   virtual usb_bus_if vif;
 
   usb_bfm_config cfg;
 
 
-   
+           
   // 2. ANALYSIS PORT
-   
+           
 
   uvm_analysis_port #(usb_bfm_transaction) analysis_port;
 
 
-   
+           
   // 3. TRANSACTION HANDLE
-   
+           
 
   usb_bfm_transaction tr;
 
 
-   
+           
   // 4. CONSTRUCTOR
-   
+           
 
   function new(string name = "usb_bfm_monitor",
                uvm_component parent = null);
@@ -41,9 +43,9 @@ class usb_bfm_monitor extends uvm_monitor;
   endfunction
 
 
-   
+           
   // 5. BUILD PHASE
-   
+           
 
   function void build_phase(uvm_phase phase);
 
@@ -87,57 +89,41 @@ class usb_bfm_monitor extends uvm_monitor;
     end
 
     `uvm_info("USB_MON",
-              $sformatf(
-                "USB BFM monitor configured. Speed=%0d",
-                cfg.speed),
+              $sformatf("USB BFM monitor configured. Speed=%0d",
+                        cfg.speed),
               UVM_LOW)
 
   endfunction
 
 
-   
+           
   // 6. DECODE USB LINE STATE
-   
+           
 
   function usb_line_state_e decode_line_state(
     input logic dp,
     input logic dm
   );
 
-      
     // SE0: DP=0, DM=0
-      
-
     if ((dp === 1'b0) && (dm === 1'b0)) begin
 
       return USB_LINE_SE0;
 
     end
 
-      
     // SE1: DP=1, DM=1
-      
-
     else if ((dp === 1'b1) && (dm === 1'b1)) begin
 
       return USB_LINE_SE1;
 
     end
 
-      
-    // J and K states
-      
-
     else begin
 
       case (cfg.speed)
 
-        // ------------------------------------------
-        // LOW SPEED
-        // J = DP=0, DM=1
-        // K = DP=1, DM=0
-        // ------------------------------------------
-
+        // Low Speed
         USB_SPEED_LS: begin
 
           if ((dp === 1'b0) && (dm === 1'b1))
@@ -148,13 +134,7 @@ class usb_bfm_monitor extends uvm_monitor;
 
         end
 
-
-        // ------------------------------------------
-        // FULL SPEED AND HIGH SPEED DIGITAL MAPPING
-        // J = DP=1, DM=0
-        // K = DP=0, DM=1
-        // ------------------------------------------
-
+        // Full Speed and High Speed digital mapping
         USB_SPEED_FS,
         USB_SPEED_HS: begin
 
@@ -165,7 +145,6 @@ class usb_bfm_monitor extends uvm_monitor;
             return USB_LINE_K;
 
         end
-
 
         default: begin
 
@@ -178,19 +157,18 @@ class usb_bfm_monitor extends uvm_monitor;
 
     end
 
-    // Unknown or invalid combination
     return USB_LINE_SE1;
 
   endfunction
 
 
-   
+           
   // 7. CHECK EXTERNAL PARTNER SIGNALS
-   
+           
 
   function bit check_device_signals();
 
-    // device_oe must always be known
+    // Device output enable must be known
     if ((vif.cb_mon.device_oe !== 1'b0) &&
         (vif.cb_mon.device_oe !== 1'b1)) begin
 
@@ -198,8 +176,7 @@ class usb_bfm_monitor extends uvm_monitor;
 
     end
 
-    // DP and DM are relevant only when the
-    // external partner is driving the bus
+    // Check DP and DM only when external partner drives
     if (vif.cb_mon.device_oe === 1'b1) begin
 
       if ((vif.cb_mon.device_dp !== 1'b0 &&
@@ -219,13 +196,13 @@ class usb_bfm_monitor extends uvm_monitor;
   endfunction
 
 
-   
+           
   // 8. CHECK DUT TX SIGNALS
-   
+           
 
   function bit check_phy_tx_signals();
 
-    // PHY TX valid must always be known
+    // PHY TX valid must be known
     if ((vif.cb_mon.phy_tx_valid !== 1'b0) &&
         (vif.cb_mon.phy_tx_valid !== 1'b1)) begin
 
@@ -233,10 +210,14 @@ class usb_bfm_monitor extends uvm_monitor;
 
     end
 
-    // Check line state only during valid TX activity
+    // Check DP and DM only during valid TX activity
     if (vif.cb_mon.phy_tx_valid === 1'b1) begin
 
-      if (^vif.cb_mon.phy_line_state === 1'bx) begin
+      if ((vif.cb_mon.phy_dp !== 1'b0 &&
+           vif.cb_mon.phy_dp !== 1'b1) ||
+
+          (vif.cb_mon.phy_dm !== 1'b0 &&
+           vif.cb_mon.phy_dm !== 1'b1)) begin
 
         return 0;
 
@@ -249,9 +230,9 @@ class usb_bfm_monitor extends uvm_monitor;
   endfunction
 
 
-   
+           
   // 9. MAIN MONITOR PROCESS
-   
+           
 
   task run_phase(uvm_phase phase);
 
@@ -259,9 +240,9 @@ class usb_bfm_monitor extends uvm_monitor;
 
       @(vif.cb_mon);
 
-        
+                
       // Ignore observations during reset
-        
+                
 
       if (vif.cb_mon.rst_n !== 1'b1) begin
 
@@ -270,9 +251,9 @@ class usb_bfm_monitor extends uvm_monitor;
       end
 
 
-        
+                
       // Check external partner signals
-        
+                
 
       if (!check_device_signals()) begin
 
@@ -284,9 +265,9 @@ class usb_bfm_monitor extends uvm_monitor;
       end
 
 
-        
+                
       // Check DUT TX signals
-        
+                
 
       if (!check_phy_tx_signals()) begin
 
@@ -298,34 +279,37 @@ class usb_bfm_monitor extends uvm_monitor;
       end
 
 
-        
+                
       // Create observation transaction
-        
+                
 
       tr = usb_bfm_transaction::type_id::create(
              "tr", this);
 
 
-        
+                
       // Capture external partner signals
-        
+                
 
       tr.device_oe = vif.cb_mon.device_oe;
       tr.device_dp = vif.cb_mon.device_dp;
       tr.device_dm = vif.cb_mon.device_dm;
 
 
-        
+                
       // Capture DUT physical TX signals
-        
+                
 
-      tr.phy_line_state = vif.cb_mon.phy_line_state;
-      tr.phy_tx_valid   = vif.cb_mon.phy_tx_valid;
+      tr.phy_tx_valid = vif.cb_mon.phy_tx_valid;
+
+      tr.phy_line_state = decode_line_state(
+                            vif.cb_mon.phy_dp,
+                            vif.cb_mon.phy_dm);
 
 
-        
+                
       // Set event indicators
-        
+                
 
       tr.is_device_drive =
           (vif.cb_mon.device_oe === 1'b1);
@@ -334,9 +318,9 @@ class usb_bfm_monitor extends uvm_monitor;
           (vif.cb_mon.phy_tx_valid === 1'b1);
 
 
-        
+                
       // Decode external partner line state
-        
+                
 
       if (tr.is_device_drive) begin
 
@@ -345,11 +329,16 @@ class usb_bfm_monitor extends uvm_monitor;
                           vif.cb_mon.device_dm);
 
       end
+      else begin
+
+        tr.line_state = USB_LINE_SE0;
+
+      end
 
 
-        
+                
       // Publish meaningful bus activity
-        
+                
 
       if (tr.is_device_drive || tr.is_phy_tx) begin
 
@@ -357,22 +346,24 @@ class usb_bfm_monitor extends uvm_monitor;
 
         `uvm_info("USB_MON",
                   $sformatf(
-                    "SPEED=%0d DEVICE_OE=%0b DEVICE_DP=%0b DEVICE_DM=%0b DEVICE_STATE=%0d PHY_TX=%0b PHY_STATE=%0d",
+                    "SPEED=%0d DEVICE_OE=%0b DEVICE_DP=%0b DEVICE_DM=%0b DEVICE_STATE=%0d PHY_TX=%0b PHY_DP=%0b PHY_DM=%0b PHY_STATE=%0d",
                     cfg.speed,
                     tr.device_oe,
                     tr.device_dp,
                     tr.device_dm,
                     tr.line_state,
                     tr.phy_tx_valid,
+                    vif.cb_mon.phy_dp,
+                    vif.cb_mon.phy_dm,
                     tr.phy_line_state),
                   UVM_MEDIUM)
 
       end
 
 
-        
+                
       // Monitor USB bit timing
-        
+                
 
       if (vif.cb_mon.bit_tick === 1'b1) begin
 
@@ -381,7 +372,6 @@ class usb_bfm_monitor extends uvm_monitor;
                   UVM_HIGH)
 
       end
-
       else if (vif.cb_mon.bit_tick !== 1'b0) begin
 
         `uvm_error("USB_MON_TICK",
@@ -394,9 +384,9 @@ class usb_bfm_monitor extends uvm_monitor;
   endtask
 
 
-   
+           
   // 10. REPORT PHASE
-   
+           
 
   function void report_phase(uvm_phase phase);
 
