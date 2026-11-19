@@ -8,8 +8,6 @@ tx_data_line_state_converter.sv
 eop.sv
 tx_phy_mux.sv
 phy_tx_top.sv
-
-
 line_state_detector.sv
 bus_reset.sv
 rx_ctrl.sv
@@ -18,8 +16,6 @@ nrzi_decoder.sv
 bit_unstuffer.sv
 sipo.sv
 phy_rx_top.sv
-
-
 edge_err_detection.sv
 FSM.sv
 loop_filter.sv

@@ -47,6 +47,22 @@ database require wave -search {
 }
 
 #
+# Markers
+#
+set time 855ns
+if {[catch {marker new -name  {Marker 1} -time $time}] != ""} {
+    marker set -using {Marker 1} -time $time
+}
+set time 19286ns
+if {[catch {marker new -name  {Marker 3} -time $time}] != ""} {
+    marker set -using {Marker 3} -time $time
+}
+set time 0.080105ms
+if {[catch {marker new -name  {Marker 2} -time $time}] != ""} {
+    marker set -using {Marker 2} -time $time
+}
+
+#
 # Mnemonic Maps
 #
 mmap new  -reuse -name {Boolean as Logic} -radix %b -contents {{%c=FALSE -edgepriority 1 -shape low}
@@ -68,11 +84,17 @@ waveform sidebar select designbrowser
 waveform set \
     -primarycursor TimeA \
     -signalnames name \
-    -signalwidth 175 \
+    -signalwidth 134 \
     -units ns \
-    -valuewidth 75
-waveform baseline set -time 0
+    -valuewidth 80
+waveform baseline set -time 14,820ns
 
+set id [waveform add -signals  {
+	wave::tb_top.dut.clk
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_fifo.rst_n
+	} ]
 set id [waveform add -signals  {
 	{wave::tb_top.dut.sie_data[7:0]}
 	} ]
@@ -85,8 +107,79 @@ set id [waveform add -signals  {
 set id [waveform add -signals  {
 	wave::tb_top.dut.sie_valid
 	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.sof_packet
+	} ]
+set id [waveform add -signals  {
+	{wave::tb_top.dut.usb_speed[1:0]}
+	} ]
+set id [waveform add -cdivider divider]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.dp
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.dm
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.tx_valid
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.sie_valid
+	} ]
+set id [waveform add -cdivider divider]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_nrzi.bit_in
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_nrzi.bit_in_valid
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_nrzi.clk
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_line_conv.line_valid
+	} ]
+set id [waveform add -signals  {
+	{wave::tb_top.dut.dut_tx.u_line_conv.line_state[1:0]}
+	} ]
+set id [waveform add -signals  {
+	{wave::tb_top.dut.dut_tx.u_mux.data_line_state[1:0]}
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_mux.data_valid
+	} ]
+set id [waveform add -signals  {
+	{wave::tb_top.dut.dut_tx.u_mux.eop_line_state[1:0]}
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_mux.eop_valid
+	} ]
+set id [waveform add -signals  {
+	{wave::tb_top.dut.dut_tx.u_mux.tx_line_state[1:0]}
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_mux.tx_valid
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_nrzi.bit_in_sop
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_nrzi.bit_tick
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_nrzi.bit_in_last
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_nrzi.nrzi_out
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_nrzi.nrzi_out_last
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_nrzi.nrzi_out_valid
+	} ]
 
-waveform xview limits 0 2000ns
+waveform xview limits 0 55296ns
 
 #
 # Waveform Window Links

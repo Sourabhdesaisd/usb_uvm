@@ -139,7 +139,7 @@ xrun -64bit -uvm -sv -f filelist.f \
      -top tb_top \
      +UVM_TESTNAME=usb_phy_base_test \
      +USB_SPEED=0 \
-     -l ls.log
+     -l ls.log +DRAIN_TIME=100us
 
 # Full Speed
 xrun -64bit -uvm -sv -f filelist.f \

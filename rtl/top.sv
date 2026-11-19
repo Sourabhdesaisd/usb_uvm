@@ -46,8 +46,7 @@ module usb2_cdr_top #(
     output  logic     dp_out,
     output  logic     dm_out,
 
-    output logic      recovered_bit_clk,   // 1-cycle bit-centre strobe
-    output logic      rx_bit_valid
+    output logic      recovered_bit_clk   // 1-cycle bit-centre strobe
 
     );
     //----------------------------------------------------------------------
@@ -73,6 +72,7 @@ module usb2_cdr_top #(
  	wire       recovered_data;      // NRZI line level, changes 1 clk after the strobe
  	wire       locked;
  	wire [TED_W-1:0] quality;        // last timing error (signed), diagnostic
+    logic      rx_bit_valid;
 
     wire en_eff = enable & (speed != 2'b10);
     //----------------------------------------------------------------------

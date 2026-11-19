@@ -1,28 +1,19 @@
 
-module tb_top;
-
-              
-  // 1. PACKAGE IMPORTS
-              
-
+module tb_top;        
+             
   import uvm_pkg::*;
   import usb_phy_tb_pkg::*;
-
-
               
-  // 2. CLOCK
-              
-
   logic clk;
 
   initial begin
-    clk = 1'b0;
-    forever #5 clk = ~clk;
+  clk = 0;
+  forever #1.041667 clk=~clk;
+
   end
 
-
               
-  // 3. INTERFACE INSTANCES
+  // INTERFACE INSTANCES
               
 
   usb_phy_if phy_if(clk);
@@ -31,7 +22,7 @@ module tb_top;
 
 
               
-  // 4. RESET AND INITIAL CONFIGURATION
+  //  RESET AND INITIAL CONFIGURATION
               
 
   initial begin
@@ -57,7 +48,7 @@ module tb_top;
 
 
               
-  // 5. COMMON RESET CONNECTION
+  // COMMON RESET CONNECTION
               
 
   // Both interfaces use the same reset
@@ -65,7 +56,7 @@ module tb_top;
 
 
               
-  // 6. DUT TX -> USB BUS CONNECTION
+  //  DUT TX -> USB BUS CONNECTION
               
 
   assign usb_if.phy_dp       = phy_if.dp;
@@ -74,7 +65,7 @@ module tb_top;
 
 
               
-  // 7. USB BUS -> DUT CDR RX CONNECTION
+  // USB BUS -> DUT CDR RX CONNECTION
               
 
   assign phy_if.analog_d_plus  = usb_if.bus_dp;

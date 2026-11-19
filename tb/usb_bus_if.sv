@@ -53,8 +53,7 @@ interface usb_bus_if(input logic clk);
   // 5. USB BIT TIMING
           
 
-  logic bit_tick;
-
+ logic bit_tick = 1'b0;
 
           
   // 6. EXTERNAL USB PARTNER DRIVER CLOCKING BLOCK

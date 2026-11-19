@@ -31,7 +31,6 @@ module phy_rx_top
 #(
     parameter int WIDTH             = 8,
     parameter int CLK_HZ            = 480_000_000,
-    parameter int MAX_PKT_SYMBOLS   = 12288,
     parameter int BAD_LIMIT         = 8,
     parameter int HS_SYNC_MIN_ALT   = 11,    // HS: 12-symbol minimum SYNC (hubs may truncate 4 bits each)
     parameter int HS_SYNC_MAX_ALT   = 31,    // HS: max alternating symbols (full 32-symbol SYNC)
@@ -68,7 +67,6 @@ module phy_rx_top
     output logic             rx_stuff_err,
     output logic             rx_align_err,
     output logic             rx_line_err,
-    output logic             rx_babble_err,
     output logic             rx_sync_err,
     output logic             rx_bus_reset     // LS/FS: SE0 held > 2.5 us (always 0 in HS)
 );
@@ -132,7 +130,6 @@ module phy_rx_top
     );
 
     usb2_rx_ctrl #(.WIDTH			(WIDTH), 
-				   .MAX_PKT_SYMBOLS	(MAX_PKT_SYMBOLS), 
 				   .BAD_LIMIT		(BAD_LIMIT),
         		   .EOP_SE0_MIN		(EOP_SE0_MIN), 
 				   .EOP_SE0_MAX		(EOP_SE0_MAX), 
@@ -171,7 +168,6 @@ module phy_rx_top
 				   .rx_stuff_err	(rx_stuff_err), 
 				   .rx_align_err	(rx_align_err),
         		   .rx_line_err		(rx_line_err), 
-				   .rx_babble_err	(rx_babble_err), 
 				   .rx_sync_err		(rx_sync_err)
     );
 

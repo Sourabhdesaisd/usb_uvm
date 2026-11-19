@@ -2,7 +2,6 @@ module phy_top #(
 	parameter int WIDTH      = 8,
     parameter int FIFO_DEPTH = 16,
     parameter int CLK_HZ            = 480_000_000,
-    parameter int MAX_PKT_SYMBOLS   = 12288,
     parameter int BAD_LIMIT         = 8,
     parameter int HS_SYNC_MIN_ALT   = 11,    // HS: 12-symbol minimum SYNC (hubs may truncate 4 bits each)
     parameter int HS_SYNC_MAX_ALT   = 31,    // HS: max alternating symbols (full 32-symbol SYNC)
@@ -52,17 +51,14 @@ module phy_top #(
     output logic             rx_stuff_err,
     output logic             rx_align_err,
     output logic             rx_line_err,
-    output logic             rx_babble_err,
     output logic             rx_sync_err,
     output logic             rx_bus_reset     // LS/FS: SE0 held > 2.5 us (always 0 in HS)
 );
 	// from CDR / sampler block output
     logic             d_plus;
     logic             d_minus;
-    logic             sample_valid;
 	logic recovered_bit_clk;
 	speed_t speed;
-
 	always_comb begin
 		case(usb_speed)
 			LS:speed = LS;
@@ -71,6 +67,7 @@ module phy_top #(
 			default: speed=FS;
 		endcase
 	end
+
 	// phy Tx path
 	phy_tx_top #(
 				.WIDTH      (WIDTH),
@@ -94,7 +91,6 @@ module phy_top #(
 	phy_rx_top #(
     			.WIDTH				(WIDTH),             
     			.CLK_HZ 			(CLK_HZ),           
-    			.MAX_PKT_SYMBOLS	(MAX_PKT_SYMBOLS),   
     			.BAD_LIMIT  		(BAD_LIMIT),       
     			.HS_SYNC_MIN_ALT 	(HS_SYNC_MIN_ALT),     
     			.HS_SYNC_MAX_ALT 	(HS_SYNC_MAX_ALT),     
@@ -112,7 +108,7 @@ module phy_top #(
     			.usb_speed		(speed),
     			.d_plus			(d_plus),
     			.d_minus		(d_minus),
-    			.sample_valid	(sample_valid),
+    			.sample_valid	(recovered_bit_clk),
     			.DataOut		(DataOut),
     			.RxValid		(RxValid),
     			.RxActive		(RxActive),
@@ -123,7 +119,6 @@ module phy_top #(
     			.rx_stuff_err	(rx_stuff_err),
     			.rx_align_err	(rx_align_err),
     			.rx_line_err	(rx_line_err),
-    			.rx_babble_err	(rx_babble_err),
     			.rx_sync_err	(rx_sync_err),
     			.rx_bus_reset	(rx_bus_reset)     
 	);
@@ -138,8 +133,7 @@ module phy_top #(
     			.dm					(analog_d_minus),
     			.dp_out				(d_plus),
     			.dm_out				(d_minus),
-    			.recovered_bit_clk	(recovered_bit_clk),   
-    			.rx_bit_valid		(sample_valid)
+    			.recovered_bit_clk	(recovered_bit_clk)
     );
 	
 endmodule

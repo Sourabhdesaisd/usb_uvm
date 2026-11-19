@@ -4,41 +4,20 @@ class usb_phy_base_test extends uvm_test;
 
   `uvm_component_utils(usb_phy_base_test)
 
-
-    
-  // 1. ENVIRONMENT
-    
-
+     
   usb_phy_env env;
-
-
-    
-  // 2. ENVIRONMENT CONFIGURATION
-    
-
+     
   usb_phy_env_config env_cfg;
 
-
-    
-  // 3. VIRTUAL INTERFACES
-    
-
+     
   virtual usb_phy_if phy_vif;
-
   virtual usb_bus_if usb_vif;
 
-
-    
-  // 4. USB SPEED ARGUMENT
-    
-
+     
   int unsigned speed_arg;
 
 
-    
-  // 5. CONSTRUCTOR
-    
-
+     
   function new(string name = "usb_phy_base_test",
                uvm_component parent = null);
 
@@ -46,19 +25,12 @@ class usb_phy_base_test extends uvm_test;
 
   endfunction
 
-
-    
-  // 6. BUILD PHASE
-    
-
+     
   function void build_phase(uvm_phase phase);
 
     super.build_phase(phase);
 
-
-     
     // Get PHY virtual interface
-     
 
     if (!uvm_config_db#(virtual usb_phy_if)::get(
           this, "", "phy_vif", phy_vif)) begin
@@ -68,10 +40,7 @@ class usb_phy_base_test extends uvm_test;
 
     end
 
-
-     
     // Get USB bus virtual interface
-     
 
     if (!uvm_config_db#(virtual usb_bus_if)::get(
           this, "", "usb_vif", usb_vif)) begin
@@ -81,14 +50,10 @@ class usb_phy_base_test extends uvm_test;
 
     end
 
-
-     
     // Read USB speed from command line
-    //
     // 0 = Low Speed
     // 1 = Full Speed
     // 2 = High Speed
-     
 
     if (!$value$plusargs("USB_SPEED=%d", speed_arg)) begin
 
@@ -96,18 +61,11 @@ class usb_phy_base_test extends uvm_test;
 
     end
 
-
-     
     // Create environment configuration
-     
 
-    env_cfg = usb_phy_env_config::type_id::create(
-                "env_cfg");
+    env_cfg = usb_phy_env_config::type_id::create("env_cfg");
 
-
-     
     // Configure USB speed
-     
 
     case (speed_arg)
 
@@ -121,7 +79,6 @@ class usb_phy_base_test extends uvm_test;
 
       end
 
-
       1: begin
 
         env_cfg.speed = USB_SPEED_FS;
@@ -131,7 +88,6 @@ class usb_phy_base_test extends uvm_test;
                   UVM_LOW)
 
       end
-
 
       2: begin
 
@@ -143,7 +99,6 @@ class usb_phy_base_test extends uvm_test;
 
       end
 
-
       default: begin
 
         `uvm_fatal("BASE_TEST",
@@ -153,35 +108,21 @@ class usb_phy_base_test extends uvm_test;
 
     endcase
 
-
-     
     // Assign virtual interfaces
-     
 
     env_cfg.phy_vif = phy_vif;
-
     env_cfg.usb_vif = usb_vif;
 
-
-     
     // Agent activity configuration
-     
 
     env_cfg.phy_is_active = UVM_ACTIVE;
-
     env_cfg.usb_is_active = UVM_ACTIVE;
 
-
-     
     // Validate environment configuration
-     
 
     env_cfg.validate_config();
 
-
-     
     // Pass configuration to environment
-     
 
     uvm_config_db#(usb_phy_env_config)::set(
       this,
@@ -190,20 +131,11 @@ class usb_phy_base_test extends uvm_test;
       env_cfg
     );
 
-
-     
     // Create USB PHY environment
-     
 
-    env = usb_phy_env::type_id::create(
-            "env",
-            this
-          );
+    env = usb_phy_env::type_id::create("env", this);
 
-
-     
     // Configuration summary
-     
 
     `uvm_info("BASE_TEST",
               $sformatf(
@@ -216,39 +148,56 @@ class usb_phy_base_test extends uvm_test;
 
   endfunction
 
+     
+  task run_phase(uvm_phase phase);
 
-task run_phase(uvm_phase phase);
+    phy_simple_tx_seq tx_seq;
 
-  phy_simple_tx_seq tx_seq;
+    phase.raise_objection(this);
 
-  phase.raise_objection(this);
+    
+    
+    `uvm_info("BASE_TEST",
+              "Starting simple PHY TX sequence",
+              UVM_LOW)
 
-  `uvm_info("BASE_TEST",
-            "Starting simple PHY TX sequence",
-            UVM_LOW)
+    // Check PHY agent and sequencer
 
-  tx_seq = phy_simple_tx_seq::type_id::create("tx_seq");
+    if (env.phy_ag == null ||
+        env.phy_ag.sequencer == null) begin
 
-  if (env.phy_ag == null ||
-      env.phy_ag.sequencer == null) begin
+      `uvm_fatal("BASE_TEST",
+                 "PHY agent or sequencer is NULL")
 
-    `uvm_fatal("BASE_TEST",
-               "PHY agent or sequencer is NULL")
+    end
 
-  end
+    // Create and start TX sequence
 
-  tx_seq.start(env.phy_ag.sequencer);
+    tx_seq = phy_simple_tx_seq::type_id::create("tx_seq");
 
-  `uvm_info("BASE_TEST",
-            "Simple PHY TX sequence completed",
-            UVM_LOW)
+    tx_seq.start(env.phy_ag.sequencer);
 
-  // Allow a few clocks for final DUT observations
-  repeat (10) @(posedge phy_vif.clk);
+    `uvm_info("BASE_TEST",
+              "Simple PHY TX sequence completed",
+              UVM_LOW)
 
-  phase.drop_objection(this);
+    // Wait for final DUT TX/RX operations and observations
 
-endtask
-  
+    `uvm_info("BASE_TEST",
+              "Waiting for DUT to complete pending operations",
+              UVM_LOW)
+
+    #10ms;
+
+    `uvm_info("BASE_TEST",
+              "Simulation drain time completed",
+              UVM_LOW)
+
+    // End test
+
+    phase.drop_objection(this);
+
+  endtask
+
 endclass
 
