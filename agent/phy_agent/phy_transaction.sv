@@ -2,7 +2,7 @@
 class phy_transaction extends uvm_sequence_item;
 
         
-  // 1. SIE TO PHY - TX STIMULUS
+  // SIE TO PHY - TX STIMULUS
         
 
   rand bit        sie_valid;
@@ -13,7 +13,7 @@ class phy_transaction extends uvm_sequence_item;
 
 
         
-  // 2. MONITOR EVENT INDICATORS
+  // ONITOR EVENT INDICATORS
         
 
   bit is_sie_transfer;
@@ -21,7 +21,7 @@ class phy_transaction extends uvm_sequence_item;
 
 
         
-  // 3. COMMON DUT OBSERVATIONS
+  // COMMON DUT OBSERVATIONS
         
 
   logic       rst_n;
@@ -30,7 +30,7 @@ class phy_transaction extends uvm_sequence_item;
 
 
         
-  // 4. PHYSICAL TX OBSERVATIONS
+  //  PHYSICAL TX OBSERVATIONS
         
 
   logic dp;
@@ -39,7 +39,7 @@ class phy_transaction extends uvm_sequence_item;
 
 
         
-  // 5. PHY RX DATA OBSERVATIONS
+  // PHY RX DATA OBSERVATIONS
         
 
   logic [7:0] DataOut;
@@ -54,7 +54,7 @@ class phy_transaction extends uvm_sequence_item;
 
 
         
-  // 6. RX ERROR AND STATUS OBSERVATIONS
+  // RX ERROR AND STATUS OBSERVATIONS
         
 
   logic rx_stuff_err;
@@ -66,7 +66,7 @@ class phy_transaction extends uvm_sequence_item;
 
 
         
-  // 7. UVM FIELD REGISTRATION
+  //  UVM FIELD REGISTRATION
         
 
   `uvm_object_utils_begin(phy_transaction)

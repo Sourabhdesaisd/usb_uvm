@@ -49,11 +49,11 @@ database require wave -search {
 #
 # Markers
 #
-set time 855ns
+set time 0
 if {[catch {marker new -name  {Marker 1} -time $time}] != ""} {
     marker set -using {Marker 1} -time $time
 }
-set time 19286ns
+set time 0
 if {[catch {marker new -name  {Marker 3} -time $time}] != ""} {
     marker set -using {Marker 3} -time $time
 }
@@ -87,7 +87,7 @@ waveform set \
     -signalwidth 134 \
     -units ns \
     -valuewidth 80
-waveform baseline set -time 14,820ns
+waveform baseline set -time 7142ns
 
 set id [waveform add -signals  {
 	wave::tb_top.dut.clk
@@ -128,58 +128,92 @@ set id [waveform add -signals  {
 	} ]
 set id [waveform add -cdivider divider]
 set id [waveform add -signals  {
-	wave::tb_top.dut.dut_tx.u_nrzi.bit_in
+	wave::tb_top.dut.dut_tx.u_stuffer.clk
 	} ]
 set id [waveform add -signals  {
-	wave::tb_top.dut.dut_tx.u_nrzi.bit_in_valid
+	{wave::tb_top.dut.dut_tx.u_piso.fifo_data[7:0]}
+	} ]
+waveform format $id -radix %b
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_piso.serial_out
 	} ]
 set id [waveform add -signals  {
-	wave::tb_top.dut.dut_tx.u_nrzi.clk
+	wave::tb_top.dut.dut_tx.u_piso.clk
 	} ]
 set id [waveform add -signals  {
-	wave::tb_top.dut.dut_tx.u_line_conv.line_valid
+	wave::tb_top.dut.dut_tx.u_stuffer.bit_in
 	} ]
 set id [waveform add -signals  {
-	{wave::tb_top.dut.dut_tx.u_line_conv.line_state[1:0]}
+	wave::tb_top.dut.dut_tx.u_stuffer.bit_out
 	} ]
 set id [waveform add -signals  {
-	{wave::tb_top.dut.dut_tx.u_mux.data_line_state[1:0]}
+	wave::tb_top.dut.dut_tx.u_stuffer.bit_in_valid
 	} ]
 set id [waveform add -signals  {
-	wave::tb_top.dut.dut_tx.u_mux.data_valid
+	wave::tb_top.dut.dut_tx.u_stuffer.bit_out_last
 	} ]
 set id [waveform add -signals  {
-	{wave::tb_top.dut.dut_tx.u_mux.eop_line_state[1:0]}
+	wave::tb_top.dut.dut_tx.u_stuffer.bit_out_valid
+	} ]
+set id [waveform add -cdivider divider]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_stuffer.bit_out
 	} ]
 set id [waveform add -signals  {
-	wave::tb_top.dut.dut_tx.u_mux.eop_valid
-	} ]
-set id [waveform add -signals  {
-	{wave::tb_top.dut.dut_tx.u_mux.tx_line_state[1:0]}
-	} ]
-set id [waveform add -signals  {
-	wave::tb_top.dut.dut_tx.u_mux.tx_valid
-	} ]
-set id [waveform add -signals  {
-	wave::tb_top.dut.dut_tx.u_nrzi.bit_in_sop
-	} ]
-set id [waveform add -signals  {
-	wave::tb_top.dut.dut_tx.u_nrzi.bit_tick
-	} ]
-set id [waveform add -signals  {
-	wave::tb_top.dut.dut_tx.u_nrzi.bit_in_last
+	wave::tb_top.dut.dut_tx.u_stuffer.bit_out_valid
 	} ]
 set id [waveform add -signals  {
 	wave::tb_top.dut.dut_tx.u_nrzi.nrzi_out
 	} ]
 set id [waveform add -signals  {
-	wave::tb_top.dut.dut_tx.u_nrzi.nrzi_out_last
-	} ]
-set id [waveform add -signals  {
 	wave::tb_top.dut.dut_tx.u_nrzi.nrzi_out_valid
 	} ]
+set id [waveform add -signals  {
+	{wave::tb_top.dut.dut_tx.u_line_conv.line_state[1:0]}
+	} ]
+waveform hierarchy expand $id
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_line_conv.line_valid
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_line_conv.nrzi_bit
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_line_conv.nrzi_valid
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_eop.busy
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_eop.eop_done
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_eop.eop_valid
+	} ]
+set id [waveform add -signals  {
+	{wave::tb_top.dut.dut_tx.u_eop.eop_line_state[1:0]}
+	} ]
+set id [waveform add -signals  {
+	{wave::tb_top.dut.dut_tx.u_mux.tx_line_state[1:0]}
+	} ]
+waveform hierarchy expand $id
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_mux.tx_valid
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.u_tick.bit_tick
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.dp
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.dm
+	} ]
+set id [waveform add -signals  {
+	wave::tb_top.dut.dut_tx.tx_valid
+	} ]
 
-waveform xview limits 0 55296ns
+waveform xview limits 0 1830ns
 
 #
 # Waveform Window Links

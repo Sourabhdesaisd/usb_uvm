@@ -3,7 +3,7 @@ class usb_bfm_transaction extends uvm_sequence_item;
 
 
        
-  // 1. STIMULUS FIELDS
+  //  STIMULUS FIELDS
        
 
   // USB line state driven by external partner
@@ -14,7 +14,7 @@ class usb_bfm_transaction extends uvm_sequence_item;
 
 
        
-  // 2. EXTERNAL PARTNER OBSERVATIONS
+  //  EXTERNAL PARTNER OBSERVATIONS
        
 
   logic device_dp;
@@ -23,7 +23,7 @@ class usb_bfm_transaction extends uvm_sequence_item;
 
 
        
-  // 3. DUT PHYSICAL TX OBSERVATIONS
+  //  DUT PHYSICAL TX OBSERVATIONS
        
 
   logic [1:0] phy_line_state;
@@ -31,7 +31,7 @@ class usb_bfm_transaction extends uvm_sequence_item;
 
 
        
-  // 4. MONITOR EVENT INDICATORS
+  //  MONITOR EVENT INDICATORS
        
 
   bit is_device_drive;
@@ -39,7 +39,7 @@ class usb_bfm_transaction extends uvm_sequence_item;
 
 
        
-  // 5. UVM FIELD REGISTRATION
+  //  UVM FIELD REGISTRATION
        
 
   `uvm_object_utils_begin(usb_bfm_transaction)
@@ -65,7 +65,7 @@ class usb_bfm_transaction extends uvm_sequence_item;
 
 
        
-  // 6. RANDOMIZATION CONSTRAINTS
+  //  RANDOMIZATION CONSTRAINTS
        
 
   // Keep bit_count within the supported driver range
@@ -89,7 +89,7 @@ class usb_bfm_transaction extends uvm_sequence_item;
 
 
        
-  // 7. CONSTRUCTOR
+  //  CONSTRUCTOR
        
 
   function new(string name = "usb_bfm_transaction");

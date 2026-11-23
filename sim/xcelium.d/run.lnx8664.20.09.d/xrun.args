@@ -12,6 +12,6 @@ filelist.f
 -top
 tb_top
 +UVM_TESTNAME=usb_phy_base_test
-+USB_SPEED=0
++USB_SPEED=1
 -l
 ls.log

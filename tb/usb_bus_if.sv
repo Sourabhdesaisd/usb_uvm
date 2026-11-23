@@ -3,33 +3,16 @@
 interface usb_bus_if(input logic clk);
 
           
-  // 1. RESET
-          
-
+  
   logic rst_n;
-
-
-          
-  // 2. EXTERNAL USB PARTNER DRIVE
-          
 
   logic device_dp;
   logic device_dm;
   logic device_oe;
 
-
-          
-  // 3. DUT PHYSICAL TX OBSERVATIONS
-          
-
   logic phy_dp;
   logic phy_dm;
   logic phy_tx_valid;
-
-
-          
-  // 4. RESOLVED USB BUS
-          
 
   tri bus_dp;
   tri bus_dm;
@@ -48,15 +31,10 @@ interface usb_bus_if(input logic clk);
   assign bus_dm = (phy_tx_valid === 1'b1) ?
                   phy_dm : 1'bz;
 
-
-          
-  // 5. USB BIT TIMING
           
 
  logic bit_tick = 1'b0;
 
-          
-  // 6. EXTERNAL USB PARTNER DRIVER CLOCKING BLOCK
           
 
   clocking cb_drv @(posedge clk);
@@ -72,9 +50,6 @@ interface usb_bus_if(input logic clk);
 
   endclocking
 
-
-          
-  // 7. USB BUS MONITOR CLOCKING BLOCK
           
 
   clocking cb_mon @(posedge clk);

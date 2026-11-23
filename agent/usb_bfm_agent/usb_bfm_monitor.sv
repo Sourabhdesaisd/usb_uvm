@@ -7,7 +7,7 @@ class usb_bfm_monitor extends uvm_monitor;
 
 
            
-  // 1. VIRTUAL INTERFACE AND CONFIGURATION
+  // VIRTUAL INTERFACE AND CONFIGURATION
            
 
   virtual usb_bus_if vif;
@@ -16,21 +16,21 @@ class usb_bfm_monitor extends uvm_monitor;
 
 
            
-  // 2. ANALYSIS PORT
+  //  ANALYSIS PORT
            
 
   uvm_analysis_port #(usb_bfm_transaction) analysis_port;
 
 
            
-  // 3. TRANSACTION HANDLE
+  //  TRANSACTION HANDLE
            
 
   usb_bfm_transaction tr;
 
 
            
-  // 4. CONSTRUCTOR
+  //  CONSTRUCTOR
            
 
   function new(string name = "usb_bfm_monitor",
@@ -44,7 +44,7 @@ class usb_bfm_monitor extends uvm_monitor;
 
 
            
-  // 5. BUILD PHASE
+  //  BUILD PHASE
            
 
   function void build_phase(uvm_phase phase);
@@ -97,7 +97,7 @@ class usb_bfm_monitor extends uvm_monitor;
 
 
            
-  // 6. DECODE USB LINE STATE
+  // DECODE USB LINE STATE
            
 
   function usb_line_state_e decode_line_state(
@@ -163,7 +163,7 @@ class usb_bfm_monitor extends uvm_monitor;
 
 
            
-  // 7. CHECK EXTERNAL PARTNER SIGNALS
+  //  CHECK EXTERNAL PARTNER SIGNALS
            
 
   function bit check_device_signals();
@@ -197,7 +197,7 @@ class usb_bfm_monitor extends uvm_monitor;
 
 
            
-  // 8. CHECK DUT TX SIGNALS
+  //  CHECK DUT TX SIGNALS
            
 
   function bit check_phy_tx_signals();
@@ -231,7 +231,7 @@ class usb_bfm_monitor extends uvm_monitor;
 
 
            
-  // 9. MAIN MONITOR PROCESS
+  //  MAIN MONITOR PROCESS
            
 
   task run_phase(uvm_phase phase);
@@ -385,7 +385,7 @@ class usb_bfm_monitor extends uvm_monitor;
 
 
            
-  // 10. REPORT PHASE
+  //  REPORT PHASE
            
 
   function void report_phase(uvm_phase phase);

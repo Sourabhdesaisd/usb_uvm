@@ -6,7 +6,7 @@
 1795071270 /home/sgeuser8/Desktop/usb_phy_sim/rtl/tx_data_line_state_converter.sv
 1795071270 /home/sgeuser8/Desktop/usb_phy_sim/rtl/bit_stuffer.sv
 1795071270 /home/sgeuser8/Desktop/usb_phy_sim/rtl/tx_holding_reg.sv
-1795071270 /home/sgeuser8/Desktop/usb_phy_sim/rtl/phy_top.sv
+1795071624 /home/sgeuser8/Desktop/usb_phy_sim/rtl/phy_top.sv
 1795071270 /home/sgeuser8/Desktop/usb_phy_sim/rtl/sipo.sv
 1795071270 /home/sgeuser8/Desktop/usb_phy_sim/rtl/top.sv
 1795071270 /home/sgeuser8/Desktop/usb_phy_sim/rtl/bit_enable.sv
@@ -28,4 +28,4 @@
 1795071270 /home/sgeuser8/Desktop/usb_phy_sim/rtl/eop.sv
 1795071270 /home/sgeuser8/Desktop/usb_phy_sim/rtl/nrzi_decoder.sv
 1795071270 /home/sgeuser8/Desktop/usb_phy_sim/rtl/line_state_detector.sv
-1795068987 /home/sgeuser8/Desktop/usb_phy_sim/tb/tb_top.sv
+1795071631 /home/sgeuser8/Desktop/usb_phy_sim/tb/tb_top.sv

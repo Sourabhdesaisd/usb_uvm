@@ -148,7 +148,7 @@ module tb_top;
     .rx_stuff_err    (phy_if.rx_stuff_err),
     .rx_align_err    (phy_if.rx_align_err),
     .rx_line_err     (phy_if.rx_line_err),
-    .rx_babble_err   (phy_if.rx_babble_err),
+   // .rx_babble_err   (phy_if.rx_babble_err),
     .rx_sync_err     (phy_if.rx_sync_err),
     .rx_bus_reset    (phy_if.rx_bus_reset)
 

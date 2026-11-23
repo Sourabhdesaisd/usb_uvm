@@ -2,7 +2,7 @@
 // File created by:  xrun
 // Do not modify this file
 //
-+USB_SPEED=0
++USB_SPEED=1
 +incdir+../tb
 +incdir+../agent
 +incdir+../agent/phy_agent

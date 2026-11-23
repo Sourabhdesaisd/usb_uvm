@@ -1,30 +1,17 @@
-
-
-
-
 interface usb_phy_if #(
     parameter int WIDTH = 8
 )(
     input logic clk
 );
 
-               
-    // 1. IMPORT RTL PACKAGE
-               
 
     import usb_phy_pkg::*;
-
-
-               
-    // 2. RESET AND USB CONFIGURATION
-               
-
     logic   rst_n;
     speed_t usb_speed;
 
 
                
-    // 3. SIE -> DUT TX PHY INPUTS
+    // SIE -> DUT TX PHY INPUTS
                
 
     logic             sof_packet;
@@ -37,9 +24,6 @@ interface usb_phy_if #(
     logic             sie_ready;
 
 
-               
-    // 4. DUT TX PHY -> EXTERNAL USB PARTNER OUTPUTS
-               
 
     logic dp;
     logic dm;
@@ -47,7 +31,7 @@ interface usb_phy_if #(
 
 
                
-    // 5. EXTERNAL USB PARTNER -> DUT CDR INPUTS
+    //EXTERNAL USB PARTNER -> DUT CDR INPUTS
                
 
     logic analog_d_plus;
@@ -57,7 +41,7 @@ interface usb_phy_if #(
 
 
                
-    // 6. DUT RX PHY -> SIE OUTPUTS
+    // DUT RX PHY -> SIE OUTPUTS
                
 
     logic [WIDTH-1:0] DataOut;
@@ -73,7 +57,7 @@ interface usb_phy_if #(
 
 
                
-    // 7. DUT RX DEBUG / STATUS OUTPUTS
+    // DUT RX DEBUG / STATUS OUTPUTS
                
 
     logic rx_stuff_err;
@@ -85,7 +69,7 @@ interface usb_phy_if #(
 
 
                
-    // 8. CLOCKING BLOCK 1: SIE DRIVER
+    // CLOCKING BLOCK 1: SIE DRIVER
                
 
     clocking cb_drv @(posedge clk);
@@ -109,7 +93,7 @@ interface usb_phy_if #(
 
 
                
-    // 9. CLOCKING BLOCK 2: EXTERNAL USB BFM DRIVER
+    //  EXTERNAL USB BFM DRIVER
                
 
     clocking cb_bfm_drv @(posedge clk);
@@ -130,10 +114,6 @@ interface usb_phy_if #(
         output analog_serial;
 
     endclocking
-
-
-               
-    // 10. CLOCKING BLOCK 3: PHY MONITOR
                
 
     clocking cb_mon @(posedge clk);
@@ -141,15 +121,9 @@ interface usb_phy_if #(
         default input #1step;
 
                   
-        // Reset and configuration
-                  
 
         input rst_n;
         input usb_speed;
-
-
-                  
-        // SIE TX observation
                   
 
         input sof_packet;

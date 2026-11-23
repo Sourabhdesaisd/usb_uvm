@@ -39,7 +39,7 @@ class phy_simple_tx_seq extends uvm_sequence #(phy_transaction);
     // BYTE 2: EOP
     // ==============================================
 
-    req = phy_transaction::type_id::create("req_2");
+  /*  req = phy_transaction::type_id::create("req_2");
 
     start_item(req);
 
@@ -54,7 +54,7 @@ class phy_simple_tx_seq extends uvm_sequence #(phy_transaction);
 
     `uvm_info("PHY_SEQ",
               "Second byte sent: DATA=3C SOP=0 EOP=1",
-              UVM_MEDIUM)
+              UVM_MEDIUM)*/
 
 
     `uvm_info("PHY_SEQ",

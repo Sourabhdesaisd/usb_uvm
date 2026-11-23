@@ -130,8 +130,7 @@ class phy_driver extends uvm_driver #(phy_transaction);
       // Configure USB speed
       @(vif.cb_drv);
 
-      // Explicit conversion:
-      // Testbench usb_speed_e -> RTL speed_t
+      
       vif.cb_drv.usb_speed <= usb_phy_pkg::speed_t'(cfg.speed);
 
       // Check transaction
