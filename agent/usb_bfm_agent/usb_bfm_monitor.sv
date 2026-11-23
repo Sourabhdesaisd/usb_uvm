@@ -1,381 +1,321 @@
 
-
-
 class usb_bfm_monitor extends uvm_monitor;
 
   `uvm_component_utils(usb_bfm_monitor)
 
-
-           
-  // VIRTUAL INTERFACE AND CONFIGURATION
-           
+             
+  // Virtual interface and configuration
+             
 
   virtual usb_bus_if vif;
-
   usb_bfm_config cfg;
 
+  // Analysis port: publishes observed USB bus transactions
+  uvm_analysis_port #(usb_bfm_transaction) ap;
 
-           
-  //  ANALYSIS PORT
-           
+  // Symbol counters for debug
+  int unsigned phy_tx_symbol_count;
+  int unsigned device_symbol_count;
 
-  uvm_analysis_port #(usb_bfm_transaction) analysis_port;
-
-
-           
-  //  TRANSACTION HANDLE
-           
-
-  usb_bfm_transaction tr;
-
-
-           
-  //  CONSTRUCTOR
-           
+             
+  // Constructor
+             
 
   function new(string name = "usb_bfm_monitor",
                uvm_component parent = null);
-
     super.new(name, parent);
 
-    analysis_port = new("analysis_port", this);
+    ap = new("ap", this);
 
+    phy_tx_symbol_count = 0;
+    device_symbol_count = 0;
   endfunction
 
 
-           
-  //  BUILD PHASE
-           
+             
+  // Build phase
+             
 
   function void build_phase(uvm_phase phase);
-
     super.build_phase(phase);
 
     if (!uvm_config_db#(virtual usb_bus_if)::get(
           this, "", "vif", vif)) begin
-
-      `uvm_fatal("USB_MON_VIF",
-                 "USB bus virtual interface not found")
-
-    end
-
-    if (vif == null) begin
-
-      `uvm_fatal("USB_MON_VIF_NULL",
-                 "USB bus virtual interface is NULL")
-
+      `uvm_fatal("BFM_MON",
+                 "usb_bus_if virtual interface not found")
     end
 
     if (!uvm_config_db#(usb_bfm_config)::get(
           this, "", "cfg", cfg)) begin
-
-      `uvm_fatal("USB_MON_CFG",
-                 "USB BFM configuration not found")
-
+      `uvm_fatal("BFM_MON",
+                 "usb_bfm_config not found")
     end
-
-    if (cfg == null) begin
-
-      `uvm_fatal("USB_MON_CFG_NULL",
-                 "USB BFM configuration is NULL")
-
-    end
-
-    if (cfg.speed == USB_SPEED_RESERVED) begin
-
-      `uvm_fatal("USB_MON_SPEED",
-                 "Reserved USB speed selected")
-
-    end
-
-    `uvm_info("USB_MON",
-              $sformatf("USB BFM monitor configured. Speed=%0d",
-                        cfg.speed),
-              UVM_LOW)
-
   endfunction
 
 
-           
-  // DECODE USB LINE STATE
-           
+             
+  // Decode USB line state
+  //
+  // USB_LINE_J:
+  //   LS : DP=0, DM=1
+  //   FS/HS : DP=1, DM=0
+  //
+  // USB_LINE_K:
+  //   LS : DP=1, DM=0
+  //   FS/HS : DP=0, DM=1
+  //
+  // SE0 = 00
+  // SE1 = 11
+             
 
-  function usb_line_state_e decode_line_state(
-    input logic dp,
-    input logic dm
+  function automatic usb_line_state_e decode_line_state(
+      input logic dp,
+      input logic dm
   );
 
-    // SE0: DP=0, DM=0
     if ((dp === 1'b0) && (dm === 1'b0)) begin
-
       return USB_LINE_SE0;
-
     end
 
-    // SE1: DP=1, DM=1
-    else if ((dp === 1'b1) && (dm === 1'b1)) begin
-
+    if ((dp === 1'b1) && (dm === 1'b1)) begin
       return USB_LINE_SE1;
-
     end
 
-    else begin
+    case (cfg.speed)
 
-      case (cfg.speed)
-
-        // Low Speed
-        USB_SPEED_LS: begin
-
-          if ((dp === 1'b0) && (dm === 1'b1))
-            return USB_LINE_J;
-
-          else if ((dp === 1'b1) && (dm === 1'b0))
-            return USB_LINE_K;
-
-        end
-
-        // Full Speed and High Speed digital mapping
-        USB_SPEED_FS,
-        USB_SPEED_HS: begin
-
-          if ((dp === 1'b1) && (dm === 1'b0))
-            return USB_LINE_J;
-
-          else if ((dp === 1'b0) && (dm === 1'b1))
-            return USB_LINE_K;
-
-        end
-
-        default: begin
-
-          `uvm_error("USB_MON_SPEED",
-                     "Invalid speed during line-state decoding")
-
-        end
-
-      endcase
-
-    end
-
-    return USB_LINE_SE1;
-
-  endfunction
-
-
-           
-  //  CHECK EXTERNAL PARTNER SIGNALS
-           
-
-  function bit check_device_signals();
-
-    // Device output enable must be known
-    if ((vif.cb_mon.device_oe !== 1'b0) &&
-        (vif.cb_mon.device_oe !== 1'b1)) begin
-
-      return 0;
-
-    end
-
-    // Check DP and DM only when external partner drives
-    if (vif.cb_mon.device_oe === 1'b1) begin
-
-      if ((vif.cb_mon.device_dp !== 1'b0 &&
-           vif.cb_mon.device_dp !== 1'b1) ||
-
-          (vif.cb_mon.device_dm !== 1'b0 &&
-           vif.cb_mon.device_dm !== 1'b1)) begin
-
-        return 0;
-
+      USB_SPEED_LS: begin
+        if ((dp === 1'b0) && (dm === 1'b1))
+          return USB_LINE_J;
+        else
+          return USB_LINE_K;
       end
 
-    end
-
-    return 1;
-
-  endfunction
-
-
-           
-  //  CHECK DUT TX SIGNALS
-           
-
-  function bit check_phy_tx_signals();
-
-    // PHY TX valid must be known
-    if ((vif.cb_mon.phy_tx_valid !== 1'b0) &&
-        (vif.cb_mon.phy_tx_valid !== 1'b1)) begin
-
-      return 0;
-
-    end
-
-    // Check DP and DM only during valid TX activity
-    if (vif.cb_mon.phy_tx_valid === 1'b1) begin
-
-      if ((vif.cb_mon.phy_dp !== 1'b0 &&
-           vif.cb_mon.phy_dp !== 1'b1) ||
-
-          (vif.cb_mon.phy_dm !== 1'b0 &&
-           vif.cb_mon.phy_dm !== 1'b1)) begin
-
-        return 0;
-
+      USB_SPEED_FS,
+      USB_SPEED_HS: begin
+        if ((dp === 1'b1) && (dm === 1'b0))
+          return USB_LINE_J;
+        else
+          return USB_LINE_K;
       end
 
-    end
+      default: begin
+        return USB_LINE_SE1;
+      end
 
-    return 1;
+    endcase
 
   endfunction
 
 
-           
-  //  MAIN MONITOR PROCESS
-           
+             
+  // Check for unknown values
+             
+
+  task automatic check_bus_signals();
+
+    if ((vif.phy_dp !== 1'b0) &&
+        (vif.phy_dp !== 1'b1)) begin
+
+      `uvm_error("BFM_MON",
+                 "Unknown value detected on PHY DP")
+    end
+
+    if ((vif.phy_dm !== 1'b0) &&
+        (vif.phy_dm !== 1'b1)) begin
+
+      `uvm_error("BFM_MON",
+                 "Unknown value detected on PHY DM")
+    end
+
+    if ((vif.device_dp !== 1'b0) &&
+        (vif.device_dp !== 1'b1)) begin
+
+      `uvm_error("BFM_MON",
+                 "Unknown value detected on device DP")
+    end
+
+    if ((vif.device_dm !== 1'b0) &&
+        (vif.device_dm !== 1'b1)) begin
+
+      `uvm_error("BFM_MON",
+                 "Unknown value detected on device DM")
+    end
+
+    if ((vif.bus_dp === 1'bx) ||
+        (vif.bus_dp === 1'bz) ||
+        (vif.bus_dm === 1'bx) ||
+        (vif.bus_dm === 1'bz)) begin
+
+      `uvm_warning("BFM_MON",
+                   "Resolved USB bus contains X or Z")
+    end
+
+  endtask
+
+
+             
+  // Monitor DUT TX output
+  //
+  // Capture only one symbol when:
+  //   bit_tick     = 1
+  //   phy_tx_valid = 1
+  //
+  // The DUT TX line state is sampled after the positive edge
+  // sequential logic has settled.
+             
+
+  task automatic monitor_phy_tx();
+
+    usb_bfm_transaction tr;
+
+    if ((vif.bit_tick === 1'b1) &&
+        (vif.phy_tx_valid === 1'b1)) begin
+
+      tr = usb_bfm_transaction::type_id::create(
+             "phy_tx_tr", this);
+
+      tr.is_phy_tx       = 1'b1;
+      tr.is_device_drive = 1'b0;
+
+      tr.phy_tx_valid = vif.phy_tx_valid;
+
+      tr.phy_line_state = {vif.phy_dp, vif.phy_dm};
+
+      tr.line_state = decode_line_state(
+                        vif.phy_dp,
+                        vif.phy_dm
+                      );
+
+      tr.bit_count = 1;
+
+      tr.device_dp = 1'b0;
+      tr.device_dm = 1'b0;
+      tr.device_oe = 1'b0;
+
+      phy_tx_symbol_count++;
+
+      `uvm_info("BFM_PHY_TX",
+        $sformatf(
+          "TX Symbol[%0d]: Speed=%0d DP=%b DM=%b LineState=%s",
+          phy_tx_symbol_count,
+          cfg.speed,
+          vif.phy_dp,
+          vif.phy_dm,
+          tr.line_state.name()
+        ),
+        UVM_HIGH
+      )
+
+      ap.write(tr);
+
+    end
+
+  endtask
+
+
+             
+  // Monitor external USB device drive
+  //
+  // This path observes the external USB partner connected
+  // through device_dp/device_dm/device_oe.
+             
+
+  task automatic monitor_device_drive();
+
+    usb_bfm_transaction tr;
+
+    if (vif.device_oe === 1'b1) begin
+
+      tr = usb_bfm_transaction::type_id::create(
+             "device_tr", this);
+
+      tr.is_device_drive = 1'b1;
+      tr.is_phy_tx       = 1'b0;
+
+      tr.device_dp = vif.device_dp;
+      tr.device_dm = vif.device_dm;
+      tr.device_oe = vif.device_oe;
+
+      tr.line_state = decode_line_state(
+                        vif.device_dp,
+                        vif.device_dm
+                      );
+
+      tr.phy_tx_valid = 1'b0;
+      tr.phy_line_state = 2'b00;
+
+      tr.bit_count = 1;
+
+      device_symbol_count++;
+
+      `uvm_info("BFM_DEVICE",
+        $sformatf(
+          "Device Symbol[%0d]: Speed=%0d DP=%b DM=%b LineState=%s",
+          device_symbol_count,
+          cfg.speed,
+          vif.device_dp,
+          vif.device_dm,
+          tr.line_state.name()
+        ),
+        UVM_HIGH
+      )
+
+      ap.write(tr);
+
+    end
+
+  endtask
+
+
+             
+  // Run phase
+             
 
   task run_phase(uvm_phase phase);
 
+    super.run_phase(phase);
+
+    `uvm_info("BFM_MON",
+      "USB BFM monitor started",
+      UVM_LOW
+    )
+
     forever begin
 
-      @(vif.cb_mon);
+      // Sample after the DUT's positive-edge sequential logic
+      // has settled. bit_tick is a full-cycle pulse.
+      @(negedge vif.clk);
 
-                
-      // Ignore observations during reset
-                
-
-      if (vif.cb_mon.rst_n !== 1'b1) begin
-
+      if (vif.rst_n !== 1'b1) begin
+        phy_tx_symbol_count = 0;
+        device_symbol_count = 0;
         continue;
-
       end
 
+      // Check signal integrity on each active bit interval.
+      if (vif.bit_tick === 1'b1) begin
 
-                
-      // Check external partner signals
-                
+        check_bus_signals();
 
-      if (!check_device_signals()) begin
+        // Independent monitoring paths
+        monitor_phy_tx();
+        monitor_device_drive();
 
-        `uvm_error("USB_MON_DEVICE_X",
-                   "Unknown value detected on external device signals")
+        // Both the external device and DUT are driving.
+        if ((vif.device_oe === 1'b1) &&
+            (vif.phy_tx_valid === 1'b1)) begin
 
-        continue;
+          `uvm_error("USB_CONTENTION",
+            $sformatf(
+              "Both device and PHY are driving USB bus. Device DP/DM=%b%b, PHY DP/DM=%b%b",
+              vif.device_dp,
+              vif.device_dm,
+              vif.phy_dp,
+              vif.phy_dm
+            )
+          )
 
-      end
-
-
-                
-      // Check DUT TX signals
-                
-
-      if (!check_phy_tx_signals()) begin
-
-        `uvm_error("USB_MON_PHY_X",
-                   "Unknown value detected on PHY TX signals")
-
-        continue;
-
-      end
-
-
-                
-      // Create observation transaction
-                
-
-      tr = usb_bfm_transaction::type_id::create(
-             "tr", this);
-
-
-                
-      // Capture external partner signals
-                
-
-      tr.device_oe = vif.cb_mon.device_oe;
-      tr.device_dp = vif.cb_mon.device_dp;
-      tr.device_dm = vif.cb_mon.device_dm;
-
-
-                
-      // Capture DUT physical TX signals
-                
-
-      tr.phy_tx_valid = vif.cb_mon.phy_tx_valid;
-
-      tr.phy_line_state = decode_line_state(
-                            vif.cb_mon.phy_dp,
-                            vif.cb_mon.phy_dm);
-
-
-                
-      // Set event indicators
-                
-
-      tr.is_device_drive =
-          (vif.cb_mon.device_oe === 1'b1);
-
-      tr.is_phy_tx =
-          (vif.cb_mon.phy_tx_valid === 1'b1);
-
-
-                
-      // Decode external partner line state
-                
-
-      if (tr.is_device_drive) begin
-
-        tr.line_state = decode_line_state(
-                          vif.cb_mon.device_dp,
-                          vif.cb_mon.device_dm);
-
-      end
-      else begin
-
-        tr.line_state = USB_LINE_SE0;
-
-      end
-
-
-                
-      // Publish meaningful bus activity
-                
-
-      if (tr.is_device_drive || tr.is_phy_tx) begin
-
-        analysis_port.write(tr);
-
-        `uvm_info("USB_MON",
-                  $sformatf(
-                    "SPEED=%0d DEVICE_OE=%0b DEVICE_DP=%0b DEVICE_DM=%0b DEVICE_STATE=%0d PHY_TX=%0b PHY_DP=%0b PHY_DM=%0b PHY_STATE=%0d",
-                    cfg.speed,
-                    tr.device_oe,
-                    tr.device_dp,
-                    tr.device_dm,
-                    tr.line_state,
-                    tr.phy_tx_valid,
-                    vif.cb_mon.phy_dp,
-                    vif.cb_mon.phy_dm,
-                    tr.phy_line_state),
-                  UVM_MEDIUM)
-
-      end
-
-
-                
-      // Monitor USB bit timing
-                
-
-      if (vif.cb_mon.bit_tick === 1'b1) begin
-
-        `uvm_info("USB_MON",
-                  "USB bit interval observed",
-                  UVM_HIGH)
-
-      end
-      else if (vif.cb_mon.bit_tick !== 1'b0) begin
-
-        `uvm_error("USB_MON_TICK",
-                   "Unknown value detected on bit_tick")
+        end
 
       end
 
@@ -384,17 +324,22 @@ class usb_bfm_monitor extends uvm_monitor;
   endtask
 
 
-           
-  //  REPORT PHASE
-           
+             
+  // Report phase
+             
 
   function void report_phase(uvm_phase phase);
 
     super.report_phase(phase);
 
-    `uvm_info("USB_MON_REPORT",
-              "USB BFM monitor simulation completed",
-              UVM_LOW)
+    `uvm_info("BFM_MON_REPORT",
+      $sformatf(
+        "Total PHY TX symbols observed = %0d, Total device symbols observed = %0d",
+        phy_tx_symbol_count,
+        device_symbol_count
+      ),
+      UVM_LOW
+    )
 
   endfunction
 
