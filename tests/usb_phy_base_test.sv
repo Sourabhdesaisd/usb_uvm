@@ -9,6 +9,7 @@ class usb_phy_base_test extends uvm_test;
   // Environment instance
   usb_phy_env env;
 
+
   // Constructor
   function new(
     string name = "usb_phy_base_test",
@@ -16,6 +17,7 @@ class usb_phy_base_test extends uvm_test;
   );
     super.new(name, parent);
   endfunction
+
 
   // Build phase
   function void build_phase(uvm_phase phase);
@@ -46,7 +48,19 @@ class usb_phy_base_test extends uvm_test;
 
     end
 
-    // Pass configuration to environment
+    // Check that at least one useful verification component is enabled
+    if (!env_cfg.enable_phy_agent &&
+        !env_cfg.enable_usb_bfm_agent &&
+        !env_cfg.enable_scoreboard) begin
+
+      `uvm_fatal(
+        "BASE_TEST",
+        "All environment components are disabled"
+      )
+
+    end
+
+    // Pass environment configuration to environment
     uvm_config_db#(usb_phy_env_config)::set(
       this,
       "env",
@@ -68,6 +82,7 @@ class usb_phy_base_test extends uvm_test;
 
   endfunction
 
+
   // Connect phase
   function void connect_phase(uvm_phase phase);
 
@@ -81,8 +96,11 @@ class usb_phy_base_test extends uvm_test;
 
   endfunction
 
+
   // End of elaboration phase
-  function void end_of_elaboration_phase(uvm_phase phase);
+  function void end_of_elaboration_phase(
+    uvm_phase phase
+  );
 
     super.end_of_elaboration_phase(phase);
 
@@ -96,6 +114,7 @@ class usb_phy_base_test extends uvm_test;
 
   endfunction
 
+
   // Run phase
   task run_phase(uvm_phase phase);
 
@@ -107,12 +126,14 @@ class usb_phy_base_test extends uvm_test;
       UVM_LOW
     )
 
-    // No stimulus in base test.
-    // Derived tests will start sequences.
+    // This is an infrastructure-only base test.
+    // No TX or USB bus stimulus is generated here.
+    // Derived tests will start the required sequences.
 
     phase.drop_objection(this);
 
   endtask
+
 
   // Report phase
   function void report_phase(uvm_phase phase);
