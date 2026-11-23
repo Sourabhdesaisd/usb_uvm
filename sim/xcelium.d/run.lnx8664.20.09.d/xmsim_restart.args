@@ -15,15 +15,15 @@
 /tools/cadence_march2021/XCELIUM2009/tools/methodology/UVM/CDNS-1.1d
 -sv_lib
 /tools/cadence_march2021/XCELIUM2009/tools/methodology/UVM/CDNS-1.1d/additions/sv/lib/64bit/libuvmpli.so
-+UVM_TESTNAME=usb_phy_base_test
++UVM_TESTNAME=usb_phy_tx_test
 -MESSAGES
 -RUN
 -SV_LIB
 /tools/cadence_march2021/XCELIUM2009/tools/methodology/UVM/CDNS-1.1d/additions/sv/lib/64bit/libuvmdpi.so
 +EMGRLOG
-base_test.log
+tx_test.log
 -XLSTIME
-1795426601
+1795427850
 -XLKEEP
 -XLMODE
 ./xcelium.d/run.lnx8664.20.09.d
@@ -37,4 +37,4 @@ xrun
 -XLVERSION
 "TOOL:	xrun(64)	20.09-s009"
 -XLNAME
-./xcelium.d/run.lnx8664.20.09.d/compute-srv3.eda.atme.in_37751
+./xcelium.d/run.lnx8664.20.09.d/compute-srv3.eda.atme.in_15946

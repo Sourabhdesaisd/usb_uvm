@@ -11,7 +11,7 @@
 filelist.f
 -top
 tb_top
-+UVM_TESTNAME=usb_phy_base_test
++UVM_TESTNAME=usb_phy_tx_test
 +USB_SPEED=1
 -l
-base_test.log
+tx_test.log
