@@ -1,8 +1,6 @@
 
 module tb_top;
 
-
-
   import uvm_pkg::*;
   import usb_phy_pkg::*;
   import usb_phy_tb_pkg::*;
@@ -11,17 +9,26 @@ module tb_top;
 
   logic clk;
 
-  // USB speed selected through +USB_SPEED
+  // --------------------------------------------------
+  // USB speed configuration
+  // --------------------------------------------------
+
   speed_t selected_usb_speed;
   int unsigned usb_speed_arg;
 
+  // --------------------------------------------------
   // UVM configuration objects
+  // --------------------------------------------------
+
   usb_phy_env_config env_cfg;
   phy_agent_config phy_cfg;
   usb_bfm_agent_config usb_bfm_cfg;
 
 
+  // --------------------------------------------------
   // PHY interface
+  // --------------------------------------------------
+
   usb_phy_if #(
     .WIDTH(WIDTH)
   ) phy_if (
@@ -29,7 +36,10 @@ module tb_top;
   );
 
 
+  // --------------------------------------------------
   // Shared USB bus interface
+  // --------------------------------------------------
+
   usb_bus_if bus_if (
     .clk(clk)
   );
@@ -92,19 +102,19 @@ module tb_top;
   // Shared USB bus connections
   // --------------------------------------------------
 
-  // DUT transmitter drives the shared bus
+  // DUT transmitter drives the shared bus.
   assign bus_if.phy_dp       = phy_if.dp;
   assign bus_if.phy_dm       = phy_if.dm;
   assign bus_if.phy_tx_valid = phy_if.tx_valid;
 
-  // Shared bus connects to the analog receiver
+  // Shared bus connects to the analog receiver.
   assign phy_if.analog_d_plus  = bus_if.bus_dp;
   assign phy_if.analog_d_minus = bus_if.bus_dm;
 
-  // Common reset
+  // Common reset.
   assign bus_if.rst_n = phy_if.rst_n;
 
-  // Observe the actual TX bit tick
+  // Observe the actual TX bit tick.
   assign bus_if.bit_tick = dut.dut_tx.bit_tick;
 
 
@@ -112,19 +122,50 @@ module tb_top;
   // 480 MHz system clock
   // --------------------------------------------------
 
-  initial begin
+  initial begin : CLOCK_GENERATION
+
     clk = 1'b0;
+
     forever #1.041667 clk = ~clk;
+
   end
 
 
   // --------------------------------------------------
-  // USB speed selection
+  // Reset generation
+  // --------------------------------------------------
+
+  initial begin : RESET_GENERATION
+
+    // Assert reset at simulation time zero.
+    phy_if.rst_n = 1'b0;
+
+    // Hold reset for 10 clock cycles.
+    repeat (10) @(posedge clk);
+
+    // Release reset on falling edge.
+    @(negedge clk);
+
+    phy_if.rst_n = 1'b1;
+
+    $display(
+      "[TB_TOP] Reset released at time %0t",
+      $time
+    );
+
+  end
+
+
+  // --------------------------------------------------
+  // USB speed selection and UVM initialization
   // --------------------------------------------------
 
   initial begin : TB_INITIALIZATION
 
-    // Default speed: Full Speed
+    // ----------------------------------------------
+    // Default USB speed: Full Speed
+    // ----------------------------------------------
+
     usb_speed_arg = 1;
     selected_usb_speed = FS;
 
@@ -137,11 +178,13 @@ module tb_top;
         2: selected_usb_speed = HS;
 
         default: begin
+
           $fatal(
             1,
             "[TB_TOP] Invalid USB_SPEED=%0d. Use 0=LS, 1=FS, 2=HS",
             usb_speed_arg
           );
+
         end
 
       endcase
@@ -156,11 +199,10 @@ module tb_top;
     end
 
 
-    // ------------------------------------------------
+    // ----------------------------------------------
     // Initialize DUT input signals
-    // ------------------------------------------------
+    // ----------------------------------------------
 
-    phy_if.rst_n         = 1'b0;
     phy_if.usb_speed     = selected_usb_speed;
 
     phy_if.sof_packet    = 1'b0;
@@ -173,18 +215,18 @@ module tb_top;
     phy_if.analog_serial = 1'b1;
 
 
-    // ------------------------------------------------
+    // ----------------------------------------------
     // Initialize external USB BFM driver
-    // ------------------------------------------------
+    // ----------------------------------------------
 
     bus_if.device_dp = 1'b1;
     bus_if.device_dm = 1'b0;
     bus_if.device_oe = 1'b0;
 
 
-    // ------------------------------------------------
+    // ----------------------------------------------
     // Create configuration objects
-    // ------------------------------------------------
+    // ----------------------------------------------
 
     env_cfg = usb_phy_env_config::type_id::create(
       "env_cfg"
@@ -199,9 +241,9 @@ module tb_top;
     );
 
 
-    // ------------------------------------------------
+    // ----------------------------------------------
     // PHY agent configuration
-    // ------------------------------------------------
+    // ----------------------------------------------
 
     phy_cfg.vif = phy_if;
 
@@ -212,9 +254,9 @@ module tb_top;
     phy_cfg.set_speed(selected_usb_speed);
 
 
-    // ------------------------------------------------
+    // ----------------------------------------------
     // USB BFM agent configuration
-    // ------------------------------------------------
+    // ----------------------------------------------
 
     usb_bfm_cfg.bus_vif = bus_if;
     usb_bfm_cfg.phy_vif = phy_if;
@@ -226,9 +268,9 @@ module tb_top;
     usb_bfm_cfg.set_speed(selected_usb_speed);
 
 
-    // ------------------------------------------------
+    // ----------------------------------------------
     // Environment configuration
-    // ------------------------------------------------
+    // ----------------------------------------------
 
     env_cfg.phy_cfg     = phy_cfg;
     env_cfg.usb_bfm_cfg = usb_bfm_cfg;
@@ -240,18 +282,18 @@ module tb_top;
     env_cfg.set_speed(selected_usb_speed);
 
 
-    // ------------------------------------------------
+    // ----------------------------------------------
     // Configuration validation
-    // ------------------------------------------------
+    // ----------------------------------------------
 
     phy_cfg.check_config();
     usb_bfm_cfg.check_config();
     env_cfg.check_config();
 
 
-    // ------------------------------------------------
+    // ----------------------------------------------
     // Publish configuration objects
-    // ------------------------------------------------
+    // ----------------------------------------------
 
     uvm_config_db#(usb_phy_env_config)::set(
       null,
@@ -261,9 +303,9 @@ module tb_top;
     );
 
 
-    // ------------------------------------------------
+    // ----------------------------------------------
     // Print selected configuration
-    // ------------------------------------------------
+    // ----------------------------------------------
 
     $display("");
     $display("==============================================");
@@ -280,30 +322,39 @@ module tb_top;
 
     endcase
 
-    $display("[TB_TOP] USB_SPEED argument : %0d", usb_speed_arg);
-    $display("[TB_TOP] PHY agent enabled   : %0b",
-             env_cfg.enable_phy_agent);
-    $display("[TB_TOP] USB BFM enabled     : %0b",
-             env_cfg.enable_usb_bfm_agent);
-    $display("[TB_TOP] Scoreboard enabled  : %0b",
-             env_cfg.enable_scoreboard);
+    $display(
+      "[TB_TOP] USB_SPEED argument : %0d",
+      usb_speed_arg
+    );
+
+    $display(
+      "[TB_TOP] PHY agent enabled   : %0b",
+      env_cfg.enable_phy_agent
+    );
+
+    $display(
+      "[TB_TOP] USB BFM enabled     : %0b",
+      env_cfg.enable_usb_bfm_agent
+    );
+
+    $display(
+      "[TB_TOP] Scoreboard enabled  : %0b",
+      env_cfg.enable_scoreboard
+    );
 
     $display("==============================================");
     $display("");
 
 
-    // ------------------------------------------------
-    // Reset sequence
-    // ------------------------------------------------
+    // ----------------------------------------------
+    // Start UVM at simulation time zero
+    // ----------------------------------------------
 
-    repeat (10) @(posedge clk);
+    $display(
+      "[TB_TOP] Calling run_test at time %0t",
+      $time
+    );
 
-    @(negedge clk);
-    phy_if.rst_n = 1'b1;
-
-    $display("[TB_TOP] Reset released");
-
-    // Start UVM after reset release
     run_test();
 
   end
@@ -313,7 +364,7 @@ module tb_top;
   // SimVision waveform dump
   // --------------------------------------------------
 
-  initial begin
+  initial begin : WAVEFORM_DUMP
 
     $shm_open("wave.shm");
     $shm_probe("ACTMF");
