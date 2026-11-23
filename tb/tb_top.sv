@@ -98,25 +98,23 @@ module tb_top;
   );
 
 
-  // --------------------------------------------------
-  // Shared USB bus connections
-  // --------------------------------------------------
+// DUT TX outputs
+assign bus_if.phy_dp       = phy_if.dp;
+assign bus_if.phy_dm       = phy_if.dm;
+assign bus_if.phy_tx_valid = phy_if.tx_valid;
 
-  // DUT transmitter drives the shared bus.
-  assign bus_if.phy_dp       = phy_if.dp;
-  assign bus_if.phy_dm       = phy_if.dm;
-  assign bus_if.phy_tx_valid = phy_if.tx_valid;
 
-  // Shared bus connects to the analog receiver.
-  assign phy_if.analog_d_plus  = bus_if.bus_dp;
-  assign phy_if.analog_d_minus = bus_if.bus_dm;
+// Shared bus to DUT RX
+assign phy_if.analog_d_plus  = bus_if.bus_dp;
+assign phy_if.analog_d_minus = bus_if.bus_dm;
 
-  // Common reset.
-  assign bus_if.rst_n = phy_if.rst_n;
 
-  // Observe the actual TX bit tick.
-  assign bus_if.bit_tick = dut.dut_tx.bit_tick;
+// Common reset
+assign bus_if.rst_n = phy_if.rst_n;
 
+
+// DUT internal bit tick observation
+assign bus_if.bit_tick = dut.dut_tx.bit_tick;
 
   // --------------------------------------------------
   // 480 MHz system clock
