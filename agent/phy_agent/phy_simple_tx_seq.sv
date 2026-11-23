@@ -1,67 +1,84 @@
 
 class phy_simple_tx_seq extends uvm_sequence #(phy_transaction);
 
-  `uvm_object_utils(phy_simple_tx_seq)
+    `uvm_object_utils(phy_simple_tx_seq)
 
-  function new(string name = "phy_simple_tx_seq");
-    super.new(name);
-  endfunction
+    // Packet configuration
+    rand speed_t packet_speed;
+    rand int unsigned packet_length;
 
+    // SOF packet selection
+    rand bit is_sof;
 
-  task body();
+    constraint c_packet_length {
+        packet_length inside {[1:64]};
+    }
 
-    phy_transaction req;
+    constraint c_packet_speed {
+        packet_speed inside {LS, FS, HS};
+    }
 
+    function new(string name = "phy_simple_tx_seq");
+        super.new(name);
+    endfunction
 
-    // ==============================================
-    // BYTE 1: SOP
-    // ==============================================
+    virtual task body();
 
-    req = phy_transaction::type_id::create("req_1");
+        phy_transaction req;
 
-    start_item(req);
+        // Generate packet configuration
+        if (!randomize()) begin
+            `uvm_fatal(
+                "PHY_SEQ",
+                "Failed to randomize packet configuration"
+            )
+        end
 
-    req.sie_valid  = 1'b1;
-    req.sie_data   = 8'hA5;
-    req.sop        = 1'b1;
-    req.eop        = 1'b0;
-    req.sof_packet = 1'b0;
+        `uvm_info(
+            "PHY_SEQ",
+            $sformatf(
+                "Starting TX packet: SPEED=%0d LENGTH=%0d SOF=%0b",
+                packet_speed,
+                packet_length,
+                is_sof
+            ),
+            UVM_MEDIUM
+        )
 
-    finish_item(req);
+        // Send packet bytes
+        for (int unsigned i = 0; i < packet_length; i++) begin
 
+            req = phy_transaction::type_id::create(
+                $sformatf("req_%0d", i)
+            );
 
-    `uvm_info("PHY_SEQ",
-              "First byte sent: DATA=A5 SOP=1 EOP=0",
-              UVM_MEDIUM)
+            start_item(req);
 
+            if (!req.randomize() with {
+                speed == local::packet_speed;
+                valid == 1'b1;
+                sop == (i == 0);
+                eop == (i == local::packet_length - 1);
+                sof_packet == (local::is_sof && (i == 0));
+            }) begin
+                `uvm_fatal(
+                    "PHY_SEQ",
+                    $sformatf("Failed to randomize TX byte %0d", i)
+                )
+            end
 
-    // ==============================================
-    // BYTE 2: EOP
-    // ==============================================
+            req.transaction_id = i;
 
-  /*  req = phy_transaction::type_id::create("req_2");
+            finish_item(req);
 
-    start_item(req);
+        end
 
-    req.sie_valid  = 1'b1;
-    req.sie_data   = 8'h3C;
-    req.sop        = 1'b0;
-    req.eop        = 1'b1;
-    req.sof_packet = 1'b0;
+        `uvm_info(
+            "PHY_SEQ",
+            "TX packet sequence completed",
+            UVM_MEDIUM
+        )
 
-    finish_item(req);
+    endtask
 
-
-    `uvm_info("PHY_SEQ",
-              "Second byte sent: DATA=3C SOP=0 EOP=1",
-              UVM_MEDIUM)*/
-
-
-    `uvm_info("PHY_SEQ",
-              "Simple TX sequence completed",
-              UVM_LOW)
-
-  endtask
-
-endclass
-
+endclass 

@@ -1,489 +1,138 @@
 
-
 class usb_bfm_driver extends uvm_driver #(usb_bfm_transaction);
 
-  `uvm_component_utils(usb_bfm_driver)
+    `uvm_component_utils(usb_bfm_driver)
 
-     
-  // 1. VIRTUAL INTERFACE AND CONFIGURATION
-     
+    usb_bfm_agent_config cfg;
 
-  virtual usb_bus_if vif;
+    virtual usb_bus_if bus_vif;
+    virtual usb_phy_if #(8) phy_vif;
 
-  usb_bfm_config cfg;
+    function new(
+        string name = "usb_bfm_driver",
+        uvm_component parent = null
+    );
+        super.new(name, parent);
+    endfunction
 
-  // Maximum system-clock cycles to wait for bit_tick
-  int unsigned bit_tick_timeout;
 
-  // Transaction status
-  bit transaction_aborted;
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
 
+        if (!uvm_config_db#(usb_bfm_agent_config)::get(
+                this, "", "cfg", cfg
+            )) begin
+            `uvm_fatal(
+                "USB_BFM_DRV",
+                "usb_bfm_agent_config not found in config_db"
+            )
+        end
 
-     
-  // 2. CONSTRUCTOR
-     
+        cfg.check_config();
 
-  function new(string name = "usb_bfm_driver",
-               uvm_component parent = null);
+        bus_vif = cfg.bus_vif;
+        phy_vif = cfg.phy_vif;
 
-    super.new(name, parent);
+    endfunction
 
-    bit_tick_timeout = 1000;
-    transaction_aborted = 0;
 
-  endfunction
+    task run_phase(uvm_phase phase);
 
+        usb_bfm_transaction tr;
 
-     
-  // 3. BUILD PHASE
-     
+        drive_bus_idle();
 
-  function void build_phase(uvm_phase phase);
+        wait_for_reset_release();
 
-    super.build_phase(phase);
+        forever begin
 
-    if (!uvm_config_db#(virtual usb_bus_if)::get(
-          this, "", "vif", vif)) begin
+            seq_item_port.get_next_item(tr);
 
-      `uvm_fatal("USB_DRV_VIF",
-                 "USB bus virtual interface not found")
+            if (tr == null) begin
+                `uvm_error(
+                    "USB_BFM_DRV",
+                    "Received a NULL transaction"
+                )
+            end
+            else begin
+                drive_transaction(tr);
+            end
 
-    end
-
-    if (vif == null) begin
-
-      `uvm_fatal("USB_DRV_VIF_NULL",
-                 "USB bus virtual interface is NULL")
-
-    end
-
-    if (!uvm_config_db#(usb_bfm_config)::get(
-          this, "", "cfg", cfg)) begin
-
-      `uvm_fatal("USB_DRV_CFG",
-                 "USB BFM configuration not found")
-
-    end
-
-    if (cfg == null) begin
-
-      `uvm_fatal("USB_DRV_CFG_NULL",
-                 "USB BFM configuration is NULL")
-
-    end
-
-    if (cfg.speed == USB_SPEED_RESERVED) begin
-
-      `uvm_fatal("USB_DRV_SPEED",
-                 "Reserved USB speed selected")
-
-    end
-
-    `uvm_info("USB_DRV",
-              $sformatf(
-                "USB BFM driver configured. Speed=%0d",
-                cfg.speed),
-              UVM_LOW)
-
-  endfunction
-
-
-     
-  // 4. RELEASE EXTERNAL USB BUS
-     
-
-  task drive_idle();
-
-    vif.cb_drv.device_oe <= 1'b0;
-    vif.cb_drv.device_dp <= 1'b0;
-    vif.cb_drv.device_dm <= 1'b0;
-
-  endtask
-
-
-     
-  // 5. DRIVE USB LINE STATE
-     
-
-  task drive_line_state(usb_line_state_e state);
-
-    case (state)
-
-                 
-      // SE0
-                 
-
-      USB_LINE_SE0: begin
-
-        vif.cb_drv.device_dp <= 1'b0;
-        vif.cb_drv.device_dm <= 1'b0;
-
-      end
-
-
-                 
-      // SE1
-                 
-
-      USB_LINE_SE1: begin
-
-        vif.cb_drv.device_dp <= 1'b1;
-        vif.cb_drv.device_dm <= 1'b1;
-
-      end
-
-
-                 
-      // J STATE
-                 
-
-      USB_LINE_J: begin
-
-        case (cfg.speed)
-
-          USB_SPEED_LS: begin
-
-            vif.cb_drv.device_dp <= 1'b0;
-            vif.cb_drv.device_dm <= 1'b1;
-
-          end
-
-          USB_SPEED_FS,
-          USB_SPEED_HS: begin
-
-            vif.cb_drv.device_dp <= 1'b1;
-            vif.cb_drv.device_dm <= 1'b0;
-
-          end
-
-          default: begin
-
-            `uvm_fatal("USB_DRV_SPEED",
-                       "Invalid USB speed for J state")
-
-          end
-
-        endcase
-
-      end
-
-
-                 
-      // K STATE
-                 
-
-      USB_LINE_K: begin
-
-        case (cfg.speed)
-
-          USB_SPEED_LS: begin
-
-            vif.cb_drv.device_dp <= 1'b1;
-            vif.cb_drv.device_dm <= 1'b0;
-
-          end
-
-          USB_SPEED_FS,
-          USB_SPEED_HS: begin
-
-            vif.cb_drv.device_dp <= 1'b0;
-            vif.cb_drv.device_dm <= 1'b1;
-
-          end
-
-          default: begin
-
-            `uvm_fatal("USB_DRV_SPEED",
-                       "Invalid USB speed for K state")
-
-          end
-
-        endcase
-
-      end
-
-
-                 
-      // INVALID STATE
-                 
-
-      default: begin
-
-        `uvm_fatal("USB_DRV_LINE",
-                   $sformatf(
-                     "Invalid USB line state: %0d",
-                     state))
-
-      end
-
-    endcase
-
-  endtask
-
-
-     
-  // 6. WAIT FOR RESET RELEASE
-     
-
-  task wait_for_reset_release();
-
-    while (vif.cb_drv.rst_n !== 1'b1) begin
-
-      @(vif.cb_drv);
-
-    end
-
-    `uvm_info("USB_DRV",
-              "Reset released. USB BFM driver ready.",
-              UVM_MEDIUM)
-
-  endtask
-
-
-     
-  // 7. WAIT FOR REQUESTED BIT INTERVALS
-     
-
-  task wait_bit_intervals(
-    input  int unsigned requested_bits,
-    output bit          success
-  );
-
-    int unsigned tick_count;
-    int unsigned cycle_count;
-
-    tick_count  = 0;
-    cycle_count = 0;
-    success     = 1'b1;
-
-    while (tick_count < requested_bits) begin
-
-      @(vif.cb_drv);
-
-      cycle_count++;
-
-                 
-      // Reset check
-                 
-
-      if (vif.cb_drv.rst_n !== 1'b1) begin
-
-        `uvm_warning("USB_DRV",
-                     "Reset asserted during USB bus transaction")
-
-        success = 1'b0;
-
-        break;
-
-      end
-
-                 
-      // Count bit_tick events
-                 
-
-      if (vif.cb_drv.bit_tick === 1'b1) begin
-
-        tick_count++;
-
-      end
-
-      else if (vif.cb_drv.bit_tick !== 1'b0) begin
-
-        `uvm_error("USB_DRV",
-                   "Unknown value detected on bit_tick")
-
-        success = 1'b0;
-
-        break;
-
-      end
-
-                 
-      // Timeout check
-                 
-
-      if ((cycle_count >= bit_tick_timeout) &&
-          (tick_count < requested_bits)) begin
-
-        `uvm_error("USB_DRV",
-                   $sformatf(
-                     "bit_tick timeout. Received=%0d Requested=%0d",
-                     tick_count,
-                     requested_bits))
-
-        success = 1'b0;
-
-        break;
-
-      end
-
-    end
-
-  endtask
-
-
-     
-  // 8. MAIN DRIVER PROCESS
-     
-
-  task run_phase(uvm_phase phase);
-
-    usb_bfm_transaction req;
-
-    bit success;
-
-    // Initially release the external USB bus
-    drive_idle();
-
-    `uvm_info("USB_DRV",
-              "USB BFM driver started",
-              UVM_LOW)
-
-    forever begin
-
-                 
-      // Get transaction from sequencer
-                 
-
-      seq_item_port.get_next_item(req);
-
-      transaction_aborted = 1'b0;
-      success             = 1'b0;
-
-                 
-      // Wait for reset release
-                 
-
-      wait_for_reset_release();
-
-                 
-      // Validate transaction
-                 
-
-      if ((req.bit_count == 0) ||
-          (req.bit_count > 1024)) begin
-
-        `uvm_error("USB_DRV",
-                   $sformatf(
-                     "Invalid bit_count=%0d. Allowed range is 1 to 1024",
-                     req.bit_count))
-
-        drive_idle();
-
-        seq_item_port.item_done();
-
-      end
-
-      else begin
-
-                    
-        // Wait for clocking event
-                    
-
-        @(vif.cb_drv);
-
-                    
-        // Check reset before driving
-                    
-
-        if (vif.cb_drv.rst_n !== 1'b1) begin
-
-          transaction_aborted = 1'b1;
-
-          `uvm_warning("USB_DRV",
-                       "Reset asserted before USB bus drive")
-
-          drive_idle();
-
-          seq_item_port.item_done();
+            seq_item_port.item_done();
 
         end
 
-        else begin
+    endtask
 
-              
-          // Enable external USB partner drive
-              
 
-          vif.cb_drv.device_oe <= 1'b1;
+    task wait_for_reset_release();
 
-              
-          // Drive requested line state
-              
+        while (bus_vif.rst_n !== 1'b1) begin
+            @(bus_vif.cb_drv);
+        end
 
-          drive_line_state(req.line_state);
+    endtask
 
-          `uvm_info("USB_DRV",
-                    $sformatf(
-                      "Driving USB bus: SPEED=%0d LINE_STATE=%0d BIT_COUNT=%0d",
-                      cfg.speed,
-                      req.line_state,
-                      req.bit_count),
-                    UVM_MEDIUM)
 
-              
-          // Hold line state for requested bit intervals
-              
+    task drive_bus_idle();
 
-          wait_bit_intervals(req.bit_count, success);
+        bus_vif.device_dp = 1'b1;
+        bus_vif.device_dm = 1'b0;
+        bus_vif.device_oe = 1'b0;
 
-              
-          // Release external USB bus
-              
+        phy_vif.analog_enable = 1'b0;
+        phy_vif.analog_serial = 1'b1;
 
-          @(vif.cb_drv);
+    endtask
 
-          drive_idle();
 
-              
-          // Report transaction result
-              
+    task drive_transaction(usb_bfm_transaction tr);
 
-          if (success) begin
+        int unsigned cycle_count;
 
-            `uvm_info("USB_DRV",
-                      "USB bus transaction completed successfully",
-                      UVM_MEDIUM)
+        if (!(tr.speed inside {LS, FS, HS})) begin
+            `uvm_error(
+                "USB_BFM_DRV",
+                $sformatf(
+                    "Unsupported USB speed: %0d",
+                    tr.speed
+                )
+            )
+            return;
+        end
 
-          end
+        // Apply the requested USB speed.
+        @(bus_vif.cb_drv);
+        phy_vif.cb_drv.usb_speed <= tr.speed;
 
-          else begin
+        // Apply the external line state.
+        bus_vif.cb_drv.device_dp <= tr.dp;
+        bus_vif.cb_drv.device_dm <= tr.dm;
+        bus_vif.cb_drv.device_oe <= tr.drive_enable;
 
-            transaction_aborted = 1'b1;
+        // Configure the CDR analog input path.
+        phy_vif.cb_bfm_drv.analog_enable <= tr.drive_enable;
+        phy_vif.cb_bfm_drv.analog_serial <= tr.analog_serial;
 
-            `uvm_warning("USB_DRV",
-                         "USB bus transaction aborted or timed out")
+        // Hold the requested line state.
+        for (cycle_count = 0;
+             cycle_count < tr.duration_cycles;
+             cycle_count++) begin
 
-          end
-
-              
-          // Complete sequencer-driver handshake
-              
-
-          seq_item_port.item_done();
+            @(bus_vif.cb_drv);
 
         end
 
-      end
+        // Release the external bus driver after this segment.
+        bus_vif.cb_drv.device_oe <= 1'b0;
 
-    end
+        phy_vif.cb_bfm_drv.analog_enable <= 1'b0;
 
-  endtask
+        // Optional idle interval before the next transaction.
+        repeat (tr.idle_cycles) begin
+            @(bus_vif.cb_drv);
+        end
 
+    endtask
 
-     
-  // 9. REPORT PHASE
-     
-
-  function void report_phase(uvm_phase phase);
-
-    super.report_phase(phase);
-
-    `uvm_info("USB_DRV_REPORT",
-              "USB BFM driver simulation completed",
-              UVM_LOW)
-
-  endfunction
-
-endclass
-
+endclass 

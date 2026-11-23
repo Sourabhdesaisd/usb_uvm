@@ -1,167 +1,92 @@
 
 class phy_transaction extends uvm_sequence_item;
 
-        
-  // SIE TO PHY - TX STIMULUS
-        
+    // USB operating speed
+    rand speed_t speed;
 
-  rand bit        sie_valid;
-  rand bit [7:0]  sie_data;
-  rand bit        sop;
-  rand bit        eop;
-  rand bit        sof_packet;
+    // TX data
+    rand bit [7:0] data;
 
+    // SIE handshake
+    rand bit valid;
+    bit ready;
 
-        
-  // ONITOR EVENT INDICATORS
-        
+    // Packet boundary indications
+    rand bit sop;
+    rand bit eop;
 
-  bit is_sie_transfer;
-  bit is_rx_transfer;
+    // SOF packet indication
+    rand bit sof_packet;
 
+    // Number of cycles to wait before presenting this transaction
+    rand int unsigned delay_cycles;
 
-        
-  // COMMON DUT OBSERVATIONS
-        
+    // Optional valid/ready backpressure control
+    rand int unsigned valid_gap_cycles;
 
-  logic       rst_n;
-  logic [1:0] usb_speed;
-  logic       sie_ready;
+    // Transaction identification
+    int unsigned transaction_id;
 
+    // Constraints
+    constraint c_delay_cycles {
+        delay_cycles inside {[0:20]};
+    }
 
-        
-  //  PHYSICAL TX OBSERVATIONS
-        
+    constraint c_valid_gap_cycles {
+        valid_gap_cycles inside {[0:10]};
+    }
 
-  logic dp;
-  logic dm;
-  logic tx_valid;
+    constraint c_packet_boundary {
+        if (sop)
+            valid == 1'b1;
 
+        if (eop)
+            valid == 1'b1;
+    }
 
-        
-  // PHY RX DATA OBSERVATIONS
-        
+    constraint c_speed {
+        speed inside {LS, FS, HS};
+    }
 
-  logic [7:0] DataOut;
-  logic       RxValid;
-  logic       RxActive;
-  logic       RxError;
+    // UVM factory registration
+    `uvm_object_utils_begin(phy_transaction)
 
-  logic [1:0] LineState;
+        `uvm_field_enum(speed_t, speed, UVM_ALL_ON)
+        `uvm_field_int(data, UVM_ALL_ON)
+        `uvm_field_int(valid, UVM_ALL_ON)
+        `uvm_field_int(ready, UVM_ALL_ON)
+        `uvm_field_int(sop, UVM_ALL_ON)
+        `uvm_field_int(eop, UVM_ALL_ON)
+        `uvm_field_int(sof_packet, UVM_ALL_ON)
+        `uvm_field_int(delay_cycles, UVM_ALL_ON)
+        `uvm_field_int(valid_gap_cycles, UVM_ALL_ON)
+        `uvm_field_int(transaction_id, UVM_ALL_ON)
 
-  logic       rx_sop;
-  logic       rx_eop;
+    `uvm_object_utils_end
 
+    // Constructor
+    function new(string name = "phy_transaction");
+        super.new(name);
+    endfunction
 
-        
-  // RX ERROR AND STATUS OBSERVATIONS
-        
+    // Print transaction details
+    function string convert2string();
 
-  logic rx_stuff_err;
-  logic rx_align_err;
-  logic rx_line_err;
-  logic rx_babble_err;
-  logic rx_sync_err;
-  logic rx_bus_reset;
+        return $sformatf(
+            "PHY_TXN: ID=%0d SPEED=%0d DATA=0x%02h VALID=%0b READY=%0b SOP=%0b EOP=%0b SOF=%0b DELAY=%0d GAP=%0d",
+            transaction_id,
+            speed,
+            data,
+            valid,
+            ready,
+            sop,
+            eop,
+            sof_packet,
+            delay_cycles,
+            valid_gap_cycles
+        );
 
-
-        
-  //  UVM FIELD REGISTRATION
-        
-
-  `uvm_object_utils_begin(phy_transaction)
-
-    // TX stimulus
-    `uvm_field_int(sie_valid,        UVM_ALL_ON)
-    `uvm_field_int(sie_data,         UVM_ALL_ON)
-    `uvm_field_int(sop,              UVM_ALL_ON)
-    `uvm_field_int(eop,              UVM_ALL_ON)
-    `uvm_field_int(sof_packet,       UVM_ALL_ON)
-
-    // Monitor event indicators
-    `uvm_field_int(is_sie_transfer,  UVM_ALL_ON)
-    `uvm_field_int(is_rx_transfer,   UVM_ALL_ON)
-
-    // Common observations
-    `uvm_field_int(rst_n,            UVM_ALL_ON)
-    `uvm_field_int(usb_speed,        UVM_ALL_ON)
-    `uvm_field_int(sie_ready,        UVM_ALL_ON)
-
-    // Physical TX observations
-    `uvm_field_int(dp,               UVM_ALL_ON)
-    `uvm_field_int(dm,               UVM_ALL_ON)
-    `uvm_field_int(tx_valid,         UVM_ALL_ON)
-
-    // RX data observations
-    `uvm_field_int(DataOut,          UVM_ALL_ON)
-    `uvm_field_int(RxValid,          UVM_ALL_ON)
-    `uvm_field_int(RxActive,         UVM_ALL_ON)
-    `uvm_field_int(RxError,          UVM_ALL_ON)
-    `uvm_field_int(LineState,        UVM_ALL_ON)
-
-    `uvm_field_int(rx_sop,           UVM_ALL_ON)
-    `uvm_field_int(rx_eop,           UVM_ALL_ON)
-
-    // RX status
-    `uvm_field_int(rx_stuff_err,     UVM_ALL_ON)
-    `uvm_field_int(rx_align_err,     UVM_ALL_ON)
-    `uvm_field_int(rx_line_err,      UVM_ALL_ON)
-    `uvm_field_int(rx_babble_err,    UVM_ALL_ON)
-    `uvm_field_int(rx_sync_err,      UVM_ALL_ON)
-    `uvm_field_int(rx_bus_reset,     UVM_ALL_ON)
-
-  `uvm_object_utils_end
-
-
-        
-  // 8. CONSTRUCTOR
-        
-
-  function new(string name = "phy_transaction");
-
-    super.new(name);
-
-    // TX stimulus defaults
-    sie_valid = 0;
-    sie_data  = 0;
-    sop       = 0;
-    eop       = 0;
-    sof_packet = 0;
-
-    // Monitor event defaults
-    is_sie_transfer = 0;
-    is_rx_transfer  = 0;
-
-    // Common observation defaults
-    rst_n     = 0;
-    usb_speed = 2'b11;
-    sie_ready = 0;
-
-    // Physical TX defaults
-    dp       = 0;
-    dm       = 0;
-    tx_valid = 0;
-
-    // RX data defaults
-    DataOut  = 0;
-    RxValid  = 0;
-    RxActive = 0;
-    RxError  = 0;
-
-    LineState = 0;
-
-    rx_sop = 0;
-    rx_eop = 0;
-
-    // RX status defaults
-    rx_stuff_err  = 0;
-    rx_align_err  = 0;
-    rx_line_err   = 0;
-    rx_babble_err = 0;
-    rx_sync_err   = 0;
-    rx_bus_reset  = 0;
-
-  endfunction
+    endfunction
 
 endclass
 

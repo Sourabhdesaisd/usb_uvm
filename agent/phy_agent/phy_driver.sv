@@ -1,266 +1,217 @@
 
 class phy_driver extends uvm_driver #(phy_transaction);
 
-  `uvm_component_utils(phy_driver)
+    `uvm_component_utils(phy_driver)
 
-  // Virtual interface and configuration
-  virtual usb_phy_if vif;
-  phy_agent_config cfg;
+    // Virtual interface
+    virtual usb_phy_if #(8) vif;
 
-  // Maximum cycles to wait for DUT ready
-  int unsigned ready_timeout;
+    // Agent configuration
+    phy_agent_config cfg;
 
-  // Transaction status
-  bit transaction_accepted;
+    // Transaction counter
+    int unsigned driven_transactions;
 
-
-  // Constructor
-  function new(string name = "phy_driver",
-               uvm_component parent = null);
-
-    super.new(name, parent);
-
-    ready_timeout        = 50;
-    transaction_accepted = 0;
-
-  endfunction
+    function new(
+        string name = "phy_driver",
+        uvm_component parent = null
+    );
+        super.new(name, parent);
+        driven_transactions = 0;
+    endfunction
 
 
-  // Build phase
-  function void build_phase(uvm_phase phase);
+              
+    // BUILD PHASE
+              
 
-    super.build_phase(phase);
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
 
-    if (!uvm_config_db#(virtual usb_phy_if)::get(
-          this, "", "vif", vif)) begin
+        if (!uvm_config_db#(phy_agent_config)::get(
+            this,
+            "",
+            "cfg",
+            cfg
+        )) begin
+            `uvm_fatal(
+                "PHY_DRV",
+                "Failed to get phy_agent_config"
+            )
+        end
 
-      `uvm_fatal("PHY_DRV_VIF",
-                 "PHY virtual interface not found")
-    end
+        if (cfg == null) begin
+            `uvm_fatal(
+                "PHY_DRV",
+                "PHY agent configuration is NULL"
+            )
+        end
 
-    if (vif == null) begin
+        if (cfg.vif == null) begin
+            `uvm_fatal(
+                "PHY_DRV",
+                "PHY virtual interface is NULL"
+            )
+        end
 
-      `uvm_fatal("PHY_DRV_VIF_NULL",
-                 "PHY virtual interface is NULL")
-    end
+        vif = cfg.vif;
 
-    if (!uvm_config_db#(phy_agent_config)::get(
-          this, "", "cfg", cfg)) begin
-
-      `uvm_fatal("PHY_DRV_CFG",
-                 "PHY agent configuration not found")
-    end
-
-    if (cfg == null) begin
-
-      `uvm_fatal("PHY_DRV_CFG_NULL",
-                 "PHY agent configuration is NULL")
-    end
-
-    if (cfg.speed == USB_SPEED_RESERVED) begin
-
-      `uvm_fatal("PHY_DRV_SPEED",
-                 "Reserved USB speed selected")
-    end
-
-    `uvm_info("PHY_DRV",
-              $sformatf("PHY driver configured for speed %0d",
-                        cfg.speed),
-              UVM_LOW)
-
-  endfunction
+    endfunction
 
 
-  // Drive idle values
-  task drive_idle();
+              
+    // RUN PHASE
+              
 
-    vif.cb_drv.sie_valid  <= 1'b0;
-    vif.cb_drv.sie_data   <= '0;
-    vif.cb_drv.sie_sop    <= 1'b0;
-    vif.cb_drv.sie_eop    <= 1'b0;
-    vif.cb_drv.sof_packet <= 1'b0;
+    task run_phase(uvm_phase phase);
 
-  endtask
-
-
-  // Wait for reset release
-  task wait_for_reset_release();
-
-    while (vif.cb_drv.rst_n !== 1'b1) begin
-      @(vif.cb_drv);
-    end
-
-    `uvm_info("PHY_DRV",
-              "Reset released. Driver is ready.",
-              UVM_MEDIUM)
-
-  endtask
-
-
-  // Main driver process
-  task run_phase(uvm_phase phase);
-
-    phy_transaction req;
-
-    int unsigned wait_count;
-
-    bit accepted;
-    bit reset_abort;
-
-    // Initialize SIE inputs
-    drive_idle();
-
-    `uvm_info("PHY_DRV",
-              "PHY driver started",
-              UVM_LOW)
-
-    forever begin
-
-      // Get next transaction
-      seq_item_port.get_next_item(req);
-
-      accepted             = 0;
-      reset_abort          = 0;
-      wait_count           = 0;
-      transaction_accepted = 0;
-
-      // Wait until reset is released
-      wait_for_reset_release();
-
-      // Configure USB speed
-      @(vif.cb_drv);
-
-      
-      vif.cb_drv.usb_speed <= usb_phy_pkg::speed_t'(cfg.speed);
-
-      // Check transaction
-      if (req.sie_valid !== 1'b1) begin
-
-        `uvm_error("PHY_DRV",
-                   "Invalid transaction: sie_valid must be 1")
+        phy_transaction req;
 
         drive_idle();
-        seq_item_port.item_done();
 
-      end
-      else begin
+        wait_for_reset_release();
 
-        // Drive SIE transaction
-        vif.cb_drv.sie_data   <= req.sie_data;
-        vif.cb_drv.sie_valid  <= 1'b1;
-        vif.cb_drv.sie_sop    <= req.sop;
-        vif.cb_drv.sie_eop    <= req.eop;
-        vif.cb_drv.sof_packet <= req.sof_packet;
+        forever begin
 
-        `uvm_info("PHY_DRV",
-                  $sformatf(
-                    "Driving SIE transaction: DATA=0x%02h SOP=%0b EOP=%0b SOF=%0b SPEED=%0d",
-                    req.sie_data,
-                    req.sop,
-                    req.eop,
-                    req.sof_packet,
-                    cfg.speed),
-                  UVM_MEDIUM)
+            seq_item_port.get_next_item(req);
 
-        // Wait for DUT handshake
-        while ((wait_count < ready_timeout) &&
-               !accepted &&
-               !reset_abort) begin
+            if (req == null) begin
+                `uvm_fatal(
+                    "PHY_DRV",
+                    "Received NULL transaction"
+                )
+            end
 
-          @(vif.cb_drv);
+            drive_transaction(req);
 
-          // Reset check
-          if (vif.cb_drv.rst_n !== 1'b1) begin
-
-            reset_abort = 1'b1;
-
-            `uvm_warning("PHY_DRV",
-                         "Reset asserted during SIE transaction")
-
-          end
-          else begin
-
-            case (vif.cb_drv.sie_ready)
-
-              1'b1: begin
-
-                accepted             = 1'b1;
-                transaction_accepted = 1'b1;
-
-                `uvm_info("PHY_DRV",
-                          "DUT accepted SIE transaction",
-                          UVM_MEDIUM)
-
-              end
-
-              1'b0: begin
-
-                wait_count++;
-
-              end
-
-              default: begin
-
-                wait_count++;
-
-                `uvm_warning("PHY_DRV",
-                             "Unknown value detected on sie_ready")
-
-              end
-
-            endcase
-
-          end
+            seq_item_port.item_done();
 
         end
 
-        // Deassert immediately after handshake/abort/timeout.
-        // The DUT has already sampled the preceding valid beat.
-        drive_idle();
+    endtask
 
-        // Report transaction result
-        if (accepted) begin
 
-          `uvm_info("PHY_DRV",
-                    "PHY transaction accepted successfully",
-                    UVM_MEDIUM)
+              
+    // WAIT FOR RESET RELEASE
+              
 
-        end
-        else if (reset_abort) begin
+    task wait_for_reset_release();
 
-          `uvm_warning("PHY_DRV",
-                       "PHY transaction aborted due to reset")
+        @(vif.cb_drv);
 
-        end
-        else begin
-
-          `uvm_error("PHY_DRV",
-                     $sformatf(
-                       "Timeout waiting for sie_ready. Timeout=%0d cycles",
-                       ready_timeout))
-
+        while (vif.cb_drv.rst_n !== 1'b1) begin
+            @(vif.cb_drv);
         end
 
-        // Complete sequence-driver handshake
-        seq_item_port.item_done();
-
-      end
-
-    end
-
-  endtask
+    endtask
 
 
-  // Report phase
-  function void report_phase(uvm_phase phase);
+              
+    // DRIVE IDLE VALUES
+              
 
-    super.report_phase(phase);
+    task drive_idle();
 
-    `uvm_info("PHY_DRV_REPORT",
-              "PHY driver simulation completed",
-              UVM_LOW)
+        vif.cb_drv.usb_speed  <= cfg.speed;
+        vif.cb_drv.sof_packet <= 1'b0;
 
-  endfunction
+        vif.cb_drv.sie_data   <= '0;
+        vif.cb_drv.sie_valid  <= 1'b0;
+        vif.cb_drv.sie_sop    <= 1'b0;
+        vif.cb_drv.sie_eop    <= 1'b0;
 
-endclass
+    endtask
 
+
+              
+    // DRIVE ONE SIE TRANSACTION
+              
+
+    task drive_transaction(phy_transaction tr);
+
+        int unsigned wait_count;
+
+        // Apply configured USB speed
+        @(vif.cb_drv);
+
+        vif.cb_drv.usb_speed <= tr.speed;
+
+        // Optional delay before this transfer
+        repeat (tr.delay_cycles) begin
+            @(vif.cb_drv);
+        end
+
+        // Drive byte and packet controls
+        vif.cb_drv.sie_data   <= tr.data;
+        vif.cb_drv.sie_sop    <= tr.sop;
+        vif.cb_drv.sie_eop    <= tr.eop;
+        vif.cb_drv.sof_packet <= tr.sof_packet;
+        vif.cb_drv.sie_valid  <= tr.valid;
+
+        wait_count = 0;
+
+        // Hold the transaction until DUT accepts it
+        do begin
+
+            @(vif.cb_drv);
+
+            wait_count++;
+
+            if (wait_count > 10000) begin
+                `uvm_fatal(
+                    "PHY_DRV_TIMEOUT",
+                    $sformatf(
+                        "DUT did not assert sie_ready. DATA=0x%02h SPEED=%0d",
+                        tr.data,
+                        tr.speed
+                    )
+                )
+            end
+
+        end while (vif.cb_drv.sie_ready !== 1'b1);
+
+        // Deassert valid after acceptance
+        vif.cb_drv.sie_valid  <= 1'b0;
+        vif.cb_drv.sie_sop    <= 1'b0;
+        vif.cb_drv.sie_eop    <= 1'b0;
+        vif.cb_drv.sof_packet <= 1'b0;
+
+        driven_transactions++;
+
+        `uvm_info(
+            "PHY_DRV",
+            $sformatf(
+                "Accepted transaction %0d: %s",
+                driven_transactions,
+                tr.convert2string()
+            ),
+            UVM_MEDIUM
+        )
+
+        // Optional gap between transfers
+        repeat (tr.valid_gap_cycles) begin
+            @(vif.cb_drv);
+        end
+
+    endtask
+
+
+              
+    // REPORT PHASE
+              
+
+    function void report_phase(uvm_phase phase);
+        super.report_phase(phase);
+
+        `uvm_info(
+            "PHY_DRV_REPORT",
+            $sformatf(
+                "Total accepted SIE transactions = %0d",
+                driven_transactions
+            ),
+            UVM_LOW
+        )
+
+    endfunction
+
+endclass 

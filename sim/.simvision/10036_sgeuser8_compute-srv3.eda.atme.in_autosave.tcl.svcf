@@ -213,7 +213,7 @@ set id [waveform add -signals  {
 	wave::tb_top.dut.dut_tx.tx_valid
 	} ]
 
-waveform xview limits 0 1830ns
+waveform xview limits 9998275ns 10000105ns
 
 #
 # Waveform Window Links

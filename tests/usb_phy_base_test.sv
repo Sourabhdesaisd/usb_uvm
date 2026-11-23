@@ -1,203 +1,141 @@
 
-
 class usb_phy_base_test extends uvm_test;
 
-  `uvm_component_utils(usb_phy_base_test)
+    `uvm_component_utils(usb_phy_base_test)
 
-     
-  usb_phy_env env;
-     
-  usb_phy_env_config env_cfg;
+    // Main environment
+    usb_phy_env env;
 
-     
-  virtual usb_phy_if phy_vif;
-  virtual usb_bus_if usb_vif;
+    // Environment configuration
+    usb_phy_env_config env_cfg;
 
-     
-  int unsigned speed_arg;
+    // Virtual interfaces
+    virtual usb_phy_if #(8) phy_vif;
+    virtual usb_bus_if bus_vif;
 
 
-     
-  function new(string name = "usb_phy_base_test",
-               uvm_component parent = null);
-
-    super.new(name, parent);
-
-  endfunction
-
-     
-  function void build_phase(uvm_phase phase);
-
-    super.build_phase(phase);
-
-    // Get PHY virtual interface
-
-    if (!uvm_config_db#(virtual usb_phy_if)::get(
-          this, "", "phy_vif", phy_vif)) begin
-
-      `uvm_fatal("BASE_TEST",
-                 "PHY virtual interface not found")
-
-    end
-
-    // Get USB bus virtual interface
-
-    if (!uvm_config_db#(virtual usb_bus_if)::get(
-          this, "", "usb_vif", usb_vif)) begin
-
-      `uvm_fatal("BASE_TEST",
-                 "USB bus virtual interface not found")
-
-    end
-
-    // Read USB speed from command line
-    // 0 = Low Speed
-    // 1 = Full Speed
-    // 2 = High Speed
-
-    if (!$value$plusargs("USB_SPEED=%d", speed_arg)) begin
-
-      speed_arg = 1;
-
-    end
-
-    // Create environment configuration
-
-    env_cfg = usb_phy_env_config::type_id::create("env_cfg");
-
-    // Configure USB speed
-
-    case (speed_arg)
-
-      0: begin
-
-        env_cfg.speed = USB_SPEED_LS;
-
-        `uvm_info("BASE_TEST",
-                  "USB Low Speed selected",
-                  UVM_LOW)
-
-      end
-
-      1: begin
-
-        env_cfg.speed = USB_SPEED_FS;
-
-        `uvm_info("BASE_TEST",
-                  "USB Full Speed selected",
-                  UVM_LOW)
-
-      end
-
-      2: begin
-
-        env_cfg.speed = USB_SPEED_HS;
-
-        `uvm_info("BASE_TEST",
-                  "USB High Speed selected",
-                  UVM_LOW)
-
-      end
-
-      default: begin
-
-        `uvm_fatal("BASE_TEST",
-                   "Invalid USB_SPEED. Use 0=LS, 1=FS, 2=HS")
-
-      end
-
-    endcase
-
-    // Assign virtual interfaces
-
-    env_cfg.phy_vif = phy_vif;
-    env_cfg.usb_vif = usb_vif;
-
-    // Agent activity configuration
-
-    env_cfg.phy_is_active = UVM_ACTIVE;
-    env_cfg.usb_is_active = UVM_ACTIVE;
-
-    // Validate environment configuration
-
-    env_cfg.validate_config();
-
-    // Pass configuration to environment
-
-    uvm_config_db#(usb_phy_env_config)::set(
-      this,
-      "env",
-      "cfg",
-      env_cfg
+    function new(
+        string name = "usb_phy_base_test",
+        uvm_component parent = null
     );
+        super.new(name, parent);
+    endfunction
 
-    // Create USB PHY environment
 
-    env = usb_phy_env::type_id::create("env", this);
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
 
-    // Configuration summary
+        // Retrieve PHY interface from testbench top.
+        if (!uvm_config_db#(virtual usb_phy_if #(8))::get(
+                this,
+                "",
+                "vif",
+                phy_vif
+            )) begin
 
-    `uvm_info("BASE_TEST",
-              $sformatf(
-                "USB PHY Base Test Configuration: SPEED=%0d PHY_ACTIVE=%0d USB_ACTIVE=%0d",
-                env_cfg.speed,
-                env_cfg.phy_is_active,
-                env_cfg.usb_is_active
-              ),
-              UVM_LOW)
+            `uvm_fatal(
+                "USB_PHY_BASE_TEST",
+                "PHY virtual interface not found"
+            )
 
-  endfunction
+        end
 
-     
-  task run_phase(uvm_phase phase);
+        // Retrieve USB bus interface from testbench top.
+        if (!uvm_config_db#(virtual usb_bus_if)::get(
+                this,
+                "",
+                "bus_vif",
+                bus_vif
+            )) begin
 
-    phy_simple_tx_seq tx_seq;
+            `uvm_fatal(
+                "USB_PHY_BASE_TEST",
+                "USB bus virtual interface not found"
+            )
 
-    phase.raise_objection(this);
+        end
 
-    
-    
-    `uvm_info("BASE_TEST",
-              "Starting simple PHY TX sequence",
-              UVM_LOW)
 
-    // Check PHY agent and sequencer
+        // Create environment configuration.
+        env_cfg = usb_phy_env_config::type_id::create(
+            "env_cfg"
+        );
 
-    if (env.phy_ag == null ||
-        env.phy_ag.sequencer == null) begin
+        // Create both agent configurations.
+        env_cfg.create_agent_configs();
 
-      `uvm_fatal("BASE_TEST",
-                 "PHY agent or sequencer is NULL")
 
-    end
+        // Configure PHY agent.
+        env_cfg.phy_cfg.vif = phy_vif;
+        env_cfg.phy_cfg.is_active = UVM_ACTIVE;
+        env_cfg.phy_cfg.enable_driver = 1'b1;
+        env_cfg.phy_cfg.enable_monitor = 1'b1;
 
-    // Create and start TX sequence
 
-    tx_seq = phy_simple_tx_seq::type_id::create("tx_seq");
+        // Configure USB BFM agent.
+        env_cfg.usb_bfm_cfg.bus_vif = bus_vif;
+        env_cfg.usb_bfm_cfg.phy_vif = phy_vif;
+        env_cfg.usb_bfm_cfg.is_active = UVM_ACTIVE;
+        env_cfg.usb_bfm_cfg.enable_driver = 1'b1;
+        env_cfg.usb_bfm_cfg.enable_monitor = 1'b1;
 
-    tx_seq.start(env.phy_ag.sequencer);
 
-    `uvm_info("BASE_TEST",
-              "Simple PHY TX sequence completed",
-              UVM_LOW)
+        // Default test speed.
+        env_cfg.set_speed(FS);
 
-    // Wait for final DUT TX/RX operations and observations
+        // Validate all configurations.
+        env_cfg.check_config();
 
-    `uvm_info("BASE_TEST",
-              "Waiting for DUT to complete pending operations",
-              UVM_LOW)
 
-    #10ms;
+        // Pass configuration to environment.
+        uvm_config_db#(usb_phy_env_config)::set(
+            this,
+            "env",
+            "env_cfg",
+            env_cfg
+        );
 
-    `uvm_info("BASE_TEST",
-              "Simulation drain time completed",
-              UVM_LOW)
 
-    // End test
+        // Create environment.
+        env = usb_phy_env::type_id::create(
+            "env",
+            this
+        );
 
-    phase.drop_objection(this);
 
-  endtask
+        `uvm_info(
+            "USB_PHY_BASE_TEST",
+            "USB PHY base test build completed",
+            UVM_LOW
+        )
 
-endclass
+    endfunction
+
+
+    function void end_of_elaboration_phase(uvm_phase phase);
+        super.end_of_elaboration_phase(phase);
+
+        `uvm_info(
+            "USB_PHY_BASE_TEST",
+            "USB PHY UVM testbench topology",
+            UVM_LOW
+        )
+
+        uvm_top.print_topology();
+
+    endfunction
+
+
+    function void report_phase(uvm_phase phase);
+        super.report_phase(phase);
+
+        `uvm_info(
+            "USB_PHY_BASE_TEST",
+            "USB PHY base test completed",
+            UVM_LOW
+        )
+
+    endfunction
+
+endclass : usb_phy_base_test
 

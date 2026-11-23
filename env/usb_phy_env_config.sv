@@ -1,105 +1,133 @@
 
 class usb_phy_env_config extends uvm_object;
 
-     
-  // Virtual interfaces
-     
+    `uvm_object_utils(usb_phy_env_config)
 
-  // Interface connected to the PHY SIE interface
-  virtual usb_phy_if phy_vif;
+    // PHY agent configuration
+    phy_agent_config phy_cfg;
 
-  // Interface connected to the external USB bus/BFM
-  virtual usb_bus_if usb_vif;
+    // USB BFM agent configuration
+    usb_bfm_agent_config usb_bfm_cfg;
 
+    // Environment-level controls
+    bit enable_phy_agent     = 1'b1;
+    bit enable_usb_bfm_agent = 1'b1;
 
-     
-  // Common USB speed configuration
-     
+    // Default USB operating speed
+    speed_t speed = FS;
 
-  usb_speed_e speed;
-
-
-     
-  // Agent activity configuration
-     
-
-  uvm_active_passive_enum phy_is_active;
-  uvm_active_passive_enum usb_is_active;
+    // Environment name
+    string env_name = "USB_PHY_ENV";
 
 
-     
-  // UVM factory and field registration
-     
-
-  `uvm_object_utils_begin(usb_phy_env_config)
-
-    `uvm_field_enum(usb_speed_e, speed, UVM_ALL_ON)
-
-    `uvm_field_enum(uvm_active_passive_enum,
-                    phy_is_active, UVM_ALL_ON)
-
-    `uvm_field_enum(uvm_active_passive_enum,
-                    usb_is_active, UVM_ALL_ON)
-
-  `uvm_object_utils_end
+    function new(string name = "usb_phy_env_config");
+        super.new(name);
+    endfunction
 
 
-     
-  // Constructor
-     
+    // Create and initialize the agent configurations.
+    function void create_agent_configs();
 
-  function new(string name = "usb_phy_env_config");
+        if (phy_cfg == null) begin
 
-    super.new(name);
+            phy_cfg = phy_agent_config::type_id::create(
+                "phy_cfg"
+            );
 
-    // Initialize virtual interfaces
-    phy_vif = null;
-    usb_vif = null;
+        end
 
-    // Default USB speed
-    speed = USB_SPEED_FS;
+        if (usb_bfm_cfg == null) begin
 
-    // Both agents are active by default
-    phy_is_active = UVM_ACTIVE;
-    usb_is_active = UVM_ACTIVE;
+            usb_bfm_cfg = usb_bfm_agent_config::type_id::create(
+                "usb_bfm_cfg"
+            );
 
-  endfunction
+        end
+
+        phy_cfg.speed = speed;
+        usb_bfm_cfg.set_speed(speed);
+
+    endfunction
 
 
-     
-  // Configuration validation
-     
+    // Set the operating speed for both agents.
+    function void set_speed(speed_t new_speed);
 
-  function void validate_config();
+        if (!(new_speed inside {LS, FS, HS})) begin
 
-    if (phy_vif == null) begin
-      `uvm_fatal("ENV_CFG",
-                 "PHY virtual interface is not configured")
-    end
+            `uvm_error(
+                "USB_PHY_ENV_CFG",
+                $sformatf(
+                    "Invalid USB speed: %0d",
+                    new_speed
+                )
+            )
 
-    if (usb_vif == null) begin
-      `uvm_fatal("ENV_CFG",
-                 "USB bus virtual interface is not configured")
-    end
+            return;
 
-    if (speed == USB_SPEED_RESERVED) begin
-      `uvm_fatal("ENV_CFG",
-                 "Reserved USB speed is not supported")
-    end
+        end
 
-    if ((phy_is_active != UVM_ACTIVE) &&
-        (phy_is_active != UVM_PASSIVE)) begin
-      `uvm_fatal("ENV_CFG",
-                 "Invalid PHY agent activity configuration")
-    end
+        speed = new_speed;
 
-    if ((usb_is_active != UVM_ACTIVE) &&
-        (usb_is_active != UVM_PASSIVE)) begin
-      `uvm_fatal("ENV_CFG",
-                 "Invalid USB BFM agent activity configuration")
-    end
+        if (phy_cfg != null) begin
+            phy_cfg.speed = new_speed;
+        end
 
-  endfunction
+        if (usb_bfm_cfg != null) begin
+            usb_bfm_cfg.set_speed(new_speed);
+        end
 
-endclass
+    endfunction
 
+
+    // Validate environment configuration.
+    function void check_config();
+
+        if (enable_phy_agent && phy_cfg == null) begin
+
+            `uvm_fatal(
+                "USB_PHY_ENV_CFG",
+                "PHY agent configuration is NULL"
+            )
+
+        end
+
+        if (enable_usb_bfm_agent && usb_bfm_cfg == null) begin
+
+            `uvm_fatal(
+                "USB_PHY_ENV_CFG",
+                "USB BFM agent configuration is NULL"
+            )
+
+        end
+
+        if (!(speed inside {LS, FS, HS})) begin
+
+            `uvm_fatal(
+                "USB_PHY_ENV_CFG",
+                "Invalid environment USB speed"
+            )
+
+        end
+
+    endfunction
+
+
+    // Print the environment configuration.
+    function void print_config();
+
+        `uvm_info(
+            "USB_PHY_ENV_CFG",
+            $sformatf(
+                "Environment=%s Speed=%0d PHY Agent=%0b USB BFM Agent=%0b",
+                env_name,
+                speed,
+                enable_phy_agent,
+                enable_usb_bfm_agent
+            ),
+            UVM_LOW
+        )
+
+    endfunction
+
+endclass 

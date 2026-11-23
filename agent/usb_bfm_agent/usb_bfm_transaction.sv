@@ -1,119 +1,89 @@
 
 class usb_bfm_transaction extends uvm_sequence_item;
 
+    // USB operating speed
+    rand speed_t speed;
 
-       
-  //  STIMULUS FIELDS
-       
+    // USB physical line values
+    rand bit dp;
+    rand bit dm;
 
-  // USB line state driven by external partner
-  rand usb_line_state_e line_state;
+    // External device output enable
+    rand bit drive_enable;
 
-  // Number of bit intervals to hold the requested state
-  rand int unsigned bit_count;
+    // Analog serial input to CDR
+    rand bit analog_serial;
 
+    // Number of system clock cycles to hold this line state
+    rand int unsigned duration_cycles;
 
-       
-  //  EXTERNAL PARTNER OBSERVATIONS
-       
+    // Optional idle gap before applying this line state
+    rand int unsigned idle_cycles;
 
-  logic device_dp;
-  logic device_dm;
-  logic device_oe;
+    // Packet boundary markers for BFM stimulus
+    rand bit packet_start;
+    rand bit packet_end;
 
+    // Transaction identification
+    int unsigned transaction_id;
 
-       
-  //  DUT PHYSICAL TX OBSERVATIONS
-       
+    // Constraints
+    constraint c_speed {
+        speed inside {LS, FS, HS};
+    }
 
-  logic [1:0] phy_line_state;
-  logic       phy_tx_valid;
+    constraint c_duration {
+        duration_cycles inside {[1:1000]};
+    }
 
+    constraint c_idle {
+        idle_cycles inside {[0:100]};
+    }
 
-       
-  //  MONITOR EVENT INDICATORS
-       
+    // Legal USB line-state encoding:
+    // SE0 = 00
+    // K/J depend on USB speed.
+    // SE1 = 11
+    //
+    // DP/DM are randomized independently here because
+    // malformed line-state tests also need to be possible.
 
-  bit is_device_drive;
-  bit is_phy_tx;
+    `uvm_object_utils_begin(usb_bfm_transaction)
 
+        `uvm_field_enum(speed_t, speed, UVM_ALL_ON)
+        `uvm_field_int(dp, UVM_ALL_ON)
+        `uvm_field_int(dm, UVM_ALL_ON)
+        `uvm_field_int(drive_enable, UVM_ALL_ON)
+        `uvm_field_int(analog_serial, UVM_ALL_ON)
+        `uvm_field_int(duration_cycles, UVM_ALL_ON)
+        `uvm_field_int(idle_cycles, UVM_ALL_ON)
+        `uvm_field_int(packet_start, UVM_ALL_ON)
+        `uvm_field_int(packet_end, UVM_ALL_ON)
+        `uvm_field_int(transaction_id, UVM_ALL_ON)
 
-       
-  //  UVM FIELD REGISTRATION
-       
+    `uvm_object_utils_end
 
-  `uvm_object_utils_begin(usb_bfm_transaction)
+    function new(string name = "usb_bfm_transaction");
+        super.new(name);
+    endfunction
 
-    // Stimulus
-    `uvm_field_enum(usb_line_state_e, line_state, UVM_ALL_ON)
-    `uvm_field_int(bit_count, UVM_ALL_ON)
+    function string convert2string();
 
-    // External partner observations
-    `uvm_field_int(device_dp, UVM_ALL_ON)
-    `uvm_field_int(device_dm, UVM_ALL_ON)
-    `uvm_field_int(device_oe, UVM_ALL_ON)
+        return $sformatf(
+            "USB_BFM_TXN: ID=%0d SPEED=%0d DP=%0b DM=%0b OE=%0b SERIAL=%0b DURATION=%0d IDLE=%0d START=%0b END=%0b",
+            transaction_id,
+            speed,
+            dp,
+            dm,
+            drive_enable,
+            analog_serial,
+            duration_cycles,
+            idle_cycles,
+            packet_start,
+            packet_end
+        );
 
-    // DUT TX observations
-    `uvm_field_int(phy_line_state, UVM_ALL_ON)
-    `uvm_field_int(phy_tx_valid, UVM_ALL_ON)
+    endfunction
 
-    // Monitor event indicators
-    `uvm_field_int(is_device_drive, UVM_ALL_ON)
-    `uvm_field_int(is_phy_tx, UVM_ALL_ON)
-
-  `uvm_object_utils_end
-
-
-       
-  //  RANDOMIZATION CONSTRAINTS
-       
-
-  // Keep bit_count within the supported driver range
-  constraint valid_bit_count_c {
-
-    bit_count inside {[1:1024]};
-
-  }
-
-  // Allow only defined USB line states
-  constraint valid_line_state_c {
-
-    line_state inside {
-      USB_LINE_SE0,
-      USB_LINE_SE1,
-      USB_LINE_J,
-      USB_LINE_K
-    };
-
-  }
-
-
-       
-  //  CONSTRUCTOR
-       
-
-  function new(string name = "usb_bfm_transaction");
-
-    super.new(name);
-
-    // Stimulus defaults
-    line_state = USB_LINE_SE0;
-    bit_count  = 1;
-
-    // External partner observation defaults
-    device_dp = 1'b0;
-    device_dm = 1'b0;
-    device_oe = 1'b0;
-
-    // DUT physical TX observation defaults
-    phy_line_state = 2'b00;
-    phy_tx_valid   = 1'b0;
-
-    // Monitor event defaults
-    is_device_drive = 1'b0;
-    is_phy_tx       = 1'b0;
-
-  endfunction
-
-endclass
+endclass 
 

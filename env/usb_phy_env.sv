@@ -1,223 +1,116 @@
 
-
-
 class usb_phy_env extends uvm_env;
 
-  `uvm_component_utils(usb_phy_env)
+    `uvm_component_utils(usb_phy_env)
 
-         
-  // 1. ENVIRONMENT CONFIGURATION
-         
+    // Environment configuration
+    usb_phy_env_config env_cfg;
 
-  usb_phy_env_config cfg;
+    // UVM agents
+    phy_agent     phy_ag;
+    usb_bfm_agent usb_ag;
 
-         
-  // 2. AGENT CONFIGURATIONS
-         
-
-  phy_agent_config phy_cfg;
-  usb_bfm_config   usb_cfg;
-
-         
-  // 3. AGENTS
-         
-
-  phy_agent     phy_ag;
-  usb_bfm_agent usb_ag;
-
-         
-  // 4. SCOREBOARD
-         
-
-  usb_phy_scoreboard scoreboard;
-
-         
-  // 5. CONSTRUCTOR
-         
-
-  function new(string name = "usb_phy_env",
-               uvm_component parent = null);
-
-    super.new(name, parent);
-
-  endfunction
+    // Scoreboard
+    usb_phy_scb scoreboard;
 
 
-         
-  // 6. BUILD PHASE
-         
-
-  function void build_phase(uvm_phase phase);
-
-    super.build_phase(phase);
-
-    // Get environment configuration
-    if (!uvm_config_db#(usb_phy_env_config)::get(
-          this, "", "cfg", cfg)) begin
-
-      `uvm_fatal("ENV_CFG",
-                 "USB PHY environment configuration not found")
-
-    end
-
-    if (cfg == null) begin
-
-      `uvm_fatal("ENV_CFG_NULL",
-                 "USB PHY environment configuration is NULL")
-
-    end
-
-    // Validate environment configuration
-    cfg.validate_config();
-
-
-           
-    // Create PHY agent configuration
-           
-
-    phy_cfg = phy_agent_config::type_id::create("phy_cfg");
-
-    phy_cfg.vif       = cfg.phy_vif;
-    phy_cfg.speed     = cfg.speed;
-    phy_cfg.is_active = cfg.phy_is_active;
-
-    phy_cfg.validate_config();
-
-    // Pass PHY configuration to PHY agent
-    uvm_config_db#(phy_agent_config)::set(
-      this,
-      "phy_ag",
-      "cfg",
-      phy_cfg
+    function new(
+        string name = "usb_phy_env",
+        uvm_component parent = null
     );
+        super.new(name, parent);
+    endfunction
 
 
-           
-    // Create USB BFM agent configuration
-           
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
 
-    usb_cfg = usb_bfm_config::type_id::create("usb_cfg");
+        // Get environment configuration.
+        if (!uvm_config_db#(usb_phy_env_config)::get(
+                this, "", "env_cfg", env_cfg
+            )) begin
 
-    usb_cfg.vif       = cfg.usb_vif;
-    usb_cfg.speed     = cfg.speed;
-    usb_cfg.is_active = cfg.usb_is_active;
+            `uvm_fatal(
+                "USB_PHY_ENV",
+                "usb_phy_env_config not found in config_db"
+            )
 
-    usb_cfg.validate_config();
+        end
 
-    // Pass USB configuration to USB BFM agent
-    uvm_config_db#(usb_bfm_config)::set(
-      this,
-      "usb_ag",
-      "cfg",
-      usb_cfg
-    );
+        env_cfg.check_config();
 
+        // Create PHY agent.
+        if (env_cfg.enable_phy_agent) begin
 
-           
-    // Create agents
-           
+            uvm_config_db#(phy_agent_config)::set(
+                this,
+                "phy_ag",
+                "cfg",
+                env_cfg.phy_cfg
+            );
 
-    phy_ag = phy_agent::type_id::create(
-               "phy_ag",
-               this
-             );
+            phy_ag = phy_agent::type_id::create(
+                "phy_ag",
+                this
+            );
 
-    usb_ag = usb_bfm_agent::type_id::create(
-               "usb_ag",
-               this
-             );
+        end
 
+        // Create USB BFM agent.
+        if (env_cfg.enable_usb_bfm_agent) begin
 
-           
-    // Create scoreboard
-           
+            uvm_config_db#(usb_bfm_agent_config)::set(
+                this,
+                "usb_ag",
+                "cfg",
+                env_cfg.usb_bfm_cfg
+            );
 
-    scoreboard = usb_phy_scoreboard::type_id::create(
-                   "scoreboard",
-                   this
-                 );
+            usb_ag = usb_bfm_agent::type_id::create(
+                "usb_ag",
+                this
+            );
 
+        end
 
-    `uvm_info("USB_ENV",
-      $sformatf(
-        "Environment configured: SPEED=%0d PHY_ACTIVE=%0d USB_ACTIVE=%0d",
-        cfg.speed,
-        cfg.phy_is_active,
-        cfg.usb_is_active
-      ),
-      UVM_LOW
-    )
+        // Create scoreboard.
+        scoreboard = usb_phy_scb::type_id::create(
+            "scoreboard",
+            this
+        );
 
-  endfunction
-
-
-         
-  // 7. CONNECT PHASE
-         
-
-  function void connect_phase(uvm_phase phase);
-
-    super.connect_phase(phase);
-
-           
-    // PHY Monitor -> Scoreboard PHY FIFO
-           
-
-    phy_ag.monitor.ap.connect(
-      scoreboard.phy_fifo.analysis_export
-    );
+    endfunction
 
 
-           
-    // USB BFM Monitor -> Scoreboard Bus FIFO
-           
-
-    usb_ag.monitor.ap.connect(
-      scoreboard.bus_fifo.analysis_export
-    );
-
-
-    `uvm_info("USB_ENV",
-      "PHY monitor and USB BFM monitor connected to scoreboard",
-      UVM_LOW
-    )
-
-  endfunction
-
-
-         
-  // 8. END OF ELABORATION PHASE
-         
-
-  function void end_of_elaboration_phase(uvm_phase phase);
-
-    super.end_of_elaboration_phase(phase);
-
-    `uvm_info("USB_ENV",
-      "USB PHY environment elaboration completed",
-      UVM_LOW
-    )
-
-    // Display complete UVM component hierarchy
-    uvm_top.print_topology();
-
-  endfunction
+    function void connect_phase(uvm_phase phase);
+    
+      super.connect_phase(phase);
+    
+      // PHY monitor -> scoreboard
+      phy_ag.monitor.analysis_port.connect(
+        scoreboard.phy_fifo.analysis_export
+      );
+    
+      // USB bus monitor -> scoreboard
+      usb_ag.monitor.analysis_port.connect(
+        scoreboard.bus_fifo.analysis_export
+      );
+    
+    endfunction
 
 
-         
-  // 9. REPORT PHASE
-         
+    function void end_of_elaboration_phase(uvm_phase phase);
+        super.end_of_elaboration_phase(phase);
 
-  function void report_phase(uvm_phase phase);
+        `uvm_info(
+            "USB_PHY_ENV",
+            "USB PHY UVM environment elaboration completed",
+            UVM_LOW
+        )
 
-    super.report_phase(phase);
+        uvm_top.print_topology();
 
-    `uvm_info("USB_ENV_REPORT",
-      "USB PHY environment simulation completed",
-      UVM_LOW
-    )
+    endfunction
 
-  endfunction
-
-endclass
+endclass 
 
