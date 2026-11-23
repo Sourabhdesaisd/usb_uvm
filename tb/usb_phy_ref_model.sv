@@ -336,9 +336,8 @@ class usb_phy_ref_model;
     function automatic logic [1:0] encode_line(
         usb_ref_line_e line_state
     );
-
+        // Enum encoding is {DP,DM}: SE0=00, K=01, J=10, SE1=11.
         return line_state;
-
     endfunction
 
 
@@ -626,52 +625,37 @@ class usb_phy_ref_model;
         input bit input_bits[$],
         ref bit output_bits[$]
     );
-
         int unsigned ones_count;
         int unsigned i;
 
+        output_bits.delete();
         ones_count = 0;
         i = 0;
+        rx_stuff_error = 1'b0;
 
         while (i < input_bits.size()) begin
-
             output_bits.push_back(input_bits[i]);
 
             if (input_bits[i]) begin
-
                 ones_count++;
-
                 if (ones_count == 6) begin
-
+                    // A stuffed zero must immediately follow the sixth one.
                     i++;
-
-                    if (i >= input_bits.size()) begin
+                    if ((i >= input_bits.size()) || input_bits[i]) begin
                         rx_stuff_error = 1'b1;
+                        output_bits.delete();
                         return 1'b0;
                     end
-
-                    if (input_bits[i] != 1'b0) begin
-                        rx_stuff_error = 1'b1;
-                        return 1'b0;
-                    end
-
+                    // Consume, but do not copy, the stuffed zero.
                     ones_count = 0;
-
                 end
-
             end
             else begin
-
                 ones_count = 0;
-
             end
-
             i++;
-
         end
-
         return 1'b1;
-
     endfunction
 
 
@@ -727,49 +711,52 @@ class usb_phy_ref_model;
         input bit data_bits[$],
         ref usb_ref_tx_symbol_t symbols[$]
     );
-
         bit encoded_level;
-        bit stuffed_bits[$];
-
+        bit stuffed_bit;
+        bit [1:0] dpdm;
+        int unsigned consecutive_ones;
         usb_ref_line_e line_state;
 
         symbols.delete();
-        stuffed_bits.delete();
+        consecutive_ones = 0;
 
-        if (tx_stuff_enabled)
-            bit_stuff(data_bits, stuffed_bits);
-        else
-            stuffed_bits = data_bits;
-
-        tx_nrzi_previous = 1'b1;
-
-        foreach (stuffed_bits[i]) begin
-
+        // Caller sets tx_nrzi_previous to the physical level at the
+        // end of SYNC. If there is no SYNC, reset_tx() establishes J.
+        foreach (data_bits[i]) begin
+            stuffed_bit = 1'b0;
             if (tx_nrzi_enabled)
-                encoded_level = nrzi_encode_bit(
-                    stuffed_bits[i],
-                    tx_nrzi_previous
-                );
+                encoded_level = nrzi_encode_bit(data_bits[i], tx_nrzi_previous);
             else
-                encoded_level = stuffed_bits[i];
+                encoded_level = data_bits[i];
 
-            if (encoded_level)
-                line_state = get_j_state();
-            else
-                line_state = get_k_state();
-
-            symbols.push_back('{
-                dp: encode_line(line_state)[1],
-                dm: encode_line(line_state)[0],
-                tx_valid: 1'b1,
-                is_stuffed: 1'b0,
-                is_eop: 1'b0
-            });
-
+            line_state = encoded_level ? get_j_state() : get_k_state();
+            dpdm = encode_line(line_state);
+            symbols.push_back('{dp:dpdm[1], dm:dpdm[0], tx_valid:1'b1,
+                                is_stuffed:1'b0, is_eop:1'b0});
             tx_symbol_count++;
 
+            if (tx_stuff_enabled && data_bits[i]) begin
+                consecutive_ones++;
+                if (consecutive_ones == 6) begin
+                    // Stuffed logical zero forces an NRZI transition.
+                    stuffed_bit = 1'b1;
+                    if (tx_nrzi_enabled)
+                        encoded_level = nrzi_encode_bit(1'b0, tx_nrzi_previous);
+                    else
+                        encoded_level = 1'b0;
+                    line_state = encoded_level ? get_j_state() : get_k_state();
+                    dpdm = encode_line(line_state);
+                    symbols.push_back('{dp:dpdm[1], dm:dpdm[0], tx_valid:1'b1,
+                                        is_stuffed:1'b1, is_eop:1'b0});
+                    tx_symbol_count++;
+                    tx_stuffed_bit_count++;
+                    consecutive_ones = 0;
+                end
+            end
+            else begin
+                consecutive_ones = 0;
+            end
         end
-
     endfunction
 
 
@@ -887,8 +874,17 @@ class usb_phy_ref_model;
 
             end
 
+            // SYNC ends in K. The first data bit's NRZI reference level
+            // must therefore be K (false in the internal J=1/K=0 encoding).
+            tx_nrzi_previous = 1'b0;
+
+        end
+        else begin
+            // Without an emitted SYNC, begin from the model's idle J level.
+            tx_nrzi_previous = 1'b1;
         end
 
+        tx_stuffed_bit_count = 0;
         foreach (payload[i])
             append_byte(payload[i], data_bits);
 
@@ -953,55 +949,43 @@ class usb_phy_ref_model;
         input bit decoded_bits[$],
         ref usb_ref_rx_result_t rx_bytes[$]
     );
-
         usb_ref_rx_result_t result;
-
         logic [7:0] data;
         int unsigned bit_index;
+        bit alignment_error_local;
 
         rx_bytes.delete();
-
         data = '0;
         bit_index = 0;
+        alignment_error_local = ((decoded_bits.size() % 8) != 0);
 
-        foreach (decoded_bits[i]) begin
-
-            data[bit_index] = decoded_bits[i];
-
-            bit_index++;
-
-            if (bit_index == 8) begin
-
-                result = '{
-                    data: data,
-                    valid: 1'b1,
-                    sop: 1'b0,
-                    eop: 1'b0,
-                    error: rx_stuff_error |
-                           rx_align_error |
-                           rx_line_error |
-                           rx_sync_error,
-                    stuff_error: rx_stuff_error,
-                    align_error: rx_align_error,
-                    sync_error: rx_sync_error
-                };
-
-                rx_bytes.push_back(result);
-
-                rx_byte_count++;
-
-                data = '0;
-                bit_index = 0;
-
-            end
-
-        end
-
-        if (bit_index != 0) begin
+        // Determine alignment before creating results so every returned
+        // byte carries the final packet-level error status.
+        if (alignment_error_local) begin
             rx_align_error = 1'b1;
             rx_error_count++;
         end
 
+        foreach (decoded_bits[i]) begin
+            data[bit_index] = decoded_bits[i];
+            bit_index++;
+            if (bit_index == 8) begin
+                result = '{data:data, valid:1'b1,
+                           sop:(rx_bytes.size() == 0),
+                           eop:((i + 1) == decoded_bits.size() && !alignment_error_local),
+                           error:(rx_stuff_error | rx_align_error | rx_line_error | rx_sync_error),
+                           stuff_error:rx_stuff_error,
+                           align_error:rx_align_error,
+                           sync_error:rx_sync_error};
+                rx_bytes.push_back(result);
+                rx_byte_count++;
+                data = '0;
+                bit_index = 0;
+            end
+        end
+
+        // If trailing partial bits exist, the last complete byte is not
+        // marked EOP: packet termination/alignment is erroneous.
     endfunction
 
 
@@ -1032,6 +1016,8 @@ class usb_phy_ref_model;
         if (!bit_unstuff(decoded_bits, unstuffed_bits)) begin
             rx_stuff_error = 1'b1;
             rx_error_count++;
+            rx_bytes.delete();
+            return;
         end
 
         bits_to_rx_bytes(

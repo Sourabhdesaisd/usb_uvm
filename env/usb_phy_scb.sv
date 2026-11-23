@@ -3,90 +3,163 @@ class usb_phy_scb extends uvm_scoreboard;
 
   `uvm_component_utils(usb_phy_scb)
 
-  // Analysis FIFOs
+  // ==================================================
+  // ANALYSIS FIFOS
+  // ==================================================
+
   uvm_tlm_analysis_fifo #(phy_transaction) phy_fifo;
   uvm_tlm_analysis_fifo #(phy_transaction) rx_fifo;
+
+  // Separate FIFO for RX status events
+  uvm_tlm_analysis_fifo #(phy_transaction) rx_status_fifo;
+
   uvm_tlm_analysis_fifo #(usb_bfm_transaction) bus_fifo;
 
-  // Transaction handles
+
+  // ==================================================
+  // TRANSACTION HANDLES
+  // ==================================================
+
   phy_transaction tx_tr;
   phy_transaction rx_tr;
+  phy_transaction rx_status_tr;
+
   usb_bfm_transaction bus_tr;
 
-  // TX statistics
+
+  // ==================================================
+  // TX STATISTICS
+  // ==================================================
+
   int unsigned tx_handshake_count;
   int unsigned tx_sop_count;
   int unsigned tx_eop_count;
   int unsigned tx_sof_count;
 
-  // RX statistics
+
+  // ==================================================
+  // RX STATISTICS
+  // ==================================================
+
   int unsigned rx_byte_count;
   int unsigned rx_sop_count;
   int unsigned rx_eop_count;
-  int unsigned rx_error_count;
 
-  // USB bus statistics
+  int unsigned rx_error_count;
+  int unsigned rx_stuff_error_count;
+  int unsigned rx_align_error_count;
+  int unsigned rx_line_error_count;
+  int unsigned rx_sync_error_count;
+  int unsigned rx_bus_reset_count;
+
+
+  // ==================================================
+  // USB BUS STATISTICS
+  // ==================================================
+
   int unsigned bus_segment_count;
+
   int unsigned bus_dpdm_10_count;
   int unsigned bus_dpdm_01_count;
   int unsigned bus_se0_count;
   int unsigned bus_se1_count;
   int unsigned bus_unknown_count;
 
-  // Error statistics
+
+  // ==================================================
+  // GENERAL STATISTICS
+  // ==================================================
+
   int unsigned total_errors;
   int unsigned total_warnings;
 
-  // Packet tracking
+
+  // ==================================================
+  // PACKET TRACKING
+  // ==================================================
+
   bit tx_packet_active;
   bit rx_packet_active;
 
   speed_t tx_packet_speed;
   speed_t rx_packet_speed;
 
-  // Constructor
+
+  // ==================================================
+  // CONSTRUCTOR
+  // ==================================================
+
   function new(
     string name = "usb_phy_scb",
     uvm_component parent = null
   );
+
     super.new(name, parent);
+
   endfunction
 
-  // Build phase
+
+  // ==================================================
+  // BUILD PHASE
+  // ==================================================
+
   function void build_phase(uvm_phase phase);
 
     super.build_phase(phase);
 
-    phy_fifo = new("phy_fifo", this);
-    rx_fifo  = new("rx_fifo", this);
-    bus_fifo = new("bus_fifo", this);
+    // Create analysis FIFOs
+    phy_fifo       = new("phy_fifo", this);
+    rx_fifo        = new("rx_fifo", this);
+    rx_status_fifo = new("rx_status_fifo", this);
+    bus_fifo       = new("bus_fifo", this);
 
+
+    // TX counters
     tx_handshake_count = 0;
     tx_sop_count       = 0;
     tx_eop_count       = 0;
     tx_sof_count       = 0;
 
-    rx_byte_count      = 0;
-    rx_sop_count       = 0;
-    rx_eop_count       = 0;
-    rx_error_count     = 0;
 
-    bus_segment_count  = 0;
-    bus_dpdm_10_count  = 0;
-    bus_dpdm_01_count  = 0;
-    bus_se0_count      = 0;
-    bus_se1_count      = 0;
-    bus_unknown_count  = 0;
+    // RX counters
+    rx_byte_count         = 0;
+    rx_sop_count          = 0;
+    rx_eop_count          = 0;
 
-    total_errors       = 0;
-    total_warnings     = 0;
+    rx_error_count        = 0;
+    rx_stuff_error_count  = 0;
+    rx_align_error_count  = 0;
+    rx_line_error_count   = 0;
+    rx_sync_error_count   = 0;
+    rx_bus_reset_count    = 0;
 
-    tx_packet_active   = 0;
-    rx_packet_active   = 0;
+
+    // Bus counters
+    bus_segment_count = 0;
+
+    bus_dpdm_10_count = 0;
+    bus_dpdm_01_count = 0;
+    bus_se0_count     = 0;
+    bus_se1_count     = 0;
+    bus_unknown_count = 0;
+
+
+    // General counters
+    total_errors   = 0;
+    total_warnings = 0;
+
+
+    // Packet state
+    tx_packet_active = 1'b0;
+    rx_packet_active = 1'b0;
 
   endfunction
 
-  // Run phase
+
+  // ==================================================
+  // RUN PHASE
+  // ==================================================
+
   task run_phase(uvm_phase phase);
 
     `uvm_info(
@@ -96,14 +169,24 @@ class usb_phy_scb extends uvm_scoreboard;
     )
 
     fork
+
       process_tx();
+
       process_rx();
+
+      process_rx_status();
+
       process_bus();
+
     join
 
   endtask
 
-  // TX processing
+
+  // ==================================================
+  // TX PROCESSING
+  // ==================================================
+
   task process_tx();
 
     forever begin
@@ -111,38 +194,62 @@ class usb_phy_scb extends uvm_scoreboard;
       phy_fifo.get(tx_tr);
 
       if (tx_tr == null) begin
+
         total_errors++;
-        `uvm_error("USB_SCB", "NULL TX transaction")
+
+        `uvm_error(
+          "USB_SCB",
+          "NULL TX transaction"
+        )
+
         continue;
+
       end
 
+
+      // TX monitor must publish only accepted
+      // SIE transactions: sie_valid && sie_ready.
       if (!(tx_tr.valid && tx_tr.ready)) begin
+
         total_errors++;
+
         `uvm_error(
           "USB_SCB",
           "TX monitor published a non-handshake transaction"
         )
+
         continue;
+
       end
 
+
       tx_handshake_count++;
+
+
+      // --------------------------------------------
+      // Start of packet
+      // --------------------------------------------
 
       if (tx_tr.sop) begin
 
         tx_sop_count++;
 
         if (tx_packet_active) begin
+
           total_errors++;
+
           `uvm_error(
             "USB_SCB",
             "TX SOP received while previous packet is active"
           )
+
         end
 
-        tx_packet_active = 1;
+        tx_packet_active = 1'b1;
         tx_packet_speed  = tx_tr.speed;
 
       end
+
       else if (!tx_packet_active) begin
 
         total_warnings++;
@@ -152,10 +259,15 @@ class usb_phy_scb extends uvm_scoreboard;
           "TX data received without preceding SOP"
         )
 
-        tx_packet_active = 1;
+        tx_packet_active = 1'b1;
         tx_packet_speed  = tx_tr.speed;
 
       end
+
+
+      // --------------------------------------------
+      // Speed consistency
+      // --------------------------------------------
 
       if (tx_packet_active &&
           tx_tr.speed != tx_packet_speed) begin
@@ -173,15 +285,30 @@ class usb_phy_scb extends uvm_scoreboard;
 
       end
 
-      if (tx_tr.sof_packet)
+
+      // --------------------------------------------
+      // SOF information
+      // --------------------------------------------
+
+      if (tx_tr.sof_packet) begin
+
         tx_sof_count++;
+
+      end
+
+
+      // --------------------------------------------
+      // End of packet
+      // --------------------------------------------
 
       if (tx_tr.eop) begin
 
         tx_eop_count++;
-        tx_packet_active = 0;
+
+        tx_packet_active = 1'b0;
 
       end
+
 
       `uvm_info(
         "USB_SCB_TX",
@@ -193,7 +320,11 @@ class usb_phy_scb extends uvm_scoreboard;
 
   endtask
 
-  // RX processing
+
+  // ==================================================
+  // RX BYTE PROCESSING
+  // ==================================================
+
   task process_rx();
 
     forever begin
@@ -201,38 +332,61 @@ class usb_phy_scb extends uvm_scoreboard;
       rx_fifo.get(rx_tr);
 
       if (rx_tr == null) begin
-        total_errors++;
-        `uvm_error("USB_SCB", "NULL RX transaction")
-        continue;
-      end
 
-      if (!rx_tr.valid) begin
         total_errors++;
+
         `uvm_error(
           "USB_SCB",
-          "RX monitor published transaction without RxValid"
+          "NULL RX transaction"
         )
+
         continue;
+
       end
 
+
+      // This FIFO is only for valid RX bytes.
+      if (rx_tr.valid !== 1'b1) begin
+
+        total_errors++;
+
+        `uvm_error(
+          "USB_SCB",
+          "RX byte FIFO received transaction without RxValid"
+        )
+
+        continue;
+
+      end
+
+
       rx_byte_count++;
+
+
+      // --------------------------------------------
+      // Start of RX packet
+      // --------------------------------------------
 
       if (rx_tr.sop) begin
 
         rx_sop_count++;
 
         if (rx_packet_active) begin
+
           total_errors++;
+
           `uvm_error(
             "USB_SCB",
             "RX SOP received while previous packet is active"
           )
+
         end
 
-        rx_packet_active = 1;
+        rx_packet_active = 1'b1;
         rx_packet_speed  = rx_tr.speed;
 
       end
+
       else if (!rx_packet_active) begin
 
         total_warnings++;
@@ -242,10 +396,15 @@ class usb_phy_scb extends uvm_scoreboard;
           "RX byte received without preceding RX SOP"
         )
 
-        rx_packet_active = 1;
+        rx_packet_active = 1'b1;
         rx_packet_speed  = rx_tr.speed;
 
       end
+
+
+      // --------------------------------------------
+      // Speed consistency
+      // --------------------------------------------
 
       if (rx_packet_active &&
           rx_tr.speed != rx_packet_speed) begin
@@ -263,46 +422,19 @@ class usb_phy_scb extends uvm_scoreboard;
 
       end
 
+
+      // --------------------------------------------
+      // End of RX packet
+      // --------------------------------------------
+
       if (rx_tr.eop) begin
 
         rx_eop_count++;
-        rx_packet_active = 0;
+
+        rx_packet_active = 1'b0;
 
       end
 
-      if (rx_tr.rx_error ||
-          rx_tr.rx_stuff_err ||
-          rx_tr.rx_align_err ||
-          rx_tr.rx_line_err ||
-          rx_tr.rx_sync_err) begin
-
-        rx_error_count++;
-        total_errors++;
-
-        `uvm_error(
-          "USB_SCB",
-          $sformatf(
-            "RX error: DATA=0x%02h RXERR=%0b STUFF=%0b ALIGN=%0b LINE=%0b SYNC=%0b",
-            rx_tr.data,
-            rx_tr.rx_error,
-            rx_tr.rx_stuff_err,
-            rx_tr.rx_align_err,
-            rx_tr.rx_line_err,
-            rx_tr.rx_sync_err
-          )
-        )
-
-      end
-
-      if (rx_tr.rx_bus_reset) begin
-
-        `uvm_info(
-          "USB_SCB",
-          "RX bus reset indication observed",
-          UVM_MEDIUM
-        )
-
-      end
 
       `uvm_info(
         "USB_SCB_RX",
@@ -314,7 +446,163 @@ class usb_phy_scb extends uvm_scoreboard;
 
   endtask
 
-  // Physical USB bus processing
+
+  // ==================================================
+  // RX STATUS PROCESSING
+  // ==================================================
+
+  task process_rx_status();
+
+    forever begin
+
+      rx_status_fifo.get(rx_status_tr);
+
+      if (rx_status_tr == null) begin
+
+        total_errors++;
+
+        `uvm_error(
+          "USB_SCB",
+          "NULL RX status transaction"
+        )
+
+        continue;
+
+      end
+
+
+      // Status events are intentionally separate
+      // from the RX byte stream.
+      if (rx_status_tr.valid !== 1'b0) begin
+
+        total_errors++;
+
+        `uvm_error(
+          "USB_SCB",
+          "RX status FIFO received an unexpected valid byte transaction"
+        )
+
+      end
+
+
+      // --------------------------------------------
+      // RX error
+      // --------------------------------------------
+
+      if (rx_status_tr.rx_error) begin
+
+        rx_error_count++;
+
+        `uvm_error(
+          "USB_SCB_RX_STATUS",
+          $sformatf(
+            "RX error observed: ID=%0d SPEED=%0d",
+            rx_status_tr.transaction_id,
+            rx_status_tr.speed
+          )
+        )
+
+      end
+
+
+      // --------------------------------------------
+      // Stuffing error
+      // --------------------------------------------
+
+      if (rx_status_tr.rx_stuff_err) begin
+
+        rx_stuff_error_count++;
+
+        `uvm_error(
+          "USB_SCB_RX_STATUS",
+          "RX stuffing error observed"
+        )
+
+      end
+
+
+      // --------------------------------------------
+      // Alignment error
+      // --------------------------------------------
+
+      if (rx_status_tr.rx_align_err) begin
+
+        rx_align_error_count++;
+
+        `uvm_info(
+          "USB_SCB_RX_STATUS",
+          "RX alignment error observed",
+          UVM_MEDIUM
+        )
+
+      end
+
+
+      // --------------------------------------------
+      // Line error
+      // --------------------------------------------
+
+      if (rx_status_tr.rx_line_err) begin
+
+        rx_line_error_count++;
+
+        `uvm_error(
+          "USB_SCB_RX_STATUS",
+          "RX line error observed"
+        )
+
+      end
+
+
+      // --------------------------------------------
+      // SYNC error
+      // --------------------------------------------
+
+      if (rx_status_tr.rx_sync_err) begin
+
+        rx_sync_error_count++;
+
+        `uvm_info(
+          "USB_SCB_RX_STATUS",
+          "RX SYNC error observed",
+          UVM_MEDIUM
+        )
+
+      end
+
+
+      // --------------------------------------------
+      // USB bus reset
+      // --------------------------------------------
+
+      if (rx_status_tr.rx_bus_reset) begin
+
+        rx_bus_reset_count++;
+
+        `uvm_info(
+          "USB_SCB_RX_STATUS",
+          "USB bus reset detected by PHY",
+          UVM_MEDIUM
+        )
+
+      end
+
+
+      `uvm_info(
+        "USB_SCB_RX_STATUS",
+        rx_status_tr.convert2string(),
+        UVM_HIGH
+      )
+
+    end
+
+  endtask
+
+
+  // ==================================================
+  // USB PHYSICAL BUS PROCESSING
+  // ==================================================
+
   task process_bus();
 
     forever begin
@@ -322,48 +610,78 @@ class usb_phy_scb extends uvm_scoreboard;
       bus_fifo.get(bus_tr);
 
       if (bus_tr == null) begin
+
         total_errors++;
-        `uvm_error("USB_SCB", "NULL USB bus transaction")
+
+        `uvm_error(
+          "USB_SCB",
+          "NULL USB bus transaction"
+        )
+
         continue;
+
       end
 
+
       bus_segment_count++;
+
+
+      // --------------------------------------------
+      // Classify DP/DM
+      // --------------------------------------------
 
       case ({bus_tr.dp, bus_tr.dm})
 
         2'b10: begin
+
           bus_dpdm_10_count++;
+
         end
+
 
         2'b01: begin
+
           bus_dpdm_01_count++;
+
         end
+
 
         2'b00: begin
+
           bus_se0_count++;
+
         end
 
+
         2'b11: begin
+
           bus_se1_count++;
+
           total_warnings++;
 
           `uvm_warning(
             "USB_SCB",
             "SE1 observed on USB bus"
           )
+
         end
 
+
         default: begin
+
           bus_unknown_count++;
+
           total_warnings++;
 
           `uvm_warning(
             "USB_SCB",
             "Unknown/X/Z USB bus state observed"
           )
+
         end
 
       endcase
+
 
       `uvm_info(
         "USB_SCB_BUS",
@@ -383,10 +701,19 @@ class usb_phy_scb extends uvm_scoreboard;
 
   endtask
 
-  // Check phase
+
+  // ==================================================
+  // CHECK PHASE
+  // ==================================================
+
   function void check_phase(uvm_phase phase);
 
     super.check_phase(phase);
+
+
+    // ----------------------------------------------
+    // TX packet completion
+    // ----------------------------------------------
 
     if (tx_packet_active) begin
 
@@ -398,6 +725,11 @@ class usb_phy_scb extends uvm_scoreboard;
       )
 
     end
+
+
+    // ----------------------------------------------
+    // RX packet completion
+    // ----------------------------------------------
 
     if (rx_packet_active) begin
 
@@ -412,102 +744,278 @@ class usb_phy_scb extends uvm_scoreboard;
 
   endfunction
 
-  // Report phase
+
+  // ==================================================
+  // REPORT PHASE
+  // ==================================================
+
   function void report_phase(uvm_phase phase);
 
     super.report_phase(phase);
 
-    `uvm_info("USB_SCB",
-      "==============================================",
-      UVM_NONE)
 
-    `uvm_info("USB_SCB",
+    `uvm_info(
+      "USB_SCB",
+      "==============================================",
+      UVM_NONE
+    )
+
+    `uvm_info(
+      "USB_SCB",
       "       USB 2.0 PHY SCOREBOARD REPORT",
-      UVM_NONE)
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
+    `uvm_info(
+      "USB_SCB",
       "==============================================",
-      UVM_NONE)
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
-      $sformatf("TX HANDSHAKES       : %0d", tx_handshake_count),
-      UVM_NONE)
 
-    `uvm_info("USB_SCB",
-      $sformatf("TX SOP              : %0d", tx_sop_count),
-      UVM_NONE)
+    // ----------------------------------------------
+    // TX report
+    // ----------------------------------------------
 
-    `uvm_info("USB_SCB",
-      $sformatf("TX EOP              : %0d", tx_eop_count),
-      UVM_NONE)
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "TX HANDSHAKES       : %0d",
+        tx_handshake_count
+      ),
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
-      $sformatf("TX SOF              : %0d", tx_sof_count),
-      UVM_NONE)
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "TX SOP              : %0d",
+        tx_sop_count
+      ),
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "TX EOP              : %0d",
+        tx_eop_count
+      ),
+      UVM_NONE
+    )
+
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "TX SOF              : %0d",
+        tx_sof_count
+      ),
+      UVM_NONE
+    )
+
+
+    // ----------------------------------------------
+    // RX report
+    // ----------------------------------------------
+
+    `uvm_info(
+      "USB_SCB",
       "----------------------------------------------",
-      UVM_NONE)
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
-      $sformatf("RX VALID BYTES      : %0d", rx_byte_count),
-      UVM_NONE)
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "RX VALID BYTES      : %0d",
+        rx_byte_count
+      ),
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
-      $sformatf("RX SOP              : %0d", rx_sop_count),
-      UVM_NONE)
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "RX SOP              : %0d",
+        rx_sop_count
+      ),
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
-      $sformatf("RX EOP              : %0d", rx_eop_count),
-      UVM_NONE)
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "RX EOP              : %0d",
+        rx_eop_count
+      ),
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
-      $sformatf("RX ERROR EVENTS     : %0d", rx_error_count),
-      UVM_NONE)
 
-    `uvm_info("USB_SCB",
+    // ----------------------------------------------
+    // RX status report
+    // ----------------------------------------------
+
+    `uvm_info(
+      "USB_SCB",
       "----------------------------------------------",
-      UVM_NONE)
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
-      $sformatf("BUS SEGMENTS        : %0d", bus_segment_count),
-      UVM_NONE)
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "RX ERROR EVENTS     : %0d",
+        rx_error_count
+      ),
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
-      $sformatf("BUS DPDM=10         : %0d", bus_dpdm_10_count),
-      UVM_NONE)
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "RX STUFF ERRORS     : %0d",
+        rx_stuff_error_count
+      ),
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
-      $sformatf("BUS DPDM=01         : %0d", bus_dpdm_01_count),
-      UVM_NONE)
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "RX ALIGN ERRORS     : %0d",
+        rx_align_error_count
+      ),
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
-      $sformatf("BUS SE0             : %0d", bus_se0_count),
-      UVM_NONE)
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "RX LINE ERRORS      : %0d",
+        rx_line_error_count
+      ),
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
-      $sformatf("BUS SE1             : %0d", bus_se1_count),
-      UVM_NONE)
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "RX SYNC ERRORS      : %0d",
+        rx_sync_error_count
+      ),
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
-      $sformatf("BUS UNKNOWN         : %0d", bus_unknown_count),
-      UVM_NONE)
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "RX BUS RESETS       : %0d",
+        rx_bus_reset_count
+      ),
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
+
+    // ----------------------------------------------
+    // Bus report
+    // ----------------------------------------------
+
+    `uvm_info(
+      "USB_SCB",
       "----------------------------------------------",
-      UVM_NONE)
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
-      $sformatf("TOTAL ERRORS        : %0d", total_errors),
-      UVM_NONE)
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "BUS SEGMENTS        : %0d",
+        bus_segment_count
+      ),
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
-      $sformatf("TOTAL WARNINGS      : %0d", total_warnings),
-      UVM_NONE)
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "BUS DPDM=10         : %0d",
+        bus_dpdm_10_count
+      ),
+      UVM_NONE
+    )
 
-    `uvm_info("USB_SCB",
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "BUS DPDM=01         : %0d",
+        bus_dpdm_01_count
+      ),
+      UVM_NONE
+    )
+
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "BUS SE0             : %0d",
+        bus_se0_count
+      ),
+      UVM_NONE
+    )
+
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "BUS SE1             : %0d",
+        bus_se1_count
+      ),
+      UVM_NONE
+    )
+
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "BUS UNKNOWN         : %0d",
+        bus_unknown_count
+      ),
+      UVM_NONE
+    )
+
+
+    // ----------------------------------------------
+    // General report
+    // ----------------------------------------------
+
+    `uvm_info(
+      "USB_SCB",
+      "----------------------------------------------",
+      UVM_NONE
+    )
+
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "TOTAL ERRORS        : %0d",
+        total_errors
+      ),
+      UVM_NONE
+    )
+
+    `uvm_info(
+      "USB_SCB",
+      $sformatf(
+        "TOTAL WARNINGS      : %0d",
+        total_warnings
+      ),
+      UVM_NONE
+    )
+
+    `uvm_info(
+      "USB_SCB",
       "==============================================",
-      UVM_NONE)
+      UVM_NONE
+    )
+
 
     if (total_errors == 0) begin
 
@@ -522,7 +1030,10 @@ class usb_phy_scb extends uvm_scoreboard;
 
       `uvm_error(
         "USB_SCB",
-        $sformatf("SCOREBOARD ERRORS = %0d", total_errors)
+        $sformatf(
+          "SCOREBOARD ERRORS = %0d",
+          total_errors
+        )
       )
 
     end

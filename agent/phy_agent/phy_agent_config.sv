@@ -1,156 +1,105 @@
 
-class usb_phy_env_config extends uvm_object;
+class phy_agent_config extends uvm_object;
 
-  `uvm_object_utils(usb_phy_env_config)
+  `uvm_object_utils(phy_agent_config)
 
-  // Agent configurations
-  phy_agent_config phy_cfg;
-  usb_bfm_agent_config usb_bfm_cfg;
+  // PHY virtual interface
+  virtual usb_phy_if #(8) vif;
 
-  // Environment-level controls
-  bit enable_phy_agent     = 1'b1;
-  bit enable_usb_bfm_agent = 1'b1;
-  bit enable_scoreboard    = 1'b1;
+  // Agent operation mode
+  uvm_active_passive_enum is_active = UVM_ACTIVE;
 
-  // Default USB operating speed
+  // Component controls
+  bit enable_driver  = 1'b1;
+  bit enable_monitor = 1'b1;
+
+  // Selected USB speed
   speed_t speed = FS;
 
-  // Environment name
-  string env_name = "USB_PHY_ENV";
+  // Agent identification
+  string agent_name = "PHY_AGENT";
 
 
   // Constructor
-  function new(string name = "usb_phy_env_config");
+  function new(string name = "phy_agent_config");
     super.new(name);
   endfunction
 
 
-  // Create and initialize agent configurations
-  function void create_agent_configs();
-
-    if (phy_cfg == null) begin
-
-      phy_cfg = phy_agent_config::type_id::create(
-        "phy_cfg"
-      );
-
-    end
-
-    if (usb_bfm_cfg == null) begin
-
-      usb_bfm_cfg = usb_bfm_agent_config::type_id::create(
-        "usb_bfm_cfg"
-      );
-
-    end
-
-    // Apply common speed
-    phy_cfg.speed = speed;
-    usb_bfm_cfg.set_speed(speed);
-
-  endfunction
-
-
-  // Set operating speed for both agents
+  // Set USB speed
   function void set_speed(speed_t new_speed);
 
     if (!(new_speed inside {LS, FS, HS})) begin
 
-      `uvm_error(
-        "USB_PHY_ENV_CFG",
+      `uvm_fatal(
+        "PHY_AGENT_CFG",
         $sformatf(
           "Invalid USB speed: %0d",
           new_speed
         )
       )
 
-      return;
-
     end
 
     speed = new_speed;
 
-    if (phy_cfg != null)
-      phy_cfg.speed = new_speed;
-
-    if (usb_bfm_cfg != null)
-      usb_bfm_cfg.set_speed(new_speed);
-
-    `uvm_info(
-      "USB_PHY_ENV_CFG",
-      $sformatf("USB speed updated to %0d", speed),
-      UVM_LOW
-    )
-
   endfunction
 
 
-  // Validate environment configuration
+  // Validate configuration
   function void check_config();
 
-    // Validate PHY agent configuration
-    if (enable_phy_agent && phy_cfg == null) begin
+    if (vif == null) begin
 
       `uvm_fatal(
-        "USB_PHY_ENV_CFG",
-        "PHY agent is enabled but PHY configuration is NULL"
+        "PHY_AGENT_CFG",
+        "PHY virtual interface is NULL"
       )
 
     end
 
-    // Validate USB BFM configuration
-    if (enable_usb_bfm_agent && usb_bfm_cfg == null) begin
-
-      `uvm_fatal(
-        "USB_PHY_ENV_CFG",
-        "USB BFM agent is enabled but its configuration is NULL"
-      )
-
-    end
-
-    // Validate speed
     if (!(speed inside {LS, FS, HS})) begin
 
       `uvm_fatal(
-        "USB_PHY_ENV_CFG",
-        "Invalid environment USB speed"
+        "PHY_AGENT_CFG",
+        "Invalid USB speed configuration"
       )
 
     end
 
-    // Check PHY speed consistency
-    if (enable_phy_agent && phy_cfg != null) begin
+    if (is_active == UVM_ACTIVE && !enable_driver) begin
 
-      if (phy_cfg.speed != speed) begin
+      `uvm_fatal(
+        "PHY_AGENT_CFG",
+        "Active PHY agent requires driver enabled"
+      )
 
-        `uvm_fatal(
-          "USB_PHY_ENV_CFG",
-          "PHY agent speed does not match environment speed"
-        )
+    end
 
-      end
+    if (!enable_driver && !enable_monitor) begin
+
+      `uvm_warning(
+        "PHY_AGENT_CFG",
+        "Both PHY driver and monitor are disabled"
+      )
 
     end
 
   endfunction
 
 
-  // Print environment configuration
+  // Print configuration
   function void print_config();
 
     `uvm_info(
-      "USB_PHY_ENV_CFG",
+      "PHY_AGENT_CFG",
       $sformatf(
-        "Environment       : %s\n\
-         USB Speed         : %0d\n\
-         PHY Agent Enabled : %0b\n\
-         USB BFM Enabled   : %0b\n\
-         Scoreboard Enabled: %0b",
-        env_name,
+        "Agent=%s SPEED=%0d MODE=%s DRIVER=%0b MONITOR=%0b",
+        agent_name,
         speed,
-        enable_phy_agent,
-        enable_usb_bfm_agent,
-        enable_scoreboard
+        (is_active == UVM_ACTIVE) ? "ACTIVE" : "PASSIVE",
+        enable_driver,
+        enable_monitor
       ),
       UVM_LOW
     )
