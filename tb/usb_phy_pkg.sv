@@ -6,7 +6,6 @@ package usb_phy_tb_pkg;
 
   `include "uvm_macros.svh"
 
-  // USB speed enumeration for UVM configuration
   typedef enum logic [1:0] {
     USB_SPEED_LS       = 2'b00,
     USB_SPEED_FS       = 2'b01,
@@ -14,7 +13,6 @@ package usb_phy_tb_pkg;
     USB_SPEED_RESERVED = 2'b11
   } usb_speed_e;
 
-  // USB line state enumeration
   typedef enum logic [1:0] {
     USB_LINE_SE0 = 2'b00,
     USB_LINE_K   = 2'b01,
@@ -23,7 +21,9 @@ package usb_phy_tb_pkg;
   } usb_line_state_e;
 
 
+  // --------------------------------------------------
   // PHY AGENT
+  // --------------------------------------------------
 
   `include "phy_agent/phy_transaction.sv"
   `include "phy_agent/phy_agent_config.sv"
@@ -34,7 +34,9 @@ package usb_phy_tb_pkg;
   `include "phy_agent/phy_agent.sv"
 
 
+  // --------------------------------------------------
   // USB BFM AGENT
+  // --------------------------------------------------
 
   `include "usb_bfm_agent/usb_bfm_transaction.sv"
   `include "usb_bfm_agent/usb_bfm_agent_config.sv"
@@ -44,29 +46,34 @@ package usb_phy_tb_pkg;
   `include "usb_bfm_agent/usb_bfm_agent.sv"
 
 
+  // --------------------------------------------------
   // REFERENCE MODEL
+  // --------------------------------------------------
 
-   `include "usb_phy_ref_model.sv"
+  `include "usb_phy_ref_model.sv"
 
 
+  // --------------------------------------------------
   // SCOREBOARD
+  // --------------------------------------------------
 
   `include "usb_phy_scb.sv"
 
 
-  // ENVIRONMENT CONFIGURATION
+  // --------------------------------------------------
+  // ENVIRONMENT
+  // --------------------------------------------------
 
   `include "usb_phy_env_config.sv"
-
-
-  // ENVIRONMENT
-
   `include "usb_phy_env.sv"
 
 
-  // BASE TEST
+  // --------------------------------------------------
+  // TESTS
+  // --------------------------------------------------
 
   `include "usb_phy_base_test.sv"
+  `include "usb_phy_tx_test.sv"
 
-endpackage
+endpackage : usb_phy_tb_pkg
 

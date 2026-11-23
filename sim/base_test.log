@@ -1,0 +1,236 @@
+xrun(64): 20.09-s009: (c) Copyright 1995-2021 Cadence Design Systems, Inc.
+TOOL:	xrun(64)	20.09-s009: Started on Nov 23, 2026 at 14:53:39 IST
+xrun
+	-64bit
+	-uvm
+	-sv
+	-access +rwc
+	-f filelist.f
+		+incdir+../tb
+		+incdir+../agent
+		+incdir+../agent/phy_agent
+		+incdir+../agent/usb_bfm_agent
+		+incdir+../env
+		+incdir+../tests
+		../rtl/pkg.sv
+		../rtl/bit_enable.sv
+		../rtl/tx_holding_reg.sv
+		../rtl/piso.sv
+		../rtl/bit_stuffer.sv
+		../rtl/nrzi_encoder.sv
+		../rtl/tx_data_line_state_converter.sv
+		../rtl/eop.sv
+		../rtl/tx_phy_mux.sv
+		../rtl/phy_tx_top.sv
+		../rtl/line_state_detector.sv
+		../rtl/bus_reset.sv
+		../rtl/rx_ctrl.sv
+		../rtl/sync_eop_detector.sv
+		../rtl/nrzi_decoder.sv
+		../rtl/bit_unstuffer.sv
+		../rtl/sipo.sv
+		../rtl/phy_rx_top.sv
+		../rtl/edge_err_detection.sv
+		../rtl/FSM.sv
+		../rtl/loop_filter.sv
+		../rtl/oversampler.sv
+		../rtl/phase_acc.sv
+		../rtl/sampler.sv
+		../rtl/sync_deglitch.sv
+		../rtl/top.sv
+		../rtl/phy_top.sv
+		../tb/usb_phy_if.sv
+		../tb/usb_bus_if.sv
+		../tb/usb_phy_pkg.sv
+		../tb/tb_top.sv
+	-top tb_top
+	+UVM_TESTNAME=usb_phy_base_test
+	+USB_SPEED=1
+	-l base_test.log
+
+   User defined plus("+") options:
+	+USB_SPEED=1
+
+Compiling UVM packages (uvm_pkg.sv cdns_uvm_pkg.sv) using uvmhome location /tools/cadence_march2021/XCELIUM2009/tools/methodology/UVM/CDNS-1.1d
+file: ../rtl/pkg.sv
+	package worklib.usb_phy_pkg:sv
+		errors: 0, warnings: 0
+file: ../rtl/bit_enable.sv
+	module worklib.usb_speed_tick:sv
+		errors: 0, warnings: 0
+file: ../rtl/tx_holding_reg.sv
+	module worklib.usb2_tx_fifo:sv
+		errors: 0, warnings: 0
+file: ../rtl/piso.sv
+	module worklib.usb_piso:sv
+		errors: 0, warnings: 0
+file: ../rtl/bit_stuffer.sv
+	module worklib.usb2_bit_stuffer:sv
+		errors: 0, warnings: 0
+file: ../rtl/nrzi_encoder.sv
+	module worklib.usb_nrzi_encoder:sv
+		errors: 0, warnings: 0
+file: ../rtl/tx_data_line_state_converter.sv
+	module worklib.tx_line_state_converter:sv
+		errors: 0, warnings: 0
+file: ../rtl/eop.sv
+	module worklib.usb_eop_gen:sv
+		errors: 0, warnings: 0
+file: ../rtl/tx_phy_mux.sv
+	module worklib.usb_tx_line_mux:sv
+		errors: 0, warnings: 0
+file: ../rtl/phy_tx_top.sv
+	module worklib.phy_tx_top:sv
+		errors: 0, warnings: 0
+file: ../rtl/line_state_detector.sv
+	module worklib.usb2_rx_line_state_detector:sv
+		errors: 0, warnings: 0
+file: ../rtl/bus_reset.sv
+	module worklib.usb2_rx_reset_detect:sv
+		errors: 0, warnings: 0
+file: ../rtl/rx_ctrl.sv
+	module worklib.usb2_rx_ctrl:sv
+		errors: 0, warnings: 0
+file: ../rtl/sync_eop_detector.sv
+	module worklib.usb2_rx_sync_eop_detector:sv
+		errors: 0, warnings: 0
+file: ../rtl/nrzi_decoder.sv
+	module worklib.usb2_nrzi_decoder:sv
+		errors: 0, warnings: 0
+file: ../rtl/bit_unstuffer.sv
+	module worklib.usb2_bit_unstuffer:sv
+		errors: 0, warnings: 0
+file: ../rtl/sipo.sv
+	module worklib.usb_sipo:sv
+		errors: 0, warnings: 0
+file: ../rtl/phy_rx_top.sv
+	module worklib.phy_rx_top:sv
+		errors: 0, warnings: 0
+file: ../rtl/edge_err_detection.sv
+	module worklib.usb2_cdr_error_detection:sv
+		errors: 0, warnings: 0
+file: ../rtl/FSM.sv
+	module worklib.usb2_cdr_lock_fsm:sv
+		errors: 0, warnings: 0
+file: ../rtl/loop_filter.sv
+	module worklib.usb2_cdr_loop_filter:sv
+		errors: 0, warnings: 0
+file: ../rtl/oversampler.sv
+	module worklib.usb2_cdr_oversampler:sv
+		errors: 0, warnings: 0
+file: ../rtl/phase_acc.sv
+	module worklib.usb2_cdr_phase_acc:sv
+		errors: 0, warnings: 0
+file: ../rtl/sampler.sv
+	module worklib.usb2_cdr_sampler:sv
+		errors: 0, warnings: 0
+file: ../rtl/sync_deglitch.sv
+	module worklib.usb2_cdr_sync_deglitch:sv
+		errors: 0, warnings: 0
+file: ../rtl/top.sv
+	module worklib.usb2_cdr_top:sv
+		errors: 0, warnings: 0
+file: ../rtl/phy_top.sv
+	module worklib.phy_top:sv
+		errors: 0, warnings: 0
+file: ../tb/usb_phy_if.sv
+	interface worklib.usb_phy_if:sv
+		errors: 0, warnings: 0
+file: ../tb/usb_bus_if.sv
+	interface worklib.usb_bus_if:sv
+		errors: 0, warnings: 0
+file: ../tb/usb_phy_pkg.sv
+    )
+    |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,10|4): 'is_active': undeclared identifier [12.5(IEEE)].
+    )
+    |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,10|4): 'is_active': undeclared identifier [12.5(IEEE)].
+    )
+    |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,10|4): 'is_active': undeclared identifier [12.5(IEEE)].
+    )
+    |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,10|4): 'is_active': undeclared identifier [12.5(IEEE)].
+    )
+    |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,10|4): 'is_active': undeclared identifier [12.5(IEEE)].
+    `uvm_field_int(enable_driver, UVM_ALL_ON)
+                                            |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,12|44): 'enable_driver': undeclared identifier [12.5(IEEE)].
+    `uvm_field_int(enable_driver, UVM_ALL_ON)
+                                            |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,12|44): 'enable_driver': undeclared identifier [12.5(IEEE)].
+    `uvm_field_int(enable_driver, UVM_ALL_ON)
+                                            |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,12|44): 'enable_driver': undeclared identifier [12.5(IEEE)].
+    `uvm_field_int(enable_driver, UVM_ALL_ON)
+                                            |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,12|44): 'enable_driver': undeclared identifier [12.5(IEEE)].
+    `uvm_field_int(enable_monitor, UVM_ALL_ON)
+                                             |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,13|45): 'enable_monitor': undeclared identifier [12.5(IEEE)].
+    `uvm_field_int(enable_monitor, UVM_ALL_ON)
+                                             |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,13|45): 'enable_monitor': undeclared identifier [12.5(IEEE)].
+    `uvm_field_int(enable_monitor, UVM_ALL_ON)
+                                             |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,13|45): 'enable_monitor': undeclared identifier [12.5(IEEE)].
+    `uvm_field_int(enable_monitor, UVM_ALL_ON)
+                                             |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,13|45): 'enable_monitor': undeclared identifier [12.5(IEEE)].
+    `uvm_field_enum(speed_t, speed, UVM_ALL_ON)
+                                              |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,15|46): 'speed': undeclared identifier [12.5(IEEE)].
+    `uvm_field_enum(speed_t, speed, UVM_ALL_ON)
+                                              |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,15|46): 'speed': undeclared identifier [12.5(IEEE)].
+    `uvm_field_enum(speed_t, speed, UVM_ALL_ON)
+                                              |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,15|46): 'speed': undeclared identifier [12.5(IEEE)].
+    `uvm_field_enum(speed_t, speed, UVM_ALL_ON)
+                                              |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,15|46): 'speed': undeclared identifier [12.5(IEEE)].
+    `uvm_field_enum(speed_t, speed, UVM_ALL_ON)
+                                              |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,15|46): 'speed': undeclared identifier [12.5(IEEE)].
+    `uvm_field_int(default_bit_time_cycles, UVM_ALL_ON)
+                                                      |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,17|54): 'default_bit_time_cycles': undeclared identifier [12.5(IEEE)].
+    `uvm_field_int(default_bit_time_cycles, UVM_ALL_ON)
+                                                      |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,17|54): 'default_bit_time_cycles': undeclared identifier [12.5(IEEE)].
+    `uvm_field_int(default_bit_time_cycles, UVM_ALL_ON)
+                                                      |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,17|54): 'default_bit_time_cycles': undeclared identifier [12.5(IEEE)].
+    `uvm_field_int(default_bit_time_cycles, UVM_ALL_ON)
+                                                      |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,17|54): 'default_bit_time_cycles': undeclared identifier [12.5(IEEE)].
+    `uvm_field_int(default_idle_cycles, UVM_ALL_ON)
+                                                  |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,18|50): 'default_idle_cycles': undeclared identifier [12.5(IEEE)].
+    `uvm_field_int(default_idle_cycles, UVM_ALL_ON)
+                                                  |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,18|50): 'default_idle_cycles': undeclared identifier [12.5(IEEE)].
+    `uvm_field_int(default_idle_cycles, UVM_ALL_ON)
+                                                  |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,18|50): 'default_idle_cycles': undeclared identifier [12.5(IEEE)].
+    `uvm_field_int(default_idle_cycles, UVM_ALL_ON)
+                                                  |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,18|50): 'default_idle_cycles': undeclared identifier [12.5(IEEE)].
+    `uvm_field_string(agent_name, UVM_ALL_ON)
+                                            |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,20|44): 'agent_name': undeclared identifier [12.5(IEEE)].
+    `uvm_field_string(agent_name, UVM_ALL_ON)
+                                            |
+xmvlog: *E,UNDIDN (../agent/usb_bfm_agent/usb_bfm_agent_config.sv,20|44): 'agent_name': undeclared identifier [12.5(IEEE)].
+	package worklib.usb_phy_tb_pkg:sv
+		errors: 28, warnings: 0
+file: ../tb/tb_top.sv
+  import usb_phy_tb_pkg::*;
+                      |
+xmvlog: *E,NOPBIND (../tb/tb_top.sv,8|22): Package usb_phy_tb_pkg could not be bound.
+	module worklib.tb_top:sv
+		errors: 1, warnings: 0
+xrun: *E,VLGERR: An error occurred during parsing.  Review the log file for errors with the code *E and fix those identified problems to proceed.  Exiting with code (status 1).
+TOOL:	xrun(64)	20.09-s009: Exiting on Nov 23, 2026 at 14:53:44 IST  (total: 00:00:05)

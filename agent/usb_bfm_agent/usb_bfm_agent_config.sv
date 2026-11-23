@@ -342,3 +342,4 @@ class usb_bfm_agent_config extends uvm_object;
 
 endclass
 
+

@@ -1,150 +1,114 @@
 
-class usb_phy_tx_test extends usb_phy_base_test;
+class phy_simple_tx_seq extends uvm_sequence #(phy_transaction);
 
-  `uvm_component_utils(usb_phy_tx_test)
+  `uvm_object_utils(phy_simple_tx_seq)
 
-  // TX sequence handle
-  phy_simple_tx_seq tx_seq;
+  speed_t packet_speed = FS;
 
-  // Constructor
-  function new(
-    string name = "usb_phy_tx_test",
-    uvm_component parent = null
-  );
-    super.new(name, parent);
+  rand int unsigned packet_length;
+  rand bit is_sof;
+
+  int unsigned transaction_id;
+
+  constraint c_packet_length {
+    packet_length inside {[1:64]};
+  }
+
+  constraint c_sof_speed {
+    if (packet_speed != HS)
+      is_sof == 1'b0;
+  }
+
+  function new(string name = "phy_simple_tx_seq");
+    super.new(name);
+
+    packet_speed   = FS;
+    packet_length  = 8;
+    is_sof         = 1'b0;
+    transaction_id = 0;
   endfunction
 
 
-  // --------------------------------------------------
-  // Build phase
-  // --------------------------------------------------
+  virtual task body();
 
-  function void build_phase(uvm_phase phase);
+    phy_transaction req;
 
-    super.build_phase(phase);
+    if (!(packet_speed inside {LS, FS, HS})) begin
+      `uvm_fatal(
+        "PHY_TX_SEQ",
+        $sformatf("Invalid packet_speed=%0d", packet_speed)
+      )
+    end
+
+    if (!this.randomize(packet_length, is_sof)) begin
+      `uvm_fatal(
+        "PHY_TX_SEQ",
+        "Failed to randomize packet_length/is_sof"
+      )
+    end
 
     `uvm_info(
-      "TX_TEST",
-      "USB PHY TX test build phase completed",
-      UVM_LOW
-    )
-
-  endfunction
-
-
-  // --------------------------------------------------
-  // Run phase
-  // --------------------------------------------------
-
-  task run_phase(uvm_phase phase);
-
-    phase.raise_objection(this);
-
-    `uvm_info(
-      "TX_TEST",
-      "USB PHY TX test started",
-      UVM_LOW
-    )
-
-    // ----------------------------------------------
-    // Check environment
-    // ----------------------------------------------
-
-    if (env == null) begin
-      `uvm_fatal(
-        "TX_TEST",
-        "USB PHY environment handle is NULL"
-      )
-    end
-
-    if (env_cfg == null) begin
-      `uvm_fatal(
-        "TX_TEST",
-        "USB PHY environment configuration is NULL"
-      )
-    end
-
-    // ----------------------------------------------
-    // Check PHY agent
-    // ----------------------------------------------
-
-    if (env.phy_ag == null) begin
-      `uvm_fatal(
-        "TX_TEST",
-        "PHY agent is not created"
-      )
-    end
-
-    if (env.phy_ag.sequencer == null) begin
-      `uvm_fatal(
-        "TX_TEST",
-        "PHY sequencer is not created. Check PHY agent active mode."
-      )
-    end
-
-    if (env.phy_ag.driver == null) begin
-      `uvm_fatal(
-        "TX_TEST",
-        "PHY driver is not created. Check enable_driver configuration."
-      )
-    end
-
-    // ----------------------------------------------
-    // Create TX sequence
-    // ----------------------------------------------
-
-    tx_seq = phy_simple_tx_seq::type_id::create(
-      "tx_seq"
-    );
-
-    // Use speed configured by the environment.
-    tx_seq.packet_speed = env_cfg.speed;
-
-    `uvm_info(
-      "TX_TEST",
+      "PHY_TX_SEQ",
       $sformatf(
-        "Starting TX sequence at USB speed = %0d",
-        env_cfg.speed
+        "Starting TX packet: speed=%0d length=%0d SOF=%0b",
+        packet_speed,
+        packet_length,
+        is_sof
       ),
-      UVM_LOW
+      UVM_MEDIUM
     )
 
-    // ----------------------------------------------
-    // Start sequence on PHY sequencer
-    // ----------------------------------------------
+    for (int unsigned i = 0; i < packet_length; i++) begin
 
-    tx_seq.start(env.phy_ag.sequencer);
+      req = phy_transaction::type_id::create(
+        $sformatf("req_%0d", i)
+      );
+
+      start_item(req);
+
+      // Initialize every transaction field.
+      req.speed            = packet_speed;
+      req.valid            = 1'b1;
+      req.ready            = 1'b0;
+      req.sop              = (i == 0);
+      req.eop              = (i == packet_length - 1);
+      req.sof_packet       = (is_sof && (i == 0));
+      req.delay_cycles     = 0;
+      req.valid_gap_cycles = 0;
+      req.transaction_id   = transaction_id++;
+
+      req.rx_error         = 1'b0;
+      req.rx_stuff_err     = 1'b0;
+      req.rx_align_err     = 1'b0;
+      req.rx_line_err      = 1'b0;
+      req.rx_sync_err      = 1'b0;
+      req.rx_bus_reset     = 1'b0;
+
+      // Randomize payload only.
+      if (!req.randomize(data)) begin
+        `uvm_fatal(
+          "PHY_TX_SEQ",
+          $sformatf("Failed to randomize data for byte %0d", i)
+        )
+      end
+
+      `uvm_info(
+        "PHY_TX_SEQ",
+        req.convert2string(),
+        UVM_HIGH
+      )
+
+      finish_item(req);
+
+    end
 
     `uvm_info(
-      "TX_TEST",
-      "PHY TX sequence completed successfully",
-      UVM_LOW
+      "PHY_TX_SEQ",
+      "TX packet sequence completed",
+      UVM_MEDIUM
     )
-
-    // ----------------------------------------------
-    // Complete test
-    // ----------------------------------------------
-
-    phase.drop_objection(this);
 
   endtask
-
-
-  // --------------------------------------------------
-  // Report phase
-  // --------------------------------------------------
-
-  function void report_phase(uvm_phase phase);
-
-    super.report_phase(phase);
-
-    `uvm_info(
-      "TX_TEST",
-      "USB PHY TX test completed",
-      UVM_LOW
-    )
-
-  endfunction
 
 endclass
 
