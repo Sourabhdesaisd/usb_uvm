@@ -10,8 +10,13 @@
 -f
 filelist.f
 -top
-tb_top
-+UVM_TESTNAME=usb_phy_tx_test
+top_tb
++UVM_TESTNAME=usb_phy_full_path_test
 +USB_SPEED=1
++USB_FAULT=1
++RESET_CASE=0
++UVM_VERBOSITY=UVM_MEDIUM
+-seed
+1
 -l
-tx_test.log
+logs/usb_phy_full_path_test_speed1_fault1_reset0_seed1.log

@@ -5,12 +5,12 @@
 
 // INCLUDE DIRECTORIES
    
-+incdir+../tb
-+incdir+../agent
-+incdir+../agent/phy_agent
-+incdir+../agent/usb_bfm_agent
++incdir+../rtl
++incdir+../phy_agent
++incdir+../phy_bfm_agent
 +incdir+../env
-+incdir+../tests
++incdir+../test
++incdir+../test_pkg
 
 
   
@@ -74,17 +74,17 @@
 //  TESTBENCH INTERFACES
   
 
-../tb/usb_phy_if.sv
-../tb/usb_bus_if.sv
+../intf/usb_phy_if.sv
+../intf/usb_bus_if.sv
 
 
   
 //  UVM PACKAGE
   
 
-../tb/usb_phy_pkg.sv
+../test_pkg/usb_phy_tb_pkg.sv
 
 
 //TESTBENCH TOP
 
-../tb/tb_top.sv
+../env/top_tb.sv

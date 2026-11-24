@@ -1,0 +1,320 @@
+xrun(64): 20.09-s009: (c) Copyright 1995-2021 Cadence Design Systems, Inc.
+TOOL:	xrun(64)	20.09-s009: Started on Nov 24, 2026 at 16:58:06 IST
+xrun
+	-64bit
+	-uvm
+	-sv
+	-access +rwc
+	-f filelist.f
+		+incdir+../rtl
+		+incdir+../phy_agent
+		+incdir+../phy_bfm_agent
+		+incdir+../env
+		+incdir+../test
+		+incdir+../test_pkg
+		../rtl/pkg.sv
+		../rtl/bit_enable.sv
+		../rtl/tx_holding_reg.sv
+		../rtl/piso.sv
+		../rtl/bit_stuffer.sv
+		../rtl/nrzi_encoder.sv
+		../rtl/tx_data_line_state_converter.sv
+		../rtl/eop.sv
+		../rtl/tx_phy_mux.sv
+		../rtl/phy_tx_top.sv
+		../rtl/line_state_detector.sv
+		../rtl/bus_reset.sv
+		../rtl/rx_ctrl.sv
+		../rtl/sync_eop_detector.sv
+		../rtl/nrzi_decoder.sv
+		../rtl/bit_unstuffer.sv
+		../rtl/sipo.sv
+		../rtl/phy_rx_top.sv
+		../rtl/edge_err_detection.sv
+		../rtl/FSM.sv
+		../rtl/loop_filter.sv
+		../rtl/oversampler.sv
+		../rtl/phase_acc.sv
+		../rtl/sampler.sv
+		../rtl/sync_deglitch.sv
+		../rtl/top.sv
+		../rtl/phy_top.sv
+		../intf/usb_phy_if.sv
+		../intf/usb_bus_if.sv
+		../test_pkg/usb_phy_tb_pkg.sv
+		../env/top_tb.sv
+	-top top_tb
+	-elaborate
+	-l logs/elaborate.log
+Recompiling... reason: file '../env/top_tb.sv' is newer than expected.
+	expected: Tue Nov 24 16:42:51 2026
+	actual:   Tue Nov 24 16:58:02 2026
+Compiling UVM packages (uvm_pkg.sv cdns_uvm_pkg.sv) using uvmhome location /tools/cadence_march2021/XCELIUM2009/tools/methodology/UVM/CDNS-1.1d
+file: ../test_pkg/usb_phy_tb_pkg.sv
+        period = clocks_per_bit((vif.cb_mon.usb_speed == speed_t'(2'b11)) ?
+                                                                          |
+xmvlog: *W,ENUMERR (../phy_bfm_agent/usb_slave_model.sv,267|74): This assignment is a violation of SystemVerilog strong typing rules for enumeration datatypes.
+file: ../env/top_tb.sv
+	module worklib.top_tb:sv
+		errors: 0, warnings: 0
+xmvlog: *W,SPDUSD: Include directory ../rtl given but not used.
+xmvlog: *W,SPDUSD: Include directory ../phy_agent given but not used.
+xmvlog: *W,SPDUSD: Include directory ../phy_bfm_agent given but not used.
+xmvlog: *W,SPDUSD: Include directory ../env given but not used.
+xmvlog: *W,SPDUSD: Include directory ../test given but not used.
+xmvlog: *W,SPDUSD: Include directory ../test_pkg given but not used.
+	Total errors/warnings found outside modules and primitives:
+		errors: 0, warnings: 6
+	Elaborating the design hierarchy:
+		Caching library 'worklib' ....... Done
+	Top level design units:
+		usb_phy_pkg
+		$unit_0x4ccb88e7
+		uvm_pkg
+		cdns_uvmapi
+		cdns_assert2uvm_pkg
+		cdns_uvm_pkg
+		usb_phy_tb_pkg
+		top_tb
+xmelab: *W,DSEMEL: This SystemVerilog design will be simulated as per IEEE 1800-2009 SystemVerilog simulation semantics. Use -disable_sem2009 option for turning off SV 2009 simulation semantics.
+	Building instance overlay tables: .................... Done
+	Generating native compiled code:
+		worklib.usb2_cdr_lock_fsm:sv <0x17fa2a6b>
+			streams:  17, words:  7516
+		worklib.usb2_cdr_sampler:sv <0x0ed7ba4b>
+			streams:  11, words:  3523
+		worklib.usb2_cdr_phase_acc:sv <0x79709f74>
+			streams:  11, words:  3324
+		worklib.usb2_cdr_loop_filter:sv <0x04d61f2f>
+			streams:  18, words:  6585
+		worklib.usb2_cdr_error_detection:sv <0x6bf4cccf>
+			streams:  10, words:  2658
+		worklib.usb2_cdr_oversampler:sv <0x16f6b801>
+			streams:   3, words:  2172
+		worklib.usb2_cdr_sync_deglitch:sv <0x1a079959>
+			streams:  10, words:  2560
+		worklib.usb2_cdr_top:sv <0x0817a866>
+			streams:  11, words:  3014
+		worklib.usb_sipo:sv <0x2fddba09>
+			streams:   8, words:  2755
+		worklib.usb2_bit_unstuffer:sv <0x3538429b>
+			streams:   7, words:  2820
+		worklib.usb2_nrzi_decoder:sv <0x2a741254>
+			streams:   6, words:  1930
+		worklib.usb2_rx_ctrl:sv <0x7e049d5d>
+			streams:  45, words: 20741
+		worklib.usb2_rx_sync_eop_detector:sv <0x2c6e1814>
+			streams:  17, words: 11373
+		worklib.usb2_rx_reset_detect:sv <0x71be9025>
+			streams:   4, words:  1227
+		worklib.usb2_rx_line_state_detector:sv <0x4b741011>
+			streams:   1, words:  1673
+		worklib.phy_rx_top:sv <0x20f8d5e8>
+			streams:  61, words: 15923
+		worklib.usb_tx_line_mux:sv <0x4304d376>
+			streams:   1, words:   985
+		worklib.usb_eop_gen:sv <0x217d6fa0>
+			streams:   9, words:  5337
+		worklib.tx_line_state_converter:sv <0x20299cae>
+			streams:   3, words:   790
+		worklib.usb_nrzi_encoder:sv <0x7ab70470>
+			streams:   6, words:  2073
+		worklib.usb2_bit_stuffer:sv <0x751f996a>
+			streams:  11, words:  3506
+		worklib.usb_piso:sv <0x4d707081>
+			streams:  17, words:  9970
+		worklib.usb2_tx_fifo:sv <0x4f1f54b6>
+			streams:  12, words:  4726
+		worklib.usb_speed_tick:sv <0x57802f37>
+			streams:   5, words:  1486
+		worklib.phy_top:sv <0x78f9912c>
+			streams:  24, words:  8571
+		worklib.uvm_pkg:sv <0x55178fd9>
+			streams:   6, words:  3460
+		worklib.uvm_pkg:sv <0x244e2248>
+			streams:   6, words:  3120
+		worklib.uvm_pkg:sv <0x48703406>
+			streams:   5, words:  2530
+		worklib.uvm_pkg:sv <0x2f2375fc>
+			streams:   7, words:  1927
+		worklib.uvm_pkg:sv <0x37a0ec42>
+			streams:   8, words:  2774
+		worklib.uvm_pkg:sv <0x76e1d5c4>
+			streams:  21, words: 50384
+		worklib.uvm_pkg:sv <0x3fbebfa2>
+			streams:   7, words:  1927
+		worklib.uvm_pkg:sv <0x241e8b43>
+			streams:  24, words: 20005
+		worklib.uvm_pkg:sv <0x56313504>
+			streams:  24, words: 19057
+		worklib.uvm_pkg:sv <0x34463a7b>
+			streams:  20, words: 18548
+		worklib.uvm_pkg:sv <0x2d242178>
+			streams:  11, words:  4487
+		worklib.uvm_pkg:sv <0x4e61f609>
+			streams:  23, words: 28699
+		worklib.uvm_pkg:sv <0x297b4b0b>
+			streams:   7, words:  2431
+		worklib.uvm_pkg:sv <0x6443e669>
+			streams:  12, words: 16092
+		worklib.uvm_pkg:sv <0x3c6d230f>
+			streams:  23, words: 24178
+		worklib.uvm_pkg:sv <0x3ee19756>
+			streams:  22, words: 51194
+		worklib.uvm_pkg:sv <0x0c937ddd>
+			streams:  25, words: 32248
+		worklib.uvm_pkg:sv <0x4730344d>
+			streams:  24, words: 46655
+		worklib.uvm_pkg:sv <0x6d015772>
+			streams:  25, words: 35031
+		worklib.uvm_pkg:sv <0x195324af>
+			streams:  23, words: 52165
+		worklib.uvm_pkg:sv <0x3b4ba73e>
+			streams:  25, words: 37109
+		worklib.uvm_pkg:sv <0x78ad259c>
+			streams:  23, words: 57796
+		worklib.uvm_pkg:sv <0x1dd2832a>
+			streams:  25, words: 41735
+		worklib.uvm_pkg:sv <0x67001baa>
+			streams:  23, words: 50753
+		worklib.uvm_pkg:sv <0x4c2dcef1>
+			streams:  23, words: 53731
+		worklib.uvm_pkg:sv <0x6b47b0e6>
+			streams:  25, words: 34315
+		worklib.uvm_pkg:sv <0x4938ad04>
+			streams:  23, words: 50381
+		worklib.uvm_pkg:sv <0x1727c20a>
+			streams:  25, words: 77049
+		worklib.uvm_pkg:sv <0x370ea5d9>
+			streams:  53, words: 73144
+		worklib.cdns_uvm_pkg:sv <0x09e93786>
+			streams:  26, words: 34197
+		worklib.cdns_uvm_pkg:sv <0x52989eb9>
+			streams:   8, words:  4031
+		worklib.cdns_uvm_pkg:sv <0x7fc087f2>
+			streams:  10, words:  8705
+		worklib.uvm_pkg:sv <0x51532b72>
+			streams:  21, words: 31684
+		worklib.uvm_pkg:sv <0x39755164>
+			streams:  20, words: 33793
+		worklib.uvm_pkg:sv <0x373dd4ae>
+			streams:  22, words: 35745
+		worklib.uvm_pkg:sv <0x16ce9b23>
+			streams:  22, words: 52018
+		worklib.uvm_pkg:sv <0x3eec0468>
+			streams:  23, words: 26370
+		worklib.uvm_pkg:sv <0x7c87497f>
+			streams:  20, words: 50666
+		worklib.uvm_pkg:sv <0x2090dfba>
+			streams:  21, words: 40064
+		worklib.uvm_pkg:sv <0x2a957ece>
+			streams:  26, words: 67778
+		worklib.uvm_pkg:sv <0x7922c542>
+			streams:  20, words: 36681
+		worklib.uvm_pkg:sv <0x50824547>
+			streams:  20, words: 23796
+		worklib.uvm_pkg:sv <0x47c85fdb>
+			streams:  23, words: 25306
+		worklib.uvm_pkg:sv <0x29d7b2d2>
+			streams:  23, words: 27304
+		worklib.uvm_pkg:sv <0x21bc3380>
+			streams:  30, words: 41842
+		worklib.uvm_pkg:sv <0x1cfe09fc>
+			streams:  20, words: 28983
+		worklib.uvm_pkg:sv <0x1bbc7305>
+			streams:  20, words: 28323
+		worklib.usb_phy_tb_pkg:sv <0x3bc98623>
+			streams:  24, words: 35014
+		worklib.uvm_pkg:sv <0x532f3f96>
+			streams:   7, words:  3099
+		worklib.uvm_pkg:sv <0x367cfc5a>
+			streams:  24, words: 38812
+		worklib.uvm_pkg:sv <0x17f1e53c>
+			streams:  24, words: 35600
+		worklib.uvm_pkg:sv <0x026a24c3>
+			streams:  29, words: 70056
+		worklib.uvm_pkg:sv <0x1cad5c35>
+			streams: 102, words: 156792
+		worklib.uvm_pkg:sv <0x78220a12>
+			streams:  42, words: 231293
+		worklib.uvm_pkg:sv <0x65af86a4>
+			streams:   7, words:  3099
+		worklib.uvm_pkg:sv <0x633cf274>
+			streams:  57, words: 55606
+		worklib.usb_phy_tb_pkg:sv <0x1c2cfe6e>
+			streams:  23, words: 30946
+		worklib.uvm_pkg:sv <0x581bc4a3>
+			streams:   8, words:  4212
+		worklib.uvm_pkg:sv <0x47dfb19f>
+			streams:  24, words: 46888
+		worklib.uvm_pkg:sv <0x345a40e0>
+			streams:   7, words:  3099
+		worklib.uvm_pkg:sv <0x53dd9bea>
+			streams: 103, words: 156884
+		worklib.uvm_pkg:sv <0x71a62b63>
+			streams:  23, words: 35095
+		worklib.uvm_pkg:sv <0x7a2f2fb4>
+			streams:  29, words: 27429
+		worklib.uvm_pkg:sv <0x7d50c4be>
+			streams:  83, words: 150807
+		worklib.uvm_pkg:sv <0x2bd1ce71>
+			streams: 259, words: 313323
+		worklib.uvm_pkg:sv <0x536d4373>
+			streams:  23, words: 82537
+		worklib.uvm_pkg:sv <0x4e2731c1>
+			streams:  22, words: 20734
+		worklib.uvm_pkg:sv <0x011c197a>
+			streams:  33, words: 49750
+		worklib.uvm_pkg:sv <0x27791883>
+			streams: 258, words: 311484
+		worklib.uvm_pkg:sv <0x511c1f41>
+			streams:  23, words: 116205
+		worklib.top_tb:sv <0x366dbda9>
+			streams:  95, words: 109622
+		worklib.uvm_pkg:sv <0x436b2e17>
+			streams:  25, words: 41855
+		worklib.uvm_pkg:sv <0x24ead1b1>
+			streams:  24, words: 27681
+		worklib.uvm_pkg:sv <0x5ecde5fa>
+			streams:  24, words: 67422
+		worklib.usb_phy_tb_pkg:sv <0x3df33723>
+			streams:   0, words:     0
+		worklib.cdns_uvm_pkg:sv <0x18b9b108>
+			streams: 128, words: 240666
+		worklib.cdns_uvmapi:svp <0x7cefb11b>
+			streams:  27, words: 31790
+		worklib.cdns_assert2uvm_pkg:sv <0x323fe75a>
+			streams:   3, words:  2239
+		worklib.uvm_pkg:sv <0x6451fbea>
+			streams: 3939, words: 6487026
+		worklib.usb_phy_if:sv <0x71984058>
+			streams:  64, words: 35403
+		worklib.usb_bus_if:sv <0x2e598824>
+			streams:  33, words: 16876
+		worklib.phy_tx_top:sv <0x4d2d3012>
+			streams:  56, words: 15678
+	Building instance specific data structures.
+	Loading native compiled code:     .................... Done
+	Design hierarchy summary:
+		                       Instances  Unique
+		Modules:                      27      27
+		Interfaces:                    2       2
+		Verilog packages:              6       6
+		Registers:                 16722   11324
+		Scalar wires:                356       -
+		Vectored wires:               80       -
+		Named events:                  4      12
+		Always blocks:                36      36
+		Initial blocks:              381     185
+		Clocking blocks:               5       5
+		Clocking items:               53      53
+		Parallel blocks:              31      32
+		Cont. assignments:           118     139
+		Pseudo assignments:          169     169
+		Assertions:                    2       2
+		Covergroup Instances:          0       3
+		Compilation units:             1       1
+		SV Class declarations:       227     340
+		SV Class specializations:    473     473
+	Writing initial simulation snapshot: worklib.top_tb:sv
+TOOL:	xrun(64)	20.09-s009: Exiting on Nov 24, 2026 at 16:58:18 IST  (total: 00:00:12)

@@ -29,7 +29,7 @@
 /home/sgeuser8/Desktop/usb_phy_sim/rtl/sync_deglitch.sv
 /home/sgeuser8/Desktop/usb_phy_sim/rtl/top.sv
 /home/sgeuser8/Desktop/usb_phy_sim/rtl/phy_top.sv
-/home/sgeuser8/Desktop/usb_phy_sim/tb/usb_phy_if.sv
-/home/sgeuser8/Desktop/usb_phy_sim/tb/usb_bus_if.sv
-/home/sgeuser8/Desktop/usb_phy_sim/tb/usb_phy_pkg.sv
-/home/sgeuser8/Desktop/usb_phy_sim/tb/tb_top.sv
+/home/sgeuser8/Desktop/usb_phy_sim/intf/usb_phy_if.sv
+/home/sgeuser8/Desktop/usb_phy_sim/intf/usb_bus_if.sv
+/home/sgeuser8/Desktop/usb_phy_sim/test_pkg/usb_phy_tb_pkg.sv
+/home/sgeuser8/Desktop/usb_phy_sim/env/top_tb.sv

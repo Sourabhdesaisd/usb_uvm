@@ -15,7 +15,7 @@ class usb_phy_env extends uvm_env;
   // ==================================================
 
   phy_agent     phy_ag;
-  usb_bfm_agent usb_ag;
+  usb_slave_model usb_ag;
 
 
   // ==================================================
@@ -23,6 +23,8 @@ class usb_phy_env extends uvm_env;
   // ==================================================
 
   usb_phy_scb scoreboard;
+  usb_tx_wire_checker tx_wire_checker;
+  usb_phy_coverage coverage;
 
 
   // ==================================================
@@ -116,7 +118,7 @@ class usb_phy_env extends uvm_env;
         cfg.usb_bfm_cfg
       );
 
-      usb_ag = usb_bfm_agent::type_id::create(
+      usb_ag = usb_slave_model::type_id::create(
         "usb_ag",
         this
       );
@@ -130,10 +132,16 @@ class usb_phy_env extends uvm_env;
 
     if (cfg.enable_scoreboard) begin
 
+      uvm_config_db#(virtual usb_phy_if #(8))::set(
+        this,"scoreboard","vif",cfg.phy_cfg.vif);
+
       scoreboard = usb_phy_scb::type_id::create(
         "scoreboard",
         this
       );
+      uvm_config_db#(virtual usb_phy_if #(8))::set(
+        this, "coverage", "vif", cfg.phy_cfg.vif);
+      coverage = usb_phy_coverage::type_id::create("coverage",this);
 
     end
 
@@ -147,6 +155,9 @@ class usb_phy_env extends uvm_env;
   function void connect_phase(uvm_phase phase);
 
     super.connect_phase(phase);
+
+    if (usb_ag != null)
+      tx_wire_checker = usb_ag.tx_wire_checker;
 
 
     // ----------------------------------------------
@@ -200,6 +211,13 @@ class usb_phy_env extends uvm_env;
     // ----------------------------------------------
 
     if ((scoreboard != null) && (usb_ag != null)) begin
+
+      usb_ag.txd_rcvd_ap.connect(scoreboard.txd_fifo.analysis_export);
+      usb_ag.rxd_sent_ap.connect(scoreboard.rxd_fifo.analysis_export);
+
+      if (usb_ag.driver != null)
+        usb_ag.driver.expected_rx_port.connect(
+          scoreboard.expected_rx_fifo.analysis_export);
 
       if (usb_ag.monitor != null) begin
 

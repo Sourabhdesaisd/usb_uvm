@@ -1,1 +1,0 @@
-s1(23Nov2026:18:17:05):  xrun -64bit -uvm -sv -access +rwc -f filelist.f -top tb_top +UVM_TESTNAME=usb_phy_tx_test +USB_SPEED=1 -l tx_test.log 

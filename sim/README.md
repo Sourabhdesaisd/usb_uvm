@@ -1,157 +1,16 @@
-# USB 2.0 PHY UVM Simulation ? README
+# Run with Xcelium
 
-## 1. Overview
+Requires Cadence Xcelium `xrun` with SystemVerilog and UVM 1.2 compatible support and covergroups. From `sim/`:
 
-This README describes how to compile, elaborate and run USB 2.0 PHY UVM simulations using Cadence Xcelium.
-
-The testbench supports three USB 2.0 speed modes:
-
-- Low Speed (LS)
-- Full Speed (FS)
-- High Speed (HS)
-
-Separate UVM tests are used for each speed mode.
-
-## 2. Compile and Elaborate Using Makefile
-
-```bash
+```sh
 make compile
+make run TEST=usb_phy_full_path_test USB_SPEED=1
+make run TEST=usb_phy_full_path_test USB_SPEED=2
+make run TEST=usb_phy_fault_test USB_SPEED=0 FAULT=2
+make run TEST=usb_phy_reset_test USB_SPEED=1 RESET_CASE=2
+make regression
 ```
 
-## 3. Simulation Using Makefile
+`USB_SPEED=0/1/2` selects LS/FS/HS; use HS only for TX and reset tests. `FAULT=1/2/3/4` chooses SE1/missing stuff/long SE0/broken SYNC; faults are LS/FS only. `RESET_CASE=0/1/2` selects initialization/during TX/during RX; RX reset is LS/FS only. `make regression` launches each applicable combination, writing separate `logs/*.log`; the first failure stops the Make target. `make -n regression` prints commands without running. Check UVM_ERROR/UVM_FATAL totals, wire checker packet counters, RX scoreboard checks and actual coverage report before marking results Passed. No simulator was available during creation, so compile and run status is Pending.
 
-### Low Speed (LS)
-
-```bash
-make run TEST=usb_phy_ls_test
-```
-
-Shortcut:
-
-```bash
-make run_ls
-```
-
-### Full Speed (FS)
-
-```bash
-make run TEST=usb_phy_fs_test
-```
-
-Shortcut:
-
-```bash
-make run_fs
-```
-
-### High Speed (HS)
-
-```bash
-make run TEST=usb_phy_hs_test
-```
-
-Shortcut:
-
-```bash
-make run_hs
-```
-
-## 4. Direct Simulation Using Xcelium (xrun)
-
-Simulation can also be executed directly using the Xcelium command without the Makefile.
-
-### 4.1 Low Speed (LS)
-
-```bash
-xrun -64bit -uvm -sv -access +rwc \
--f filelist.f \
--top tb_top \
-+UVM_TESTNAME=usb_phy_ls_test \
--l usb_phy_ls.log
-```
-
-### 4.2 Full Speed (FS)
-
-```bash
-xrun -64bit -uvm -sv -access +rwc \
--f filelist.f \
--top tb_top \
-+UVM_TESTNAME=usb_phy_fs_test \
--l usb_phy_fs.log
-```
-
-### 4.3 High Speed (HS)
-
-```bash
-xrun -64bit -uvm -sv -access +rwc \
--f filelist.f \
--top tb_top \
-+UVM_TESTNAME=usb_phy_hs_test \
--l usb_phy_hs.log
-```
-.
-
-## 5. Simulation with Different Random Seeds
-
-A different seed can be specified using `-seed`.
-
-Example using Makefile:
-
-```bash
-make run TEST=usb_phy_fs_test SEED=10
-```
-
-Example using direct Xcelium:
-
-```bash
-xrun -64bit -uvm -sv -access +rwc \
--f filelist.f \
--top tb_top \
-+UVM_TESTNAME=usb_phy_fs_test \
--seed 10 \
--l usb_phy_fs_seed10.log
-```
-
-
-
-## 6. Simulation Workflow
-
-### Using Makefile
-
-```bash
-make compile
-make run_ls
-make run_fs
-make run_hs
-```
-
-### Using Direct Xcelium Commands
-
-```bash
-xrun -64bit -uvm -sv -access +rwc -f filelist.f -top tb_top +UVM_TESTNAME=usb_phy_ls_test -l usb_phy_ls.log
-
-xrun -64bit -uvm -sv -access +rwc -f filelist.f -top tb_top +UVM_TESTNAME=usb_phy_fs_test -l usb_phy_fs.log
-
-xrun -64bit -uvm -sv -access +rwc -f filelist.f -top tb_top +UVM_TESTNAME=usb_phy_hs_test -l usb_phy_hs.log
-```
-# Low Speed
-xrun -64bit -uvm -sv -f filelist.f \
-     -top tb_top \
-     +UVM_TESTNAME=usb_phy_base_test \
-     +USB_SPEED=0 \
-     -l ls.log +DRAIN_TIME=100us
-
-# Full Speed
-xrun -64bit -uvm -sv -f filelist.f \
-     -top tb_top \
-     +UVM_TESTNAME=usb_phy_base_test \
-     +USB_SPEED=1 \
-     -l fs.log
-
-# High Speed
-xrun -64bit -uvm -sv -f filelist.f \
-     -top tb_top \
-     +UVM_TESTNAME=usb_phy_base_test \
-     +USB_SPEED=2 \
-     -l hs.log
-
+The filelist references the included RTL by relative path. Do not mix these files with another version of the same modules; substitute your production RTL in `filelist.f` if needed. Keep WIDTH=8 and 480 MHz defaults unless the TB parameters and timing functions are updated together.

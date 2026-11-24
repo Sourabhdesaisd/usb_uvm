@@ -5,11 +5,11 @@
 
 # Simulator
 XRUN        ?= xrun
-TOP         ?= tb_top
+TOP         ?= top_tb
 FILELIST    ?= filelist.f
 
 # UVM test selection
-TEST        ?= usb_phy_base_test
+TEST        ?= usb_phy_full_path_test
 
 # USB speed:
 # 0 = Low Speed
@@ -19,6 +19,8 @@ USB_SPEED   ?= 1
 
 # Simulation control
 SEED        ?= 1
+FAULT       ?= 1
+RESET_CASE  ?= 0
 UVM_VERBOSITY ?= UVM_MEDIUM
 
 # Output directories
@@ -26,7 +28,7 @@ LOG_DIR     ?= logs
 WORK_DIR    ?= xcelium_work
 
 # Log file
-LOG_FILE    = $(LOG_DIR)/$(TEST)_speed$(USB_SPEED)_seed$(SEED).log
+LOG_FILE    = $(LOG_DIR)/$(TEST)_speed$(USB_SPEED)_fault$(FAULT)_reset$(RESET_CASE)_seed$(SEED).log
 
 # Xcelium options
 XRUN_FLAGS  = -64bit -uvm -sv -access +rwc
@@ -34,6 +36,8 @@ XRUN_FLAGS  = -64bit -uvm -sv -access +rwc
 # Runtime arguments
 RUN_ARGS    = +UVM_TESTNAME=$(TEST) \
               +USB_SPEED=$(USB_SPEED) \
+              +USB_FAULT=$(FAULT) \
+              +RESET_CASE=$(RESET_CASE) \
               +UVM_VERBOSITY=$(UVM_VERBOSITY) \
               -seed $(SEED)
 
@@ -76,14 +80,42 @@ hs:
 # Each speed gets a separate log file.
 #-----------------------------------------------------------
 regression:
-	$(MAKE) run USB_SPEED=0 SEED=$(SEED)
-	$(MAKE) run USB_SPEED=1 SEED=$(SEED)
-	$(MAKE) run USB_SPEED=2 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_reset_test USB_SPEED=0 RESET_CASE=0 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_reset_test USB_SPEED=1 RESET_CASE=0 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_reset_test USB_SPEED=2 RESET_CASE=0 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_full_path_test USB_SPEED=0 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_full_path_test USB_SPEED=1 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_full_path_test USB_SPEED=2 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_back_to_back_test USB_SPEED=0 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_back_to_back_test USB_SPEED=1 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_back_to_back_test USB_SPEED=2 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_speed_switch_test USB_SPEED=1 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_cdr_test USB_SPEED=0 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_cdr_test USB_SPEED=1 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_alignment_test USB_SPEED=0 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_alignment_test USB_SPEED=1 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_underrun_test USB_SPEED=0 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_underrun_test USB_SPEED=1 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_underrun_test USB_SPEED=2 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_reset_test USB_SPEED=0 RESET_CASE=1 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_reset_test USB_SPEED=1 RESET_CASE=1 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_reset_test USB_SPEED=2 RESET_CASE=1 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_reset_test USB_SPEED=0 RESET_CASE=2 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_reset_test USB_SPEED=1 RESET_CASE=2 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_slave_turnaround_test USB_SPEED=0 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_slave_turnaround_test USB_SPEED=1 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_fault_test USB_SPEED=0 SEED=$(SEED) FAULT=1
+	$(MAKE) run TEST=usb_phy_fault_test USB_SPEED=1 SEED=$(SEED) FAULT=1
+	$(MAKE) run TEST=usb_phy_fault_test USB_SPEED=0 SEED=$(SEED) FAULT=2
+	$(MAKE) run TEST=usb_phy_fault_test USB_SPEED=1 SEED=$(SEED) FAULT=2
+	$(MAKE) run TEST=usb_phy_fault_test USB_SPEED=0 SEED=$(SEED) FAULT=3
+	$(MAKE) run TEST=usb_phy_fault_test USB_SPEED=1 SEED=$(SEED) FAULT=3
+	$(MAKE) run TEST=usb_phy_fault_test USB_SPEED=0 SEED=$(SEED) FAULT=4
+	$(MAKE) run TEST=usb_phy_fault_test USB_SPEED=1 SEED=$(SEED) FAULT=4
 
 #-----------------------------------------------------------
 # Optional compile-only target
-# - Use this only if your Xcelium version supports the
-#   compile/elaboration flow used by your project.
+# - Use this only with the Xcelium elaboration flow.
 #-----------------------------------------------------------
 compile:
 	@mkdir -p $(LOG_DIR)
