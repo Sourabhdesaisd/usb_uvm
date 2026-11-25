@@ -133,9 +133,6 @@ class usb_bfm_driver extends uvm_driver #(usb_bfm_transaction);
     // Disable analog input path during initialization
     phy_vif.analog_enable_req = 1'b0;
 
-    // Default serial input level
-    phy_vif.analog_serial = 1'b1;
-
   endtask
 
 
@@ -275,12 +272,6 @@ class usb_bfm_driver extends uvm_driver #(usb_bfm_transaction);
     // CDR must remain enabled across every symbol, EOP and idle.
     phy_vif.cb_bfm_drv.analog_enable_req <= 1'b1;
 
-    // This is a separate CDR input in your RTL.
-    // Do not assume it is equivalent to DP or DM.
-    // Its relationship to the external line signals
-    // must follow the CDR architecture specification.
-    phy_vif.cb_bfm_drv.analog_serial <= tr.analog_serial;
-
 
     // ----------------------------------------------
     // Hold the segment for the requested duration
@@ -363,8 +354,8 @@ class usb_bfm_driver extends uvm_driver #(usb_bfm_transaction);
     @(bus_vif.cb_drv);
 
     bus_vif.cb_drv.device_oe <= 1'b0;
-    // Passive termination restores J. Keep the CDR enabled between packets.
-    phy_vif.cb_bfm_drv.analog_serial <= 1'b1;
+    // Passive termination restores the speed-dependent J state.
+    // analog_serial follows the resolved bus combinationally in top_tb.
 
   endtask
 
@@ -386,4 +377,5 @@ class usb_bfm_driver extends uvm_driver #(usb_bfm_transaction);
   endfunction
 
 endclass
+
 

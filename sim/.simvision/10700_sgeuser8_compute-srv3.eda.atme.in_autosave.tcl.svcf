@@ -214,7 +214,7 @@ set id [waveform add -signals  {
 	wave::top_tb.dut.RxActive
 	} ]
 
-waveform xview limits 0 8000ns
+waveform xview limits 0 943ns
 
 #
 # Waveform Window Links

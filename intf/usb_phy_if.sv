@@ -115,7 +115,6 @@ interface usb_phy_if #(
 
     // Control analog receiver
     output analog_enable_req;
-    output analog_serial;
 
   endclocking
 
@@ -193,4 +192,5 @@ interface usb_phy_if #(
 
 
 endinterface
+
 

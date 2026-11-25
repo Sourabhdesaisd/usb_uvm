@@ -158,3 +158,4 @@ interface usb_bus_if (
   );
 
 endinterface
+

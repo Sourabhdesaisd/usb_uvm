@@ -1,5 +1,5 @@
 xrun(64): 20.09-s009: (c) Copyright 1995-2021 Cadence Design Systems, Inc.
-TOOL:	xrun(64)	20.09-s009: Started on Nov 24, 2026 at 17:53:52 IST
+TOOL:	xrun(64)	20.09-s009: Started on Nov 25, 2026 at 11:05:31 IST
 xrun
 	-64bit
 	-uvm
@@ -58,18 +58,103 @@ xrun
 	+RESET_CASE=0
 	+UVM_VERBOSITY=UVM_MEDIUM
 
-Recompiling... reason: file '../rtl/phy_top.sv' is newer than expected.
-	expected: Tue Nov 24 17:43:34 2026
-	actual:   Tue Nov 24 17:53:48 2026
 Compiling UVM packages (uvm_pkg.sv cdns_uvm_pkg.sv) using uvmhome location /tools/cadence_march2021/XCELIUM2009/tools/methodology/UVM/CDNS-1.1d
+file: ../rtl/pkg.sv
+	package worklib.usb_phy_pkg:sv
+		errors: 0, warnings: 0
+file: ../rtl/bit_enable.sv
+	module worklib.usb_speed_tick:sv
+		errors: 0, warnings: 0
+file: ../rtl/tx_holding_reg.sv
+	module worklib.usb2_tx_fifo:sv
+		errors: 0, warnings: 0
+file: ../rtl/piso.sv
+	module worklib.usb_piso:sv
+		errors: 0, warnings: 0
+file: ../rtl/bit_stuffer.sv
+	module worklib.usb2_bit_stuffer:sv
+		errors: 0, warnings: 0
+file: ../rtl/nrzi_encoder.sv
+	module worklib.usb_nrzi_encoder:sv
+		errors: 0, warnings: 0
+file: ../rtl/tx_data_line_state_converter.sv
+	module worklib.tx_line_state_converter:sv
+		errors: 0, warnings: 0
+file: ../rtl/eop.sv
+	module worklib.usb_eop_gen:sv
+		errors: 0, warnings: 0
+file: ../rtl/tx_phy_mux.sv
+	module worklib.usb_tx_line_mux:sv
+		errors: 0, warnings: 0
+file: ../rtl/phy_tx_top.sv
+	module worklib.phy_tx_top:sv
+		errors: 0, warnings: 0
+file: ../rtl/line_state_detector.sv
+	module worklib.usb2_rx_line_state_detector:sv
+		errors: 0, warnings: 0
+file: ../rtl/bus_reset.sv
+	module worklib.usb2_rx_reset_detect:sv
+		errors: 0, warnings: 0
+file: ../rtl/rx_ctrl.sv
+	module worklib.usb2_rx_ctrl:sv
+		errors: 0, warnings: 0
+file: ../rtl/sync_eop_detector.sv
+	module worklib.usb2_rx_sync_eop_detector:sv
+		errors: 0, warnings: 0
+file: ../rtl/nrzi_decoder.sv
+	module worklib.usb2_nrzi_decoder:sv
+		errors: 0, warnings: 0
+file: ../rtl/bit_unstuffer.sv
+	module worklib.usb2_bit_unstuffer:sv
+		errors: 0, warnings: 0
+file: ../rtl/sipo.sv
+	module worklib.usb_sipo:sv
+		errors: 0, warnings: 0
+file: ../rtl/phy_rx_top.sv
+	module worklib.phy_rx_top:sv
+		errors: 0, warnings: 0
+file: ../rtl/edge_err_detection.sv
+	module worklib.usb2_cdr_error_detection:sv
+		errors: 0, warnings: 0
+file: ../rtl/FSM.sv
+	module worklib.usb2_cdr_lock_fsm:sv
+		errors: 0, warnings: 0
+file: ../rtl/loop_filter.sv
+	module worklib.usb2_cdr_loop_filter:sv
+		errors: 0, warnings: 0
+file: ../rtl/oversampler.sv
+	module worklib.usb2_cdr_oversampler:sv
+		errors: 0, warnings: 0
+file: ../rtl/phase_acc.sv
+	module worklib.usb2_cdr_phase_acc:sv
+		errors: 0, warnings: 0
+file: ../rtl/sampler.sv
+	module worklib.usb2_cdr_sampler:sv
+		errors: 0, warnings: 0
+file: ../rtl/sync_deglitch.sv
+	module worklib.usb2_cdr_sync_deglitch:sv
+		errors: 0, warnings: 0
+file: ../rtl/top.sv
+	module worklib.usb2_cdr_top:sv
+		errors: 0, warnings: 0
 file: ../rtl/phy_top.sv
 	module worklib.phy_top:sv
+		errors: 0, warnings: 0
+file: ../intf/usb_phy_if.sv
+	interface worklib.usb_phy_if:sv
+		errors: 0, warnings: 0
+file: ../intf/usb_bus_if.sv
+	interface worklib.usb_bus_if:sv
 		errors: 0, warnings: 0
 file: ../test_pkg/usb_phy_tb_pkg.sv
         period = clocks_per_bit((vif.cb_mon.usb_speed == speed_t'(2'b11)) ?
                                                                           |
 xmvlog: *W,ENUMERR (../phy_bfm_agent/usb_slave_model.sv,267|74): This assignment is a violation of SystemVerilog strong typing rules for enumeration datatypes.
+	package worklib.usb_phy_tb_pkg:sv
+		errors: 0, warnings: 1
 file: ../env/top_tb.sv
+	module worklib.top_tb:sv
+		errors: 0, warnings: 0
 xmvlog: *W,SPDUSD: Include directory ../rtl given but not used.
 xmvlog: *W,SPDUSD: Include directory ../phy_agent given but not used.
 xmvlog: *W,SPDUSD: Include directory ../phy_bfm_agent given but not used.
@@ -92,8 +177,220 @@ xmvlog: *W,SPDUSD: Include directory ../test_pkg given but not used.
 xmelab: *W,DSEMEL: This SystemVerilog design will be simulated as per IEEE 1800-2009 SystemVerilog simulation semantics. Use -disable_sem2009 option for turning off SV 2009 simulation semantics.
 	Building instance overlay tables: .................... Done
 	Generating native compiled code:
-		worklib.phy_top:sv <0x0a8186d4>
-			streams:  27, words:  9035
+		worklib.usb2_cdr_lock_fsm:sv <0x17fa2a6b>
+			streams:  17, words:  7516
+		worklib.usb2_cdr_sampler:sv <0x0ed7ba4b>
+			streams:  11, words:  3523
+		worklib.usb2_cdr_phase_acc:sv <0x79709f74>
+			streams:  11, words:  3324
+		worklib.usb2_cdr_loop_filter:sv <0x04d61f2f>
+			streams:  18, words:  6585
+		worklib.usb2_cdr_error_detection:sv <0x6bf4cccf>
+			streams:  10, words:  2658
+		worklib.usb2_cdr_oversampler:sv <0x16f6b801>
+			streams:   3, words:  2172
+		worklib.usb2_cdr_sync_deglitch:sv <0x1a079959>
+			streams:  10, words:  2560
+		worklib.usb2_cdr_top:sv <0x0817a866>
+			streams:  11, words:  3014
+		worklib.usb_sipo:sv <0x2fddba09>
+			streams:   8, words:  2755
+		worklib.usb2_bit_unstuffer:sv <0x3538429b>
+			streams:   7, words:  2820
+		worklib.usb2_nrzi_decoder:sv <0x2a741254>
+			streams:   6, words:  1930
+		worklib.usb2_rx_ctrl:sv <0x7e049d5d>
+			streams:  45, words: 20741
+		worklib.usb2_rx_sync_eop_detector:sv <0x2c6e1814>
+			streams:  17, words: 11373
+		worklib.usb2_rx_reset_detect:sv <0x71be9025>
+			streams:   4, words:  1227
+		worklib.usb2_rx_line_state_detector:sv <0x4b741011>
+			streams:   1, words:  1673
+		worklib.phy_rx_top:sv <0x20f8d5e8>
+			streams:  61, words: 15923
+		worklib.usb_tx_line_mux:sv <0x4304d376>
+			streams:   1, words:   985
+		worklib.usb_eop_gen:sv <0x217d6fa0>
+			streams:   9, words:  5337
+		worklib.tx_line_state_converter:sv <0x20299cae>
+			streams:   3, words:   790
+		worklib.usb_nrzi_encoder:sv <0x7ab70470>
+			streams:   6, words:  2073
+		worklib.usb2_bit_stuffer:sv <0x751f996a>
+			streams:  11, words:  3506
+		worklib.usb_piso:sv <0x4d707081>
+			streams:  17, words:  9970
+		worklib.usb2_tx_fifo:sv <0x4f1f54b6>
+			streams:  12, words:  4726
+		worklib.usb_speed_tick:sv <0x57802f37>
+			streams:   5, words:  1486
+		worklib.phy_top:sv <0x78f9912c>
+			streams:  24, words:  8571
+		worklib.uvm_pkg:sv <0x55178fd9>
+			streams:   6, words:  3460
+		worklib.uvm_pkg:sv <0x244e2248>
+			streams:   6, words:  3120
+		worklib.uvm_pkg:sv <0x48703406>
+			streams:   5, words:  2530
+		worklib.uvm_pkg:sv <0x2f2375fc>
+			streams:   7, words:  1927
+		worklib.uvm_pkg:sv <0x37a0ec42>
+			streams:   8, words:  2774
+		worklib.uvm_pkg:sv <0x76e1d5c4>
+			streams:  21, words: 50384
+		worklib.uvm_pkg:sv <0x3fbebfa2>
+			streams:   7, words:  1927
+		worklib.uvm_pkg:sv <0x241e8b43>
+			streams:  24, words: 20005
+		worklib.uvm_pkg:sv <0x56313504>
+			streams:  24, words: 19057
+		worklib.uvm_pkg:sv <0x34463a7b>
+			streams:  20, words: 18548
+		worklib.uvm_pkg:sv <0x2d242178>
+			streams:  11, words:  4487
+		worklib.uvm_pkg:sv <0x4e61f609>
+			streams:  23, words: 28699
+		worklib.uvm_pkg:sv <0x297b4b0b>
+			streams:   7, words:  2431
+		worklib.uvm_pkg:sv <0x6443e669>
+			streams:  12, words: 16092
+		worklib.uvm_pkg:sv <0x3c6d230f>
+			streams:  23, words: 24178
+		worklib.uvm_pkg:sv <0x3ee19756>
+			streams:  22, words: 51194
+		worklib.uvm_pkg:sv <0x0c937ddd>
+			streams:  25, words: 32248
+		worklib.uvm_pkg:sv <0x4730344d>
+			streams:  24, words: 46655
+		worklib.uvm_pkg:sv <0x6d015772>
+			streams:  25, words: 35031
+		worklib.uvm_pkg:sv <0x195324af>
+			streams:  23, words: 52165
+		worklib.uvm_pkg:sv <0x3b4ba73e>
+			streams:  25, words: 37109
+		worklib.uvm_pkg:sv <0x78ad259c>
+			streams:  23, words: 57796
+		worklib.uvm_pkg:sv <0x1dd2832a>
+			streams:  25, words: 41735
+		worklib.uvm_pkg:sv <0x67001baa>
+			streams:  23, words: 50753
+		worklib.uvm_pkg:sv <0x4c2dcef1>
+			streams:  23, words: 53731
+		worklib.uvm_pkg:sv <0x6b47b0e6>
+			streams:  25, words: 34315
+		worklib.uvm_pkg:sv <0x4938ad04>
+			streams:  23, words: 50381
+		worklib.uvm_pkg:sv <0x1727c20a>
+			streams:  25, words: 77049
+		worklib.uvm_pkg:sv <0x370ea5d9>
+			streams:  53, words: 73144
+		worklib.cdns_uvm_pkg:sv <0x09e93786>
+			streams:  26, words: 34197
+		worklib.cdns_uvm_pkg:sv <0x52989eb9>
+			streams:   8, words:  4031
+		worklib.cdns_uvm_pkg:sv <0x7fc087f2>
+			streams:  10, words:  8705
+		worklib.uvm_pkg:sv <0x7a10b434>
+			streams:  21, words: 31684
+		worklib.uvm_pkg:sv <0x642dab77>
+			streams:  20, words: 33793
+		worklib.uvm_pkg:sv <0x2be2a567>
+			streams:  22, words: 35745
+		worklib.uvm_pkg:sv <0x22eeb563>
+			streams:  22, words: 52018
+		worklib.uvm_pkg:sv <0x5f189b27>
+			streams:  23, words: 26307
+		worklib.uvm_pkg:sv <0x679644c6>
+			streams:  20, words: 50666
+		worklib.uvm_pkg:sv <0x3810d191>
+			streams:  21, words: 40064
+		worklib.uvm_pkg:sv <0x026e0bfb>
+			streams:  26, words: 67117
+		worklib.uvm_pkg:sv <0x461e3ca6>
+			streams:  20, words: 36681
+		worklib.uvm_pkg:sv <0x0d3938c8>
+			streams:  20, words: 23796
+		worklib.uvm_pkg:sv <0x089e2ac5>
+			streams:  23, words: 25306
+		worklib.uvm_pkg:sv <0x766e89b0>
+			streams:  23, words: 27304
+		worklib.uvm_pkg:sv <0x21bc3380>
+			streams:  30, words: 41842
+		worklib.uvm_pkg:sv <0x457b5408>
+			streams:  20, words: 28983
+		worklib.uvm_pkg:sv <0x0cabbcd5>
+			streams:  20, words: 28323
+		worklib.usb_phy_tb_pkg:sv <0x74d8481e>
+			streams:  24, words: 35014
+		worklib.uvm_pkg:sv <0x532f3f96>
+			streams:   7, words:  3099
+		worklib.uvm_pkg:sv <0x5cf83627>
+			streams:  24, words: 38812
+		worklib.uvm_pkg:sv <0x6cf1fd6d>
+			streams:  24, words: 35600
+		worklib.uvm_pkg:sv <0x484407fb>
+			streams:  29, words: 70056
+		worklib.uvm_pkg:sv <0x4d3eb8d2>
+			streams: 102, words: 156792
+		worklib.uvm_pkg:sv <0x14c72d4f>
+			streams:  42, words: 231293
+		worklib.uvm_pkg:sv <0x65af86a4>
+			streams:   7, words:  3099
+		worklib.uvm_pkg:sv <0x36a76510>
+			streams:  57, words: 55606
+		worklib.usb_phy_tb_pkg:sv <0x24e5e963>
+			streams:  23, words: 30946
+		worklib.uvm_pkg:sv <0x581bc4a3>
+			streams:   8, words:  4212
+		worklib.uvm_pkg:sv <0x21cefaee>
+			streams:  24, words: 46888
+		worklib.uvm_pkg:sv <0x345a40e0>
+			streams:   7, words:  3099
+		worklib.uvm_pkg:sv <0x230b59a6>
+			streams: 103, words: 155615
+		worklib.uvm_pkg:sv <0x37d77eed>
+			streams:  23, words: 35095
+		worklib.uvm_pkg:sv <0x63d196c0>
+			streams:  29, words: 27429
+		worklib.uvm_pkg:sv <0x5d19d4f8>
+			streams:  83, words: 150807
+		worklib.uvm_pkg:sv <0x2bd1ce71>
+			streams: 259, words: 313323
+		worklib.uvm_pkg:sv <0x536d4373>
+			streams:  23, words: 82537
+		worklib.uvm_pkg:sv <0x17a89c7e>
+			streams:  22, words: 20734
+		worklib.uvm_pkg:sv <0x1db95cf8>
+			streams:  33, words: 49475
+		worklib.uvm_pkg:sv <0x50e27bf1>
+			streams: 258, words: 311484
+		worklib.uvm_pkg:sv <0x511c1f41>
+			streams:  23, words: 116205
+		worklib.top_tb:sv <0x6d721892>
+			streams:  96, words: 109803
+		worklib.uvm_pkg:sv <0x3feba966>
+			streams:  25, words: 41855
+		worklib.uvm_pkg:sv <0x4be0a187>
+			streams:  24, words: 27681
+		worklib.uvm_pkg:sv <0x3bf98fd8>
+			streams:  24, words: 67422
+		worklib.usb_phy_tb_pkg:sv <0x3df33723>
+			streams:   0, words:     0
+		worklib.cdns_uvm_pkg:sv <0x18b9b108>
+			streams: 128, words: 240666
+		worklib.cdns_uvmapi:svp <0x7cefb11b>
+			streams:  27, words: 31790
+		worklib.cdns_assert2uvm_pkg:sv <0x323fe75a>
+			streams:   3, words:  2239
+		worklib.uvm_pkg:sv <0x6451fbea>
+			streams: 3939, words: 6487026
+		worklib.usb_phy_if:sv <0x31472928>
+			streams:  64, words: 34663
+		worklib.usb_bus_if:sv <0x2e598824>
+			streams:  33, words: 16876
+		worklib.phy_tx_top:sv <0x4d2d3012>
+			streams:  56, words: 15678
 	Building instance specific data structures.
 	Loading native compiled code:     .................... Done
 	Design hierarchy summary:
@@ -102,16 +399,16 @@ xmelab: *W,DSEMEL: This SystemVerilog design will be simulated as per IEEE 1800-
 		Interfaces:                    2       2
 		Verilog packages:              6       6
 		Registers:                 16722   11324
-		Scalar wires:                360       -
+		Scalar wires:                357       -
 		Vectored wires:               80       -
 		Named events:                  4      12
 		Always blocks:                36      36
 		Initial blocks:              381     185
 		Clocking blocks:               5       5
-		Clocking items:               53      53
+		Clocking items:               52      52
 		Parallel blocks:              31      32
-		Cont. assignments:           118     139
-		Pseudo assignments:          172     172
+		Cont. assignments:           119     140
+		Pseudo assignments:          169     169
 		Assertions:                    2       2
 		Covergroup Instances:          0       3
 		Compilation units:             1       1
@@ -456,14 +753,14 @@ UVM_INFO ../env/usb_phy_scb.sv(345) @ 1713: uvm_test_top.env.scoreboard [USB_TX_
 UVM_INFO ../env/usb_phy_scb.sv(434) @ 1713: uvm_test_top.env.scoreboard [USB_SCB_TX] PHY_TXN ID=3 SPEED=1 DATA=0x7e VALID=1 READY=1 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
 UVM_INFO ../env/usb_phy_scb.sv(345) @ 1717: uvm_test_top.env.scoreboard [USB_TX_SIE] SIE->PHY accepted byte id=4 speed=FS data=0x80 SOP=0 EOP=1 SOF=0
 UVM_INFO ../env/usb_phy_scb.sv(434) @ 1717: uvm_test_top.env.scoreboard [USB_SCB_TX] PHY_TXN ID=4 SPEED=1 DATA=0x80 VALID=1 READY=1 SOP=0 EOP=1 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 1915: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=0 actual=0x00 SOP=1 EOP=1; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 1915: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=0 SPEED=1 DATA=0x00 VALID=1 READY=0 SOP=1 EOP=1 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 4007: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=1 actual=0xff SOP=1 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 4007: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=1 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=1 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 4729: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=2 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 4729: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=2 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 5367: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=3 actual=0x7e SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 5367: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=3 SPEED=1 DATA=0x7e VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 1779: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=0 actual=0x00 SOP=1 EOP=1; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 1779: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=0 SPEED=1 DATA=0x00 VALID=1 READY=0 SOP=1 EOP=1 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 4011: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=1 actual=0xff SOP=1 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 4011: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=1 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=1 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 4727: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=2 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 4727: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=2 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 5363: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=3 actual=0x7e SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 5363: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=3 SPEED=1 DATA=0x7e VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
 UVM_INFO ../phy_agent/phy_driver.sv(266) @ 5541: uvm_test_top.env.phy_ag.driver [PHY_DRV] Accepted SIE transaction 5: PHY_TXN ID=0 SPEED=1 DATA=0x80 VALID=1 READY=0 SOP=0 EOP=1 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
 UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(140) @ 5543: uvm_test_top.env.usb_ag.tx_wire_checker [USB_TX_WIRE] packet 2    MATCH speed=FS bytes=4 symbols_expected=46 symbols_actual=46 cycles_expected=1840 cycles_actual=1840
 UVM_INFO ../env/usb_phy_scb.sv(463) @ 5543: uvm_test_top.env.scoreboard [USB_TX_COMPARE] byte[1]    MATCH expected=0xff actual_wire=0xff speed_exp=FS speed_actual=FS SOP_exp/actual=1/1 EOP_exp/actual=0/0
@@ -518,55 +815,55 @@ UVM_INFO ../env/usb_phy_scb.sv(434) @ 5601: uvm_test_top.env.scoreboard [USB_SCB
 UVM_INFO ../phy_agent/phy_driver.sv(266) @ 5605: uvm_test_top.env.phy_ag.driver [PHY_DRV] Accepted SIE transaction 21: PHY_TXN ID=0 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
 UVM_INFO ../env/usb_phy_scb.sv(345) @ 5605: uvm_test_top.env.scoreboard [USB_TX_SIE] SIE->PHY accepted byte id=20 speed=FS data=0xff SOP=0 EOP=0 SOF=0
 UVM_INFO ../env/usb_phy_scb.sv(434) @ 5605: uvm_test_top.env.scoreboard [USB_SCB_TX] PHY_TXN ID=20 SPEED=1 DATA=0xff VALID=1 READY=1 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 5613: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=4 actual=0x80 SOP=0 EOP=1; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 5613: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=4 SPEED=1 DATA=0x80 VALID=1 READY=0 SOP=0 EOP=1 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
 UVM_INFO ../phy_agent/phy_driver.sv(266) @ 5623: uvm_test_top.env.phy_ag.driver [PHY_DRV] Accepted SIE transaction 22: PHY_TXN ID=0 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
 UVM_INFO ../env/usb_phy_scb.sv(345) @ 5623: uvm_test_top.env.scoreboard [USB_TX_SIE] SIE->PHY accepted byte id=21 speed=FS data=0xff SOP=0 EOP=0 SOF=0
 UVM_INFO ../env/usb_phy_scb.sv(434) @ 5623: uvm_test_top.env.scoreboard [USB_SCB_TX] PHY_TXN ID=21 SPEED=1 DATA=0xff VALID=1 READY=1 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 5763: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=4 actual=0x80 SOP=0 EOP=1; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 5763: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=4 SPEED=1 DATA=0x80 VALID=1 READY=0 SOP=0 EOP=1 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
 UVM_INFO ../phy_agent/phy_driver.sv(266) @ 6983: uvm_test_top.env.phy_ag.driver [PHY_DRV] Accepted SIE transaction 23: PHY_TXN ID=0 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
 UVM_INFO ../env/usb_phy_scb.sv(345) @ 6983: uvm_test_top.env.scoreboard [USB_TX_SIE] SIE->PHY accepted byte id=22 speed=FS data=0xff SOP=0 EOP=0 SOF=0
 UVM_INFO ../env/usb_phy_scb.sv(434) @ 6983: uvm_test_top.env.scoreboard [USB_SCB_TX] PHY_TXN ID=22 SPEED=1 DATA=0xff VALID=1 READY=1 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
 UVM_INFO ../phy_agent/phy_driver.sv(266) @ 7703: uvm_test_top.env.phy_ag.driver [PHY_DRV] Accepted SIE transaction 24: PHY_TXN ID=0 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
 UVM_INFO ../env/usb_phy_scb.sv(345) @ 7703: uvm_test_top.env.scoreboard [USB_TX_SIE] SIE->PHY accepted byte id=23 speed=FS data=0xff SOP=0 EOP=0 SOF=0
 UVM_INFO ../env/usb_phy_scb.sv(434) @ 7703: uvm_test_top.env.scoreboard [USB_SCB_TX] PHY_TXN ID=23 SPEED=1 DATA=0xff VALID=1 READY=1 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 7843: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=5 actual=0xff SOP=1 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 7843: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=5 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=1 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 7845: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=5 actual=0xff SOP=1 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 7845: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=5 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=1 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
 UVM_INFO ../env/usb_phy_scb.sv(345) @ 8503: uvm_test_top.env.scoreboard [USB_TX_SIE] SIE->PHY accepted byte id=24 speed=FS data=0xff SOP=0 EOP=1 SOF=0
 UVM_INFO ../env/usb_phy_scb.sv(434) @ 8503: uvm_test_top.env.scoreboard [USB_SCB_TX] PHY_TXN ID=24 SPEED=1 DATA=0xff VALID=1 READY=1 SOP=0 EOP=1 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 8643: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=6 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 8643: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=6 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 9365: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=7 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 9365: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=7 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 10085: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=8 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 10085: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=8 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 10885: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=9 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 10885: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=9 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 11605: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=10 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 11605: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=10 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 12325: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=11 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 12325: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=11 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 13123: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=12 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 13123: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=12 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 13843: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=13 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 13843: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=13 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 8641: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=6 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 8641: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=6 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 9359: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=7 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 9359: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=7 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 10079: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=8 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 10079: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=8 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 10883: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=9 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 10883: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=9 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 11607: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=10 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 11607: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=10 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 12329: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=11 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 12329: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=11 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 13129: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=12 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 13129: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=12 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 13847: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=13 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 13847: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=13 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
 UVM_INFO ../env/usb_phy_scb.sv(576) @ 14565: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=14 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
 UVM_INFO ../env/usb_phy_scb.sv(661) @ 14565: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=14 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 15365: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=15 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 15365: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=15 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 16085: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=16 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 16085: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=16 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 16805: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=17 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 16805: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=17 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 17605: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=18 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 17605: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=18 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 18325: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=19 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 18325: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=19 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 19043: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=20 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 19043: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=20 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 19843: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=21 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 19843: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=21 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
-UVM_INFO ../env/usb_phy_scb.sv(576) @ 20565: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=22 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
-UVM_INFO ../env/usb_phy_scb.sv(661) @ 20565: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=22 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 15361: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=15 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 15361: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=15 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 16079: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=16 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 16079: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=16 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 16799: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=17 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 16799: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=17 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 17603: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=18 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 17603: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=18 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 18327: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=19 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 18327: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=19 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 19049: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=20 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 19049: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=20 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 19849: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=21 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 19849: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=21 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 20567: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=22 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 20567: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=22 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
 UVM_INFO ../env/usb_phy_scb.sv(576) @ 21285: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=23 actual=0xff SOP=0 EOP=0; no expected byte (fault or unexpected output)
 UVM_INFO ../env/usb_phy_scb.sv(661) @ 21285: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=23 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
 UVM_INFO ../phy_agent/phy_driver.sv(266) @ 21461: uvm_test_top.env.phy_ag.driver [PHY_DRV] Accepted SIE transaction 25: PHY_TXN ID=0 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=1 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
@@ -591,6 +888,8 @@ UVM_INFO ../env/usb_phy_scb.sv(463) @ 21463: uvm_test_top.env.scoreboard [USB_TX
 UVM_INFO ../env/usb_phy_scb.sv(463) @ 21463: uvm_test_top.env.scoreboard [USB_TX_COMPARE] byte[22]    MATCH expected=0xff actual_wire=0xff speed_exp=FS speed_actual=FS SOP_exp/actual=0/0 EOP_exp/actual=0/0
 UVM_INFO ../env/usb_phy_scb.sv(463) @ 21463: uvm_test_top.env.scoreboard [USB_TX_COMPARE] byte[23]    MATCH expected=0xff actual_wire=0xff speed_exp=FS speed_actual=FS SOP_exp/actual=0/0 EOP_exp/actual=0/0
 UVM_INFO ../env/usb_phy_scb.sv(463) @ 21463: uvm_test_top.env.scoreboard [USB_TX_COMPARE] byte[24]    MATCH expected=0xff actual_wire=0xff speed_exp=FS speed_actual=FS SOP_exp/actual=0/0 EOP_exp/actual=1/1
+UVM_INFO ../env/usb_phy_scb.sv(576) @ 21545: uvm_test_top.env.scoreboard [USB_RX_UNSCORED] byte id=24 actual=0xff SOP=0 EOP=1; no expected byte (fault or unexpected output)
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 21545: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=24 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=1 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
 UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(360) @ 22267: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_PACKET] Peer->PHY packet id=0 speed=FS bytes=3 scored=1 EOP_SE0_bits=1 HS_SOF_EOP=0 inject_SE1=0 omit_stuff=0 break_sync=0
 UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(364) @ 22267: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_DATA] Peer->PHY packet id=0 byte[0] sent=0x2d
 UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(364) @ 22267: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_DATA] Peer->PHY packet id=0 byte[1] sent=0xff
@@ -603,307 +902,324 @@ UVM_INFO ../env/usb_phy_scb.sv(292) @ 22267: uvm_test_top.env.scoreboard [USB_RX
 UVM_INFO ../env/usb_phy_scb.sv(487) @ 22267: uvm_test_top.env.scoreboard [USB_SLAVE_SENT] Peer->PHY scheduled byte[0] speed=FS data=0x2d SOP=1 EOP=0
 UVM_INFO ../env/usb_phy_scb.sv(487) @ 22267: uvm_test_top.env.scoreboard [USB_SLAVE_SENT] Peer->PHY scheduled byte[1] speed=FS data=0xff SOP=0 EOP=0
 UVM_INFO ../env/usb_phy_scb.sv(487) @ 22267: uvm_test_top.env.scoreboard [USB_SLAVE_SENT] Peer->PHY scheduled byte[2] speed=FS data=0xa5 SOP=0 EOP=1
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 22345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 22345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 22425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 22345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 22345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 22425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 22425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 22505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 22505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 22585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 22505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 22505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 22585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 22585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 22665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 22665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 22745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 22665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 22665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 22745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 22745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 22825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 22825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 22825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 22905: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 22905: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 22905: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 22985: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 22985: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 23065: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 23065: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 23145: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 23145: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 23225: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 22985: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 22985: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 23065: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 23065: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 23145: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 23145: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 23225: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 23225: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 23305: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 23305: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 23305: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 23385: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 23385: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 23465: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 23385: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 23385: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 23465: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 23465: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 23545: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 23545: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 23545: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 23625: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 23625: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 23625: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 23705: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 23705: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 23705: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 23785: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 23785: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 23785: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 23865: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 23865: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 23865: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 23945: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 23945: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 23945: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 24025: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24025: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 24105: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24105: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 24185: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24185: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 24265: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24265: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 24345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 24025: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24025: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 24105: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24105: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 24185: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24185: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 24265: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24265: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../env/usb_phy_scb.sv(572) @ 24337: uvm_test_top.env.scoreboard [USB_RX_COMPARE] byte id=25    MATCH speed=FS expected=0x2d actual=0x2d SOP_exp/actual=1/1 EOP_exp/actual=0/0 RxError=0
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 24337: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=25 SPEED=1 DATA=0x2d VALID=1 READY=0 SOP=1 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 24345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 24425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 24425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 24505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 24585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 24505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 24585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 24665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 24665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 24745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 24825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 24905: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 24745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 24825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 24905: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
 UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24905: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 24985: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24985: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 25067: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_ERROR ../test/usb_phy_full_path_test.sv(88) @ 37067: uvm_test_top [FULL_PATH] Missing RX packet with 1 SE0 EOP bits
-UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(360) @ 38027: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_PACKET] Peer->PHY packet id=0 speed=FS bytes=3 scored=1 EOP_SE0_bits=2 HS_SOF_EOP=0 inject_SE1=0 omit_stuff=0 break_sync=0
-UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(364) @ 38027: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_DATA] Peer->PHY packet id=0 byte[0] sent=0x2d
-UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(364) @ 38027: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_DATA] Peer->PHY packet id=0 byte[1] sent=0xff
-UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(364) @ 38027: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_DATA] Peer->PHY packet id=0 byte[2] sent=0xa5
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 38027: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../env/usb_phy_scb.sv(286) @ 38027: uvm_test_top.env.scoreboard [USB_RX_EXPECT] Peer queued RX packet id=0 speed=FS length=3
-UVM_INFO ../env/usb_phy_scb.sv(292) @ 38027: uvm_test_top.env.scoreboard [USB_RX_EXPECT]   byte[0] expected DataOut=0x2d SOP=1 EOP=0
-UVM_INFO ../env/usb_phy_scb.sv(292) @ 38027: uvm_test_top.env.scoreboard [USB_RX_EXPECT]   byte[1] expected DataOut=0xff SOP=0 EOP=0
-UVM_INFO ../env/usb_phy_scb.sv(292) @ 38027: uvm_test_top.env.scoreboard [USB_RX_EXPECT]   byte[2] expected DataOut=0xa5 SOP=0 EOP=1
-UVM_INFO ../env/usb_phy_scb.sv(487) @ 38027: uvm_test_top.env.scoreboard [USB_SLAVE_SENT] Peer->PHY scheduled byte[3] speed=FS data=0x2d SOP=1 EOP=0
-UVM_INFO ../env/usb_phy_scb.sv(487) @ 38027: uvm_test_top.env.scoreboard [USB_SLAVE_SENT] Peer->PHY scheduled byte[4] speed=FS data=0xff SOP=0 EOP=0
-UVM_INFO ../env/usb_phy_scb.sv(487) @ 38027: uvm_test_top.env.scoreboard [USB_SLAVE_SENT] Peer->PHY scheduled byte[5] speed=FS data=0xa5 SOP=0 EOP=1
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 38105: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 38105: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 38185: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 38185: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 38265: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 38265: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 38345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 38345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 38425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 38425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 38505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 38505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 38585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 38585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 38665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 38665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 38745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 38745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 38825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 38825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 38905: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 38905: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 38985: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 38985: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 39065: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 39065: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 39145: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 39145: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 39225: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 39225: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 39305: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 39305: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 39385: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 39385: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 39465: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 39465: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 39545: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 39545: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 39625: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 39625: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 39705: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 39705: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 39785: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 39785: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 39865: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 39865: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 39945: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 39945: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 40025: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 40025: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 40105: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 40105: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 40185: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 40185: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 40265: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 40265: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 40345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 40345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 40425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 40425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 40505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 40505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 40585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 40585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 40665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 40665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 40745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 40745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 40825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 40825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 40907: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_ERROR ../test/usb_phy_full_path_test.sv(88) @ 52907: uvm_test_top [FULL_PATH] Missing RX packet with 2 SE0 EOP bits
-UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(360) @ 53867: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_PACKET] Peer->PHY packet id=0 speed=FS bytes=3 scored=1 EOP_SE0_bits=3 HS_SOF_EOP=0 inject_SE1=0 omit_stuff=0 break_sync=0
-UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(364) @ 53867: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_DATA] Peer->PHY packet id=0 byte[0] sent=0x2d
-UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(364) @ 53867: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_DATA] Peer->PHY packet id=0 byte[1] sent=0xff
-UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(364) @ 53867: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_DATA] Peer->PHY packet id=0 byte[2] sent=0xa5
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 53867: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../env/usb_phy_scb.sv(286) @ 53867: uvm_test_top.env.scoreboard [USB_RX_EXPECT] Peer queued RX packet id=0 speed=FS length=3
-UVM_INFO ../env/usb_phy_scb.sv(292) @ 53867: uvm_test_top.env.scoreboard [USB_RX_EXPECT]   byte[0] expected DataOut=0x2d SOP=1 EOP=0
-UVM_INFO ../env/usb_phy_scb.sv(292) @ 53867: uvm_test_top.env.scoreboard [USB_RX_EXPECT]   byte[1] expected DataOut=0xff SOP=0 EOP=0
-UVM_INFO ../env/usb_phy_scb.sv(292) @ 53867: uvm_test_top.env.scoreboard [USB_RX_EXPECT]   byte[2] expected DataOut=0xa5 SOP=0 EOP=1
-UVM_INFO ../env/usb_phy_scb.sv(487) @ 53867: uvm_test_top.env.scoreboard [USB_SLAVE_SENT] Peer->PHY scheduled byte[6] speed=FS data=0x2d SOP=1 EOP=0
-UVM_INFO ../env/usb_phy_scb.sv(487) @ 53867: uvm_test_top.env.scoreboard [USB_SLAVE_SENT] Peer->PHY scheduled byte[7] speed=FS data=0xff SOP=0 EOP=0
-UVM_INFO ../env/usb_phy_scb.sv(487) @ 53867: uvm_test_top.env.scoreboard [USB_SLAVE_SENT] Peer->PHY scheduled byte[8] speed=FS data=0xa5 SOP=0 EOP=1
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 53945: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 53945: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 54025: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 54025: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 54105: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 54105: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 54185: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 54185: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 54265: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 54265: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 54345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 54345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 54425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 54425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 54505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 54505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 54585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 54585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 54665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 54665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 54745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 54745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 54825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 54825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 54905: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 54905: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 54985: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 54985: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 55065: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 55065: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 55145: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 55145: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 55225: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 55225: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 55305: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 55305: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 55385: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 55385: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 55465: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 55465: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 55545: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 55545: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 55625: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 55625: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 55705: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 55705: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 55785: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 55785: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 55865: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 55865: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 55945: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 55945: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 56025: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 56025: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 56105: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 56105: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 56185: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 56185: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 56265: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 56265: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 56345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 56345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 56425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 56425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 56505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 56505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 56585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 56585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 56665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 56665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 56745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 56745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=1 ANALOG_EN=0 DURATION=40 IDLE=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 56827: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
-UVM_ERROR ../test/usb_phy_full_path_test.sv(88) @ 68827: uvm_test_top [FULL_PATH] Missing RX packet with 3 SE0 EOP bits
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 69787: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=1240 IDLE=80
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(352) @ 72427: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=1240
-UVM_ERROR ../test/usb_phy_full_path_test.sv(96) @ 72427: uvm_test_top [FULL_PATH] LS/FS bus reset status was not observed
-UVM_INFO /tools/cadence_march2021/XCELIUM2009/tools/methodology/UVM/CDNS-1.1d/sv/src/base/uvm_objection.svh(1268) @ 72437: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
-UVM_ERROR ../env/usb_phy_scb.sv(968) @ 72437: uvm_test_top.env.scoreboard [USB_SCB_RX] Missing RX bytes: remaining=0 queued=9
-UVM_WARNING ../env/usb_phy_scb.sv(991) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] RX packet remained active at end of simulation
-xmsim: *N,COVNSM: (File: ../env/usb_phy_coverage.sv, Line: 103):(Time: 72437 NS + 30) Sampling of covergroup type "usb_phy_coverage::cg_tx" (../env/usb_phy_coverage.sv:6), referred in the statement is not enabled. As a result, coverage methods get_coverage(), get_inst_coverage(), get_hitcount(), and get_inst_hitcount() will return 0 coverage.
-xmsim: *N,COVNSM: (File: ../env/usb_phy_coverage.sv, Line: 103):(Time: 72437 NS + 30) Sampling of covergroup type "usb_phy_coverage::cg_rx" (../env/usb_phy_coverage.sv:15), referred in the statement is not enabled. As a result, coverage methods get_coverage(), get_inst_coverage(), get_hitcount(), and get_inst_hitcount() will return 0 coverage.
-xmsim: *N,COVNSM: (File: ../env/usb_phy_coverage.sv, Line: 103):(Time: 72437 NS + 30) Sampling of covergroup type "usb_phy_coverage::cg_status" (../env/usb_phy_coverage.sv:28), referred in the statement is not enabled. As a result, coverage methods get_coverage(), get_inst_coverage(), get_hitcount(), and get_inst_hitcount() will return 0 coverage.
-UVM_INFO ../env/usb_phy_coverage.sv(103) @ 72437: uvm_test_top.env.coverage [USB_COV] TX=0.0% RX=0.0% STATUS=0.0%
-UVM_INFO ../phy_agent/phy_driver.sv(288) @ 72437: uvm_test_top.env.phy_ag.driver [PHY_DRV_REPORT] Total accepted SIE transactions = 25
-UVM_INFO ../phy_agent/phy_monitor.sv(407) @ 72437: uvm_test_top.env.phy_ag.monitor [PHY_MON_REPORT] ==========================================
-UVM_INFO ../phy_agent/phy_monitor.sv(416) @ 72437: uvm_test_top.env.phy_ag.monitor [PHY_MON_REPORT] TX accepted bytes       = 25
-UVM_INFO ../phy_agent/phy_monitor.sv(425) @ 72437: uvm_test_top.env.phy_ag.monitor [PHY_MON_REPORT] TX active cycles        = 10480
-UVM_INFO ../phy_agent/phy_monitor.sv(434) @ 72437: uvm_test_top.env.phy_ag.monitor [PHY_MON_REPORT] RX valid bytes          = 24
-UVM_INFO ../phy_agent/phy_monitor.sv(443) @ 72437: uvm_test_top.env.phy_ag.monitor [PHY_MON_REPORT] RX status events        = 0
-UVM_INFO ../phy_agent/phy_monitor.sv(449) @ 72437: uvm_test_top.env.phy_ag.monitor [PHY_MON_REPORT] ==========================================
-UVM_INFO ../phy_agent/phy_agent.sv(232) @ 72437: uvm_test_top.env.phy_ag [PHY_AGENT] PHY agent report phase completed
-UVM_INFO ../env/usb_phy_scb.sv(1011) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] ==============================================
-UVM_INFO ../env/usb_phy_scb.sv(1017) @ 72437: uvm_test_top.env.scoreboard [USB_SCB]        USB 2.0 PHY SCOREBOARD REPORT
-UVM_INFO ../env/usb_phy_scb.sv(1023) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] ==============================================
-UVM_INFO ../env/usb_phy_scb.sv(1034) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] TX HANDSHAKES       : 25
-UVM_INFO ../env/usb_phy_scb.sv(1036) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] SERIAL TX BYTES DECODED/CHECKED : 25
-UVM_INFO ../env/usb_phy_scb.sv(1038) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] SLAVE RX BYTES DRIVEN           : 9
-UVM_INFO ../env/usb_phy_scb.sv(1040) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] TX UNDERRUN PACKETS              : 0
-UVM_INFO ../env/usb_phy_scb.sv(1046) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] TX SOP              : 3
-UVM_INFO ../env/usb_phy_scb.sv(1052) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] TX EOP              : 3
-UVM_INFO ../env/usb_phy_scb.sv(1058) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] TX SOF              : 0
-UVM_INFO ../env/usb_phy_scb.sv(1069) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] ----------------------------------------------
-UVM_INFO ../env/usb_phy_scb.sv(1075) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] RX VALID BYTES      : 24
-UVM_INFO ../env/usb_phy_scb.sv(1081) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] RX SOP              : 3
-UVM_INFO ../env/usb_phy_scb.sv(1087) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] RX EOP              : 2
-UVM_INFO ../env/usb_phy_scb.sv(1093) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] RX ERROR EVENTS     : 0
-UVM_INFO ../env/usb_phy_scb.sv(1099) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] RX STUFF ERRORS     : 0
-UVM_INFO ../env/usb_phy_scb.sv(1105) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] RX ALIGN ERRORS     : 0
-UVM_INFO ../env/usb_phy_scb.sv(1111) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] RX LINE ERRORS      : 0
-UVM_INFO ../env/usb_phy_scb.sv(1117) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] RX SYNC ERRORS      : 0
-UVM_INFO ../env/usb_phy_scb.sv(1123) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] RX BUS RESETS       : 0
-UVM_INFO ../env/usb_phy_scb.sv(1134) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] ----------------------------------------------
-UVM_INFO ../env/usb_phy_scb.sv(1140) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] BUS SEGMENTS        : 136
-UVM_INFO ../env/usb_phy_scb.sv(1146) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] BUS DPDM=10         : 62
-UVM_INFO ../env/usb_phy_scb.sv(1152) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] BUS DPDM=01         : 59
-UVM_INFO ../env/usb_phy_scb.sv(1158) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] BUS SE0             : 7
-UVM_INFO ../env/usb_phy_scb.sv(1164) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] BUS SE1             : 0
-UVM_INFO ../env/usb_phy_scb.sv(1170) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] BUS UNKNOWN         : 0
-UVM_INFO ../env/usb_phy_scb.sv(1176) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] BUS RELEASED        : 8
-UVM_INFO ../env/usb_phy_scb.sv(1182) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] BUS CONTENTION      : 0
-UVM_INFO ../env/usb_phy_scb.sv(1193) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] ----------------------------------------------
-UVM_INFO ../env/usb_phy_scb.sv(1199) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] TOTAL ERRORS        : 1
-UVM_INFO ../env/usb_phy_scb.sv(1205) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] TOTAL WARNINGS      : 1
-UVM_INFO ../env/usb_phy_scb.sv(1211) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] ==============================================
-UVM_ERROR ../env/usb_phy_scb.sv(1232) @ 72437: uvm_test_top.env.scoreboard [USB_SCB] SCOREBOARD ERRORS = 1
-UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(384) @ 72437: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] USB BFM driver report phase completed
-UVM_INFO ../phy_bfm_agent/usb_bfm_monitor.sv(525) @ 72437: uvm_test_top.env.usb_ag.monitor [USB_BFM_MON_REPORT] ----------------------------------------
-UVM_INFO ../phy_bfm_agent/usb_bfm_monitor.sv(534) @ 72437: uvm_test_top.env.usb_ag.monitor [USB_BFM_MON_REPORT] Total samples       = 36208
-UVM_INFO ../phy_bfm_agent/usb_bfm_monitor.sv(543) @ 72437: uvm_test_top.env.usb_ag.monitor [USB_BFM_MON_REPORT] Observed segments   = 136
-UVM_INFO ../phy_bfm_agent/usb_bfm_monitor.sv(549) @ 72437: uvm_test_top.env.usb_ag.monitor [USB_BFM_MON_REPORT] ----------------------------------------
-UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(290) @ 72437: uvm_test_top.env.usb_ag.tx_wire_checker [TX_WIRE] Wire packets=3 inserted stuff bits=29 HS SOF EOP=0 ready stalls=1441 underruns=0
-UVM_INFO ../phy_bfm_agent/usb_bfm_agent.sv(243) @ 72437: uvm_test_top.env.usb_ag [USB_BFM_AGENT] USB BFM agent report phase completed
-UVM_INFO ../env/usb_phy_env.sv(291) @ 72437: uvm_test_top.env [USB_PHY_ENV] USB PHY environment report phase completed
-UVM_INFO ../test/usb_phy_base_test.sv(174) @ 72437: uvm_test_top [BASE_TEST] USB PHY base test completed.
+UVM_INFO ../env/usb_phy_scb.sv(572) @ 24973: uvm_test_top.env.scoreboard [USB_RX_COMPARE] byte id=26    MATCH speed=FS expected=0xff actual=0xff SOP_exp/actual=0/0 EOP_exp/actual=0/0 RxError=0
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 24973: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=26 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 24985: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 24985: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 25067: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../env/usb_phy_scb.sv(572) @ 25145: uvm_test_top.env.scoreboard [USB_RX_COMPARE] byte id=27    MATCH speed=FS expected=0xa5 actual=0xa5 SOP_exp/actual=0/0 EOP_exp/actual=1/1 RxError=0
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 25145: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=27 SPEED=1 DATA=0xa5 VALID=1 READY=0 SOP=0 EOP=1 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(360) @ 26107: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_PACKET] Peer->PHY packet id=0 speed=FS bytes=3 scored=1 EOP_SE0_bits=2 HS_SOF_EOP=0 inject_SE1=0 omit_stuff=0 break_sync=0
+UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(364) @ 26107: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_DATA] Peer->PHY packet id=0 byte[0] sent=0x2d
+UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(364) @ 26107: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_DATA] Peer->PHY packet id=0 byte[1] sent=0xff
+UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(364) @ 26107: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_DATA] Peer->PHY packet id=0 byte[2] sent=0xa5
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 26107: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../env/usb_phy_scb.sv(286) @ 26107: uvm_test_top.env.scoreboard [USB_RX_EXPECT] Peer queued RX packet id=0 speed=FS length=3
+UVM_INFO ../env/usb_phy_scb.sv(292) @ 26107: uvm_test_top.env.scoreboard [USB_RX_EXPECT]   byte[0] expected DataOut=0x2d SOP=1 EOP=0
+UVM_INFO ../env/usb_phy_scb.sv(292) @ 26107: uvm_test_top.env.scoreboard [USB_RX_EXPECT]   byte[1] expected DataOut=0xff SOP=0 EOP=0
+UVM_INFO ../env/usb_phy_scb.sv(292) @ 26107: uvm_test_top.env.scoreboard [USB_RX_EXPECT]   byte[2] expected DataOut=0xa5 SOP=0 EOP=1
+UVM_INFO ../env/usb_phy_scb.sv(487) @ 26107: uvm_test_top.env.scoreboard [USB_SLAVE_SENT] Peer->PHY scheduled byte[3] speed=FS data=0x2d SOP=1 EOP=0
+UVM_INFO ../env/usb_phy_scb.sv(487) @ 26107: uvm_test_top.env.scoreboard [USB_SLAVE_SENT] Peer->PHY scheduled byte[4] speed=FS data=0xff SOP=0 EOP=0
+UVM_INFO ../env/usb_phy_scb.sv(487) @ 26107: uvm_test_top.env.scoreboard [USB_SLAVE_SENT] Peer->PHY scheduled byte[5] speed=FS data=0xa5 SOP=0 EOP=1
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 26185: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 26185: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 26265: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 26265: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 26345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 26345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 26425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 26425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 26505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 26505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 26585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 26585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 26665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 26665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 26745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 26745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 26825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 26825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 26905: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 26905: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 26985: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 26985: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 27065: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 27065: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 27145: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 27145: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 27225: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 27225: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 27305: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 27305: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 27385: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 27385: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 27465: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 27465: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 27545: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 27545: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 27625: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 27625: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 27705: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 27705: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 27785: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 27785: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 27865: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 27865: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 27945: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 27945: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 28025: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 28025: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 28105: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 28105: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../env/usb_phy_scb.sv(572) @ 28177: uvm_test_top.env.scoreboard [USB_RX_COMPARE] byte id=28    MATCH speed=FS expected=0x2d actual=0x2d SOP_exp/actual=1/1 EOP_exp/actual=0/0 RxError=0
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 28177: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=28 SPEED=1 DATA=0x2d VALID=1 READY=0 SOP=1 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 28185: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 28185: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 28265: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 28265: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 28345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 28345: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 28425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 28425: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 28505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 28505: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 28585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 28585: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 28665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 28665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 28745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 28745: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../env/usb_phy_scb.sv(572) @ 28813: uvm_test_top.env.scoreboard [USB_RX_COMPARE] byte id=29    MATCH speed=FS expected=0xff actual=0xff SOP_exp/actual=0/0 EOP_exp/actual=0/0 RxError=0
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 28813: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=29 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 28825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 28825: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 28905: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 28905: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 28987: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../env/usb_phy_scb.sv(572) @ 29063: uvm_test_top.env.scoreboard [USB_RX_COMPARE] byte id=30    MATCH speed=FS expected=0xa5 actual=0xa5 SOP_exp/actual=0/0 EOP_exp/actual=1/1 RxError=0
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 29063: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=30 SPEED=1 DATA=0xa5 VALID=1 READY=0 SOP=0 EOP=1 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(360) @ 30025: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_PACKET] Peer->PHY packet id=0 speed=FS bytes=3 scored=1 EOP_SE0_bits=3 HS_SOF_EOP=0 inject_SE1=0 omit_stuff=0 break_sync=0
+UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(364) @ 30025: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_DATA] Peer->PHY packet id=0 byte[0] sent=0x2d
+UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(364) @ 30025: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_DATA] Peer->PHY packet id=0 byte[1] sent=0xff
+UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(364) @ 30025: uvm_test_top.env.usb_ag.sequencer@@slave_packet [USB_PEER_DATA] Peer->PHY packet id=0 byte[2] sent=0xa5
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 30025: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../env/usb_phy_scb.sv(286) @ 30025: uvm_test_top.env.scoreboard [USB_RX_EXPECT] Peer queued RX packet id=0 speed=FS length=3
+UVM_INFO ../env/usb_phy_scb.sv(292) @ 30025: uvm_test_top.env.scoreboard [USB_RX_EXPECT]   byte[0] expected DataOut=0x2d SOP=1 EOP=0
+UVM_INFO ../env/usb_phy_scb.sv(292) @ 30025: uvm_test_top.env.scoreboard [USB_RX_EXPECT]   byte[1] expected DataOut=0xff SOP=0 EOP=0
+UVM_INFO ../env/usb_phy_scb.sv(292) @ 30025: uvm_test_top.env.scoreboard [USB_RX_EXPECT]   byte[2] expected DataOut=0xa5 SOP=0 EOP=1
+UVM_INFO ../env/usb_phy_scb.sv(487) @ 30025: uvm_test_top.env.scoreboard [USB_SLAVE_SENT] Peer->PHY scheduled byte[6] speed=FS data=0x2d SOP=1 EOP=0
+UVM_INFO ../env/usb_phy_scb.sv(487) @ 30025: uvm_test_top.env.scoreboard [USB_SLAVE_SENT] Peer->PHY scheduled byte[7] speed=FS data=0xff SOP=0 EOP=0
+UVM_INFO ../env/usb_phy_scb.sv(487) @ 30025: uvm_test_top.env.scoreboard [USB_SLAVE_SENT] Peer->PHY scheduled byte[8] speed=FS data=0xa5 SOP=0 EOP=1
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 30103: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 30103: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 30183: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 30183: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 30263: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 30263: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 30343: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 30343: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 30423: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 30423: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 30503: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 30503: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 30583: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 30583: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 30663: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 30663: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 30743: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 30743: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 30823: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 30823: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 30903: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 30903: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 30983: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 30983: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 31063: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 31063: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 31143: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 31143: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 31223: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 31223: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 31303: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 31303: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 31383: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 31383: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 31463: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 31463: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 31543: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 31543: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 31623: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 31623: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 31703: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 31703: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 31783: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 31783: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 31863: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 31863: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 31943: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 31943: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 32023: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 32023: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../env/usb_phy_scb.sv(572) @ 32095: uvm_test_top.env.scoreboard [USB_RX_COMPARE] byte id=31    MATCH speed=FS expected=0x2d actual=0x2d SOP_exp/actual=1/1 EOP_exp/actual=0/0 RxError=0
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 32095: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=31 SPEED=1 DATA=0x2d VALID=1 READY=0 SOP=1 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 32103: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 32103: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 32183: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 32183: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 32263: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 32263: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 32343: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 32343: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 32423: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 32423: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=1 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 32503: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 32503: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 32583: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 32583: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 32663: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 32663: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../env/usb_phy_scb.sv(572) @ 32731: uvm_test_top.env.scoreboard [USB_RX_COMPARE] byte id=32    MATCH speed=FS expected=0xff actual=0xff SOP_exp/actual=0/0 EOP_exp/actual=0/0 RxError=0
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 32731: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=32 SPEED=1 DATA=0xff VALID=1 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 32743: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 32743: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 32823: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 32823: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 32903: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 32903: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=1 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=40 IDLE=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 32985: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=40
+UVM_INFO ../env/usb_phy_scb.sv(572) @ 33063: uvm_test_top.env.scoreboard [USB_RX_COMPARE] byte id=33    MATCH speed=FS expected=0xa5 actual=0xa5 SOP_exp/actual=0/0 EOP_exp/actual=1/1 RxError=0
+UVM_INFO ../env/usb_phy_scb.sv(661) @ 33063: uvm_test_top.env.scoreboard [USB_SCB_RX] PHY_TXN ID=33 SPEED=1 DATA=0xa5 VALID=1 READY=0 SOP=0 EOP=1 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(111) @ 34025: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Driving transaction: USB_BFM_TXN ID=0 SPEED=1 DP=0 DM=0 DRIVE=1 PHY_OE=0 EXT_OE=0 CONTENTION=0 SERIAL=0 ANALOG_EN=0 DURATION=1240 IDLE=80
+UVM_INFO ../phy_agent/phy_monitor.sv(373) @ 36497: uvm_test_top.env.phy_ag.monitor [PHY_MON_STATUS] PHY_TXN ID=0 SPEED=1 DATA=0x00 VALID=0 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=1
+UVM_INFO ../env/usb_phy_scb.sv(711) @ 36497: uvm_test_top.env.scoreboard [USB_RX_STATUS] status id=0 actual RxError/stuff/align/line/sync/bus_reset=0/0/0/0/0/1 configured_expected RxError/stuff/line/sync=0/0/0/0
+UVM_INFO ../env/usb_phy_scb.sv(782) @ 36497: uvm_test_top.env.scoreboard [USB_SCB_RX_STATUS] USB bus reset detected
+UVM_INFO ../phy_agent/phy_monitor.sv(373) @ 36579: uvm_test_top.env.phy_ag.monitor [PHY_MON_STATUS] PHY_TXN ID=1 SPEED=1 DATA=0x00 VALID=0 READY=0 SOP=0 EOP=0 SOF=0 RXERR=0 STUFF=0 ALIGN=0 LINE=0 SYNC=0 RESET=0
+UVM_INFO ../env/usb_phy_scb.sv(711) @ 36579: uvm_test_top.env.scoreboard [USB_RX_STATUS] status id=1 actual RxError/stuff/align/line/sync/bus_reset=0/0/0/0/0/0 configured_expected RxError/stuff/line/sync=0/0/0/0
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(343) @ 36665: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] Transaction completed: ID=0 duration=1240
+UVM_INFO /tools/cadence_march2021/XCELIUM2009/tools/methodology/UVM/CDNS-1.1d/sv/src/base/uvm_objection.svh(1268) @ 36675: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+xmsim: *N,COVNSM: (File: ../env/usb_phy_coverage.sv, Line: 103):(Time: 36675 NS + 33) Sampling of covergroup type "usb_phy_coverage::cg_tx" (../env/usb_phy_coverage.sv:6), referred in the statement is not enabled. As a result, coverage methods get_coverage(), get_inst_coverage(), get_hitcount(), and get_inst_hitcount() will return 0 coverage.
+xmsim: *N,COVNSM: (File: ../env/usb_phy_coverage.sv, Line: 103):(Time: 36675 NS + 33) Sampling of covergroup type "usb_phy_coverage::cg_rx" (../env/usb_phy_coverage.sv:15), referred in the statement is not enabled. As a result, coverage methods get_coverage(), get_inst_coverage(), get_hitcount(), and get_inst_hitcount() will return 0 coverage.
+xmsim: *N,COVNSM: (File: ../env/usb_phy_coverage.sv, Line: 103):(Time: 36675 NS + 33) Sampling of covergroup type "usb_phy_coverage::cg_status" (../env/usb_phy_coverage.sv:28), referred in the statement is not enabled. As a result, coverage methods get_coverage(), get_inst_coverage(), get_hitcount(), and get_inst_hitcount() will return 0 coverage.
+UVM_INFO ../env/usb_phy_coverage.sv(103) @ 36675: uvm_test_top.env.coverage [USB_COV] TX=0.0% RX=0.0% STATUS=0.0%
+UVM_INFO ../phy_agent/phy_driver.sv(288) @ 36675: uvm_test_top.env.phy_ag.driver [PHY_DRV_REPORT] Total accepted SIE transactions = 25
+UVM_INFO ../phy_agent/phy_monitor.sv(407) @ 36675: uvm_test_top.env.phy_ag.monitor [PHY_MON_REPORT] ==========================================
+UVM_INFO ../phy_agent/phy_monitor.sv(416) @ 36675: uvm_test_top.env.phy_ag.monitor [PHY_MON_REPORT] TX accepted bytes       = 25
+UVM_INFO ../phy_agent/phy_monitor.sv(425) @ 36675: uvm_test_top.env.phy_ag.monitor [PHY_MON_REPORT] TX active cycles        = 10480
+UVM_INFO ../phy_agent/phy_monitor.sv(434) @ 36675: uvm_test_top.env.phy_ag.monitor [PHY_MON_REPORT] RX valid bytes          = 34
+UVM_INFO ../phy_agent/phy_monitor.sv(443) @ 36675: uvm_test_top.env.phy_ag.monitor [PHY_MON_REPORT] RX status events        = 2
+UVM_INFO ../phy_agent/phy_monitor.sv(449) @ 36675: uvm_test_top.env.phy_ag.monitor [PHY_MON_REPORT] ==========================================
+UVM_INFO ../phy_agent/phy_agent.sv(232) @ 36675: uvm_test_top.env.phy_ag [PHY_AGENT] PHY agent report phase completed
+UVM_INFO ../env/usb_phy_scb.sv(1011) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] ==============================================
+UVM_INFO ../env/usb_phy_scb.sv(1017) @ 36675: uvm_test_top.env.scoreboard [USB_SCB]        USB 2.0 PHY SCOREBOARD REPORT
+UVM_INFO ../env/usb_phy_scb.sv(1023) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] ==============================================
+UVM_INFO ../env/usb_phy_scb.sv(1034) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] TX HANDSHAKES       : 25
+UVM_INFO ../env/usb_phy_scb.sv(1036) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] SERIAL TX BYTES DECODED/CHECKED : 25
+UVM_INFO ../env/usb_phy_scb.sv(1038) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] SLAVE RX BYTES DRIVEN           : 9
+UVM_INFO ../env/usb_phy_scb.sv(1040) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] TX UNDERRUN PACKETS              : 0
+UVM_INFO ../env/usb_phy_scb.sv(1046) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] TX SOP              : 3
+UVM_INFO ../env/usb_phy_scb.sv(1052) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] TX EOP              : 3
+UVM_INFO ../env/usb_phy_scb.sv(1058) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] TX SOF              : 0
+UVM_INFO ../env/usb_phy_scb.sv(1069) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] ----------------------------------------------
+UVM_INFO ../env/usb_phy_scb.sv(1075) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] RX VALID BYTES      : 34
+UVM_INFO ../env/usb_phy_scb.sv(1081) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] RX SOP              : 6
+UVM_INFO ../env/usb_phy_scb.sv(1087) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] RX EOP              : 6
+UVM_INFO ../env/usb_phy_scb.sv(1093) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] RX ERROR EVENTS     : 0
+UVM_INFO ../env/usb_phy_scb.sv(1099) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] RX STUFF ERRORS     : 0
+UVM_INFO ../env/usb_phy_scb.sv(1105) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] RX ALIGN ERRORS     : 0
+UVM_INFO ../env/usb_phy_scb.sv(1111) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] RX LINE ERRORS      : 0
+UVM_INFO ../env/usb_phy_scb.sv(1117) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] RX SYNC ERRORS      : 0
+UVM_INFO ../env/usb_phy_scb.sv(1123) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] RX BUS RESETS       : 1
+UVM_INFO ../env/usb_phy_scb.sv(1134) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] ----------------------------------------------
+UVM_INFO ../env/usb_phy_scb.sv(1140) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] BUS SEGMENTS        : 136
+UVM_INFO ../env/usb_phy_scb.sv(1146) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] BUS DPDM=10         : 62
+UVM_INFO ../env/usb_phy_scb.sv(1152) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] BUS DPDM=01         : 59
+UVM_INFO ../env/usb_phy_scb.sv(1158) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] BUS SE0             : 7
+UVM_INFO ../env/usb_phy_scb.sv(1164) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] BUS SE1             : 0
+UVM_INFO ../env/usb_phy_scb.sv(1170) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] BUS UNKNOWN         : 0
+UVM_INFO ../env/usb_phy_scb.sv(1176) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] BUS RELEASED        : 8
+UVM_INFO ../env/usb_phy_scb.sv(1182) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] BUS CONTENTION      : 0
+UVM_INFO ../env/usb_phy_scb.sv(1193) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] ----------------------------------------------
+UVM_INFO ../env/usb_phy_scb.sv(1199) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] TOTAL ERRORS        : 0
+UVM_INFO ../env/usb_phy_scb.sv(1205) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] TOTAL WARNINGS      : 0
+UVM_INFO ../env/usb_phy_scb.sv(1211) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] ==============================================
+UVM_INFO ../env/usb_phy_scb.sv(1220) @ 36675: uvm_test_top.env.scoreboard [USB_SCB] SCOREBOARD: NO ERRORS REPORTED
+UVM_INFO ../phy_bfm_agent/usb_bfm_driver.sv(375) @ 36675: uvm_test_top.env.usb_ag.driver [USB_BFM_DRV] USB BFM driver report phase completed
+UVM_INFO ../phy_bfm_agent/usb_bfm_monitor.sv(525) @ 36675: uvm_test_top.env.usb_ag.monitor [USB_BFM_MON_REPORT] ----------------------------------------
+UVM_INFO ../phy_bfm_agent/usb_bfm_monitor.sv(534) @ 36675: uvm_test_top.env.usb_ag.monitor [USB_BFM_MON_REPORT] Total samples       = 18327
+UVM_INFO ../phy_bfm_agent/usb_bfm_monitor.sv(543) @ 36675: uvm_test_top.env.usb_ag.monitor [USB_BFM_MON_REPORT] Observed segments   = 136
+UVM_INFO ../phy_bfm_agent/usb_bfm_monitor.sv(549) @ 36675: uvm_test_top.env.usb_ag.monitor [USB_BFM_MON_REPORT] ----------------------------------------
+UVM_INFO ../phy_bfm_agent/usb_slave_model.sv(290) @ 36675: uvm_test_top.env.usb_ag.tx_wire_checker [TX_WIRE] Wire packets=3 inserted stuff bits=29 HS SOF EOP=0 ready stalls=1441 underruns=0
+UVM_INFO ../phy_bfm_agent/usb_bfm_agent.sv(243) @ 36675: uvm_test_top.env.usb_ag [USB_BFM_AGENT] USB BFM agent report phase completed
+UVM_INFO ../env/usb_phy_env.sv(291) @ 36675: uvm_test_top.env [USB_PHY_ENV] USB PHY environment report phase completed
+UVM_INFO ../test/usb_phy_base_test.sv(174) @ 36675: uvm_test_top [BASE_TEST] USB PHY base test completed.
 
 --- UVM Report catcher Summary ---
 
@@ -918,18 +1234,18 @@ Number of caught UVM_WARNING reports :    0
 --- UVM Report Summary ---
 
 ** Report counts by severity
-UVM_INFO :  491
-UVM_WARNING :    1
-UVM_ERROR :    6
+UVM_INFO :  517
+UVM_WARNING :    0
+UVM_ERROR :    0
 UVM_FATAL :    0
 ** Report counts by id
 [BASE_TEST]     4
-[FULL_PATH]     4
 [PHY_AGENT]     5
 [PHY_DRV]    26
 [PHY_DRV_REPORT]     1
 [PHY_MON]     1
 [PHY_MON_REPORT]     6
+[PHY_MON_STATUS]     2
 [PHY_SEQUENCER]     1
 [RNTST]     1
 [TEST_DONE]     1
@@ -944,17 +1260,20 @@ UVM_FATAL :    0
 [USB_PEER_PACKET]     3
 [USB_PHY_ENV]     5
 [USB_PHY_ENV_CFG]    10
+[USB_RX_COMPARE]     9
 [USB_RX_EXPECT]    12
-[USB_RX_UNSCORED]    24
-[USB_SCB]    36
-[USB_SCB_RX]    25
+[USB_RX_STATUS]     2
+[USB_RX_UNSCORED]    25
+[USB_SCB]    35
+[USB_SCB_RX]    34
+[USB_SCB_RX_STATUS]     1
 [USB_SCB_TX]    25
 [USB_SLAVE_SENT]     9
 [USB_TX_COMPARE]    25
 [USB_TX_SIE]    25
 [USB_TX_WIRE]     3
 [UVMTOP]     2
-Simulation complete via $finish(1) at time 72437 NS + 45
+Simulation complete via $finish(1) at time 36675 NS + 48
 /tools/cadence_march2021/XCELIUM2009/tools/methodology/UVM/CDNS-1.1d/sv/src/base/uvm_root.svh:457     $finish;
 xcelium> exit
-TOOL:	xrun(64)	20.09-s009: Exiting on Nov 24, 2026 at 17:53:57 IST  (total: 00:00:05)
+TOOL:	xrun(64)	20.09-s009: Exiting on Nov 25, 2026 at 11:06:02 IST  (total: 00:00:31)

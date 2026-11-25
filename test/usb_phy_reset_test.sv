@@ -25,7 +25,6 @@ class usb_phy_reset_test extends usb_phy_base_test;
     bus_vif.device_oe=1;
     bus_vif.device_dp=p;
     bus_vif.device_dm=m;
-    vif.analog_serial=serial_level;
     repeat (clocks) @(negedge vif.clk);
   endtask
 
@@ -56,7 +55,6 @@ class usb_phy_reset_test extends usb_phy_base_test;
     pulse_reset();
     @(negedge vif.clk);
     bus_vif.device_oe=0;
-    vif.analog_serial=1;
     repeat (period*12) @(posedge vif.clk);
     env.scoreboard.require_expected_rx=1;
     recovery.push_back(8'h2d);
@@ -107,3 +105,4 @@ class usb_phy_reset_test extends usb_phy_base_test;
     phase.drop_objection(this);
   endtask
 endclass
+

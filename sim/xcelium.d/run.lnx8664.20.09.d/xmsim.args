@@ -4,7 +4,7 @@
 //
 -INPUT
 "@source /tools/cadence_march2021/XCELIUM2009/tools/methodology/UVM/CDNS-1.1d/additions/sv/files/tcl/uvm_sim.tcl"
-+USB_SPEED=1
++USB_SPEED=2
 +USB_FAULT=1
 +RESET_CASE=0
 +UVM_VERBOSITY=UVM_MEDIUM
@@ -28,9 +28,9 @@
 -SV_LIB
 /tools/cadence_march2021/XCELIUM2009/tools/methodology/UVM/CDNS-1.1d/additions/sv/lib/64bit/libuvmdpi.so
 +EMGRLOG
-logs/usb_phy_full_path_test_speed1_fault1_reset0_seed1.log
+logs/usb_phy_full_path_test_speed2_fault1_reset0_seed1.log
 -XLSTIME
-1795523032
+1795588677
 -XLKEEP
 -XLMODE
 ./xcelium.d/run.lnx8664.20.09.d

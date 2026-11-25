@@ -405,7 +405,8 @@ class usb_slave_packet_seq extends uvm_sequence #(usb_bfm_transaction);
       req.speed = packet_speed;
       req.dp = p;
       req.dm = m;
-      req.analog_serial = (symbols[i] == SYM_J);
+      // analog_serial is derived from the resolved DP/DM bus in top_tb.
+      // Do not drive it independently from the slave sequence.
       req.drive_enable = 1;
       req.duration_cycles = bit_clocks(packet_speed) +
                             ((i%2)==0 ? int'(jitter_cycles) : -int'(jitter_cycles));
@@ -433,7 +434,7 @@ class usb_slave_reset_seq extends uvm_sequence #(usb_bfm_transaction);
     start_item(req);
     req.speed = reset_speed;
     req.dp = 0; req.dm = 0;
-    req.analog_serial = 0;
+    // analog_serial is derived from the resolved DP/DM bus in top_tb.
     req.drive_enable = 1;
     req.duration_cycles = reset_cycles;
     req.idle_cycles = reset_speed == LS ? 640 : 80;
@@ -584,3 +585,4 @@ class usb_slave_model extends usb_bfm_agent;
     response.start(sequencer);
   endtask
 endclass
+

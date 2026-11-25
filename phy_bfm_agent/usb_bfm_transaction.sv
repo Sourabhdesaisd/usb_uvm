@@ -161,3 +161,4 @@ class usb_bfm_transaction extends uvm_sequence_item;
   endfunction
 
 endclass
+

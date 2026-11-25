@@ -126,11 +126,11 @@ module phy_top #(
 	usb2_cdr_top dut_cdr(
     			.clk_sys			(clk),
     			.rstn				(rst_n),
-    			.enable				(tx_valid),
+    			.enable				(analog_enable),
     			.speed				(speed),
-    			.rx_serial			(dp),
-    			.dp					(dp),
-    			.dm					(dm),
+    			.rx_serial			(analog_serial),
+    			.dp					(analog_d_plus),
+    			.dm					(analog_d_minus),
     			.dp_out				(d_plus),
     			.dm_out				(d_minus),
     			.recovered_bit_clk	(recovered_bit_clk)

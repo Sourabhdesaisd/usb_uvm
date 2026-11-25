@@ -1,3 +1,0 @@
-s1(24Nov2026:16:55:48):  xrun -64bit -uvm -sv -access +rwc -f filelist.f -top top_tb -elaborate -l logs/elaborate.log 
-s2(24Nov2026:16:57:40):  xrun -64bit -uvm -sv -access +rwc -f filelist.f -top top_tb -elaborate -l logs/elaborate.log 
-s3(24Nov2026:16:58:08):  xrun -64bit -uvm -sv -access +rwc -f filelist.f -top top_tb -elaborate -l logs/elaborate.log 
