@@ -1,0 +1,1 @@
+s1(26Nov2026:15:00:07):  xrun -64bit -uvm -sv -access +rwc -f filelist.f -top top_tb +UVM_TESTNAME=usb_phy_base_test +USB_SPEED=0 +USB_FAULT=1 +RESET_CASE=0 +UVM_VERBOSITY=UVM_MEDIUM -seed 1119872923 -l logs/usb_phy_base_test_speed0_fault1_reset0_seed1119872923.log 
