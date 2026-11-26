@@ -1,6 +1,6 @@
 // file: piso.sv   (module usb_piso)
 //
-// Packet sequencer + parallel-in/serial-out.
+// Packet sequencer + parallel-in/phy_bfm-out.
 //   IDLE -> SYNC -> DATA -> HOLD -> IDLE
 //
 //  * Starts only on a bit_tick, when the FIFO head is a SOP byte.
@@ -10,8 +10,8 @@
 //  * SYNC and DATA are emitted back-to-back, one bit per bit_tick, with no
 //    bubble.  The only thing that may pause the PISO is the bit stuffer
 //    (stuff_ready = 0 while a stuffed '0' is being inserted).
-//  * serial_sop  : tags the first SYNC bit
-//    serial_last : tags the last real data bit of the packet
+//  * phy_bfm_sop  : tags the first SYNC bit
+//    phy_bfm_last : tags the last real data bit of the packet
 //  * After the last bit the PISO goes to HOLD and stays there until the
 //    downstream EOP generator reports eop_done.  Nothing new can start
 //    while the EOP is on the line.
@@ -38,11 +38,11 @@ module usb_piso
     input  logic             stuff_ready,     // 0 = stuffer inserting a 0
     input  logic             eop_done,        // EOP (+gap) finished
 
-    // serial side (valid for the whole bit time, consumed on bit_tick)
-    output logic             serial_out,
-    output logic             serial_valid,
-    output logic             serial_sop,
-    output logic             serial_last,
+    // phy_bfm side (valid for the whole bit time, consumed on bit_tick)
+    output logic             phy_bfm_out,
+    output logic             phy_bfm_valid,
+    output logic             phy_bfm_sop,
+    output logic             phy_bfm_last,
 
     output logic             busy,
     output logic             underrun
@@ -68,22 +68,22 @@ module usb_piso
 
     assign busy = (state != IDLE);
 
-    //---------------- combinational serial outputs ----------------
+    //---------------- combinational phy_bfm outputs ----------------
     always_comb begin
-        serial_out   = 1'b0;
-        serial_valid = 1'b0;
-        serial_sop   = 1'b0;
-        serial_last  = 1'b0;
+        phy_bfm_out   = 1'b0;
+        phy_bfm_valid = 1'b0;
+        phy_bfm_sop   = 1'b0;
+        phy_bfm_last  = 1'b0;
         unique case (state)
             SYNC: begin
-                serial_valid = 1'b1;
-                serial_out   = (sync_cnt == sync_len - 1'b1);  // last sync bit = 1
-                serial_sop   = (sync_cnt == '0);
+                phy_bfm_valid = 1'b1;
+                phy_bfm_out   = (sync_cnt == sync_len - 1'b1);  // last sync bit = 1
+                phy_bfm_sop   = (sync_cnt == '0);
             end
             DATA: begin
-                serial_valid = 1'b1;
-                serial_out   = sh[0];
-                serial_last  = byte_end && no_next;
+                phy_bfm_valid = 1'b1;
+                phy_bfm_out   = sh[0];
+                phy_bfm_last  = byte_end && no_next;
             end
             default: ;
         endcase

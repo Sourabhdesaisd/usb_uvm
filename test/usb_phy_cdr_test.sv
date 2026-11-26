@@ -41,4 +41,3 @@ class usb_phy_cdr_test extends usb_phy_base_test;
     phase.drop_objection(this);
   endtask
 endclass
-

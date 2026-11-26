@@ -20,11 +20,12 @@ class usb_phy_reset_test extends usb_phy_base_test;
     repeat (4) @(posedge vif.clk);
   endtask
 
-  task drive_line(bit p,bit m,bit serial_level,int clocks);
+  task drive_line(bit p,bit m,bit phy_bfm_level,int clocks);
     @(negedge vif.clk);
     bus_vif.device_oe=1;
     bus_vif.device_dp=p;
     bus_vif.device_dm=m;
+    vif.analog_phy_bfm=phy_bfm_level;
     repeat (clocks) @(negedge vif.clk);
   endtask
 
@@ -38,7 +39,7 @@ class usb_phy_reset_test extends usb_phy_base_test;
     period=env_cfg.usb_bfm_cfg.default_bit_time_cycles;
     jp=(env_cfg.speed!=LS);jm=!jp;
     repeat (period*10) @(negedge vif.clk);
-    // FS/LS SYNC K,J,K,J,K,J,K,K, using analog_serial=1 on J.
+    // FS/LS SYNC K,J,K,J,K,J,K,K, using analog_phy_bfm=1 on J.
     for (int i=0;i<8;i++) begin
       bit k;
       k=(i%2)==0 || i==7;
@@ -55,6 +56,7 @@ class usb_phy_reset_test extends usb_phy_base_test;
     pulse_reset();
     @(negedge vif.clk);
     bus_vif.device_oe=0;
+    vif.analog_phy_bfm=1;
     repeat (period*12) @(posedge vif.clk);
     env.scoreboard.require_expected_rx=1;
     recovery.push_back(8'h2d);
@@ -105,4 +107,3 @@ class usb_phy_reset_test extends usb_phy_base_test;
     phase.drop_objection(this);
   endtask
 endclass
-

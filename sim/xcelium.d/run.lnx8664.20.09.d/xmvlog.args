@@ -48,8 +48,8 @@ UVM_PLI
 ../rtl/sync_deglitch.sv
 ../rtl/top.sv
 ../rtl/phy_top.sv
-../intf/usb_phy_if.sv
-../intf/usb_bus_if.sv
+../rtl/usb_phy_if.sv
+../rtl/usb_bus_if.sv
 ../test_pkg/usb_phy_tb_pkg.sv
 ../env/top_tb.sv
 -CDSLIB

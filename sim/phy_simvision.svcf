@@ -131,7 +131,7 @@ group clear 0 end
 
 group insert \
      {wave::top_tb.dut.dut_cdr.speed[1:0]}  \
-     wave::top_tb.dut.dut_cdr.rx_serial  \
+     wave::top_tb.dut.dut_cdr.rx_phy_bfm  \
      wave::top_tb.dut.dut_cdr.enable  \
      wave::top_tb.dut.dut_cdr.dm  \
      wave::top_tb.dut.dut_cdr.dp 
@@ -210,7 +210,7 @@ set id [waveform add -signals  {
 	wave::top_tb.dut.analog_enable
 	} ]
 set id [waveform add -signals  {
-	wave::top_tb.dut.analog_serial
+	wave::top_tb.dut.analog_phy_bfm
 	} ]
 set id [waveform add -signals  {
 	{wave::top_tb.dut.DataOut[7:0]}

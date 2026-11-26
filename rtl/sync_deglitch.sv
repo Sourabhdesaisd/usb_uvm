@@ -1,6 +1,6 @@
 //==============================================================================
 // usb2_cdr_sync_deglitch  (diagram block: "Sync + Deglitch")
-//   data path      : rx_serial -> 2FF Sync -> rx_sync -> Deglitch -> rx_s
+//   data path      : rx_phy_bfm -> 2FF Sync -> rx_sync -> Deglitch -> rx_s
 //   line-state path: D_p/D_n   -> 2FF Sync -> d_p_sync/d_n_sync -> Line state
 //                    (+ Speed from AFE)                          -> SE0, idle
 //
@@ -15,7 +15,7 @@
 //     W = 0 or 1 : bypass (rx_s = rx_sync, nothing is filtered)
 //     W = 2      : removes 1-clk glitches           (default)
 //     W = 3      : removes glitches up to 2 clk  ... and so on, up to W = 31
-//   Latency from rx_serial to rx_s = 2 + W clk_sys.
+//   Latency from rx_phy_bfm to rx_s = 2 + W clk_sys.
 //   Trade-off: a glitch that lands within W clk_sys of a real edge can move
 //   that edge, and W must stay well below OS (a real bit is OS clk wide).
 //
@@ -28,7 +28,7 @@ module usb2_cdr_sync_deglitch #(
 )(
     input  wire       clk_sys,
     input  wire       rstn,
-    input  wire       rx_serial,   // AFE differential receiver
+    input  wire       rx_phy_bfm,   // AFE differential receiver
     input  wire       d_p,         // AFE single-ended D+
     input  wire       d_n,         // AFE single-ended D-
     input  wire [1:0] speed,       // from AFE
@@ -46,7 +46,7 @@ module usb2_cdr_sync_deglitch #(
       
     reg [1:0] rx_ff, dp_ff, dn_ff;
     always @(posedge clk_sys) begin
-        rx_ff <= {rx_ff[0], rx_serial};
+        rx_ff <= {rx_ff[0], rx_phy_bfm};
         dp_ff <= {dp_ff[0], d_p};
         dn_ff <= {dn_ff[0], d_n};
     end

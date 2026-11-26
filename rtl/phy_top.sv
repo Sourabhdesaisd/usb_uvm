@@ -28,7 +28,7 @@ module phy_top #(
    	input logic 			 analog_d_plus,
 	input logic 			 analog_d_minus,
 	input logic 			 analog_enable,
-	input logic 			 analog_serial,
+	input logic 			 analog_phy_bfm,
 
 	// SIE <-> PHY interface 
     input  logic             sof_packet,     // HS: use 40-bit SOF EOP
@@ -128,7 +128,7 @@ module phy_top #(
     			.rstn				(rst_n),
     			.enable				(analog_enable),
     			.speed				(speed),
-    			.rx_serial			(analog_serial),
+    			.rx_phy_bfm			(analog_phy_bfm),
     			.dp					(analog_d_plus),
     			.dm					(analog_d_minus),
     			.dp_out				(d_plus),

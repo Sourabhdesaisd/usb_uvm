@@ -197,8 +197,8 @@ module phy_rx_top
     usb_sipo #(.WIDTH(WIDTH)) u_sipo (
         		   .clk				(clk), 
 				   .rst_n			(rst_n),
-        		   .serial_in		(unst_bit), 
-				   .serial_valid	(unst_valid),
+        		   .phy_bfm_in		(unst_bit), 
+				   .phy_bfm_valid	(unst_valid),
         		   .parallel_out	(sipo_data), 
 				   .parallel_valid	(sipo_valid), 
 				   .busy			(sipo_busy),

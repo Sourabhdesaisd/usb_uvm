@@ -38,4 +38,3 @@ class usb_phy_slave_rx_test extends usb_phy_base_test;
     phase.drop_objection(this);
   endtask
 endclass
-

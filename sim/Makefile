@@ -86,6 +86,7 @@ regression:
 	$(MAKE) run TEST=usb_phy_full_path_test USB_SPEED=0 SEED=$(SEED)
 	$(MAKE) run TEST=usb_phy_full_path_test USB_SPEED=1 SEED=$(SEED)
 	$(MAKE) run TEST=usb_phy_full_path_test USB_SPEED=2 SEED=$(SEED)
+	$(MAKE) run TEST=usb_phy_hs_peer_test USB_SPEED=2 SEED=$(SEED)
 	$(MAKE) run TEST=usb_phy_back_to_back_test USB_SPEED=0 SEED=$(SEED)
 	$(MAKE) run TEST=usb_phy_back_to_back_test USB_SPEED=1 SEED=$(SEED)
 	$(MAKE) run TEST=usb_phy_back_to_back_test USB_SPEED=2 SEED=$(SEED)

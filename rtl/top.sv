@@ -1,6 +1,6 @@
 //==============================================================================
 // usb2_cdr_top : USB 2.0 LS/FS digital clock-and-data recovery
-//   rx_serial -> Sync+Deglitch -> Oversampler -> Edge detect/TED -> Loop filter
+//   rx_phy_bfm -> Sync+Deglitch -> Oversampler -> Edge detect/TED -> Loop filter
 //             -> Phase accumulator (NCO) -> Sampler -> recovered_bit_clk / data
 //   Lock FSM watches TED + line state and drives gain_sel, loop_reset,
 //   acc_reset and locked.
@@ -40,7 +40,7 @@ module usb2_cdr_top #(
     input  wire       rstn,
     input  wire       enable,
     input  wire [1:0] speed,
-    input  wire       rx_serial,
+    input  wire       rx_phy_bfm,
     input  wire       dp,
     input  wire       dm,
     output  logic     dp_out,
@@ -105,7 +105,7 @@ module usb2_cdr_top #(
     usb2_cdr_sync_deglitch #(.DEGLITCH_W(DEGLITCH_W)) u_sync (
         					 .clk_sys	(clk_sys), 
 							 .rstn		(rstn),
-        					 .rx_serial	(rx_serial),
+        					 .rx_phy_bfm	(rx_phy_bfm),
 							 .d_p		(dp), 
 							 .d_n		(dm), 
 							 .speed		(speed),

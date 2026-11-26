@@ -34,7 +34,7 @@ class usb_bfm_transaction extends uvm_sequence_item;
   // CDR / ANALOG OBSERVATION
   // ==================================================
 
-  logic analog_serial;
+  logic analog_phy_bfm;
   logic analog_enable;
 
 
@@ -78,7 +78,7 @@ class usb_bfm_transaction extends uvm_sequence_item;
     `uvm_field_int(external_drive_enable, UVM_ALL_ON)
     `uvm_field_int(bus_contention, UVM_ALL_ON)
 
-    `uvm_field_int(analog_serial, UVM_ALL_ON)
+    `uvm_field_int(analog_phy_bfm, UVM_ALL_ON)
     `uvm_field_int(analog_enable, UVM_ALL_ON)
 
     `uvm_field_int(duration_cycles, UVM_ALL_ON)
@@ -111,7 +111,7 @@ class usb_bfm_transaction extends uvm_sequence_item;
     external_drive_enable = 1'b0;
     bus_contention        = 1'b0;
 
-    analog_serial         = 1'b0;
+    analog_phy_bfm         = 1'b0;
     analog_enable         = 1'b0;
 
     duration_cycles      = 0;
@@ -151,7 +151,7 @@ class usb_bfm_transaction extends uvm_sequence_item;
       external_drive_enable,
       bus_contention,
 
-      analog_serial,
+      analog_phy_bfm,
       analog_enable,
 
       duration_cycles,
@@ -161,4 +161,3 @@ class usb_bfm_transaction extends uvm_sequence_item;
   endfunction
 
 endclass
-

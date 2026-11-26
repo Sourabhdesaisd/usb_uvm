@@ -23,8 +23,73 @@ class usb_directed_tx_seq extends uvm_sequence #(phy_transaction);
   endtask
 endclass
 
+
+// HS peer exercise at the implemented PHY boundary. The supplied CDR parks
+// at HS, so this test checks DUT TX bytes/wire and peer generated line slots,
+// direction and EOP, without expecting RxValid for peer-generated packets.
+class usb_phy_hs_peer_test extends usb_phy_base_test;
+  `uvm_component_utils(usb_phy_hs_peer_test)
+  function new(string name="usb_phy_hs_peer_test", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+
+  virtual task run_phase(uvm_phase phase);
+    usb_directed_tx_seq host_tx;
+    byte unsigned payload[$];
+    int unsigned prior_tx;
+    int unsigned prior_peer;
+    phase.raise_objection(this);
+    wait (env_cfg.phy_cfg.vif.rst_n === 1'b1);
+    if (env_cfg.speed != HS)
+      `uvm_fatal("HS_PEER","Run with USB_SPEED=2")
+    if (env.usb_ag.sequencer == null || env.phy_ag.sequencer == null)
+      `uvm_fatal("HS_PEER","Both active agents are required")
+
+    prior_tx=env.tx_wire_checker.packets_checked;
+    prior_peer=env.usb_ag.driver.peer_packets_sent;
+    host_tx=usb_directed_tx_seq::type_id::create("host_tx");
+    host_tx.packet_speed=HS;
+    host_tx.bytes.push_back(8'h2d);
+    host_tx.bytes.push_back(8'hff);
+    payload.push_back(8'hd2);
+    fork
+      env.usb_ag.respond_after_tx(payload); // 16-bit opposite-direction gap.
+      host_tx.start(env.phy_ag.sequencer);
+    join
+    repeat (3) @(posedge env_cfg.phy_cfg.vif.clk);
+    if (env.tx_wire_checker.packets_checked != prior_tx+1)
+      `uvm_error("HS_PEER","DUT HS TX was not decoded/checked")
+
+    // Normal HS packet, stuffed payload and forty-bit SOF EOP. The peer
+    // models SIE-provided bytes; PID and CRC are outside this PHY test.
+    payload.delete(); payload.push_back(8'hff);
+    payload.push_back(8'hff); payload.push_back(8'h7e);
+    env.usb_ag.send_hs_line_packet(payload);
+    payload.delete(); payload.push_back(8'ha5);
+    env.usb_ag.send_hs_line_packet(payload,1);
+
+    // Deliberately malformed HS physical traffic: line error, bit-stuff
+    // violation and invalid SYNC. The HS-disabled DUT RX cannot report them.
+    payload.delete(); payload.push_back(8'hff);
+    payload.push_back(8'hff);
+    env.usb_ag.send_fault_packet(payload,1);
+    env.usb_ag.send_fault_packet(payload,2);
+    env.usb_ag.send_fault_packet(payload,3);
+    if (env.usb_ag.driver.peer_packets_sent != prior_peer+6)
+      `uvm_error("HS_PEER",$sformatf(
+        "Expected six peer packets, got %0d",
+        env.usb_ag.driver.peer_packets_sent-prior_peer))
+    if (env.usb_ag.driver.peer_symbols_checked==0 ||
+        env.usb_ag.driver.peer_line_errors!=0 ||
+        env.scoreboard.bus_contention_count!=0)
+      `uvm_error("HS_PEER","Peer line check or bus ownership failed")
+    phase.drop_objection(this);
+  endtask
+endclass
+
 // Directed physical-layer regression. Run separately at USB_SPEED=0,1,2.
-// HS is TX only: the supplied CDR intentionally disables HS RX.
+// In this test HS checks DUT TX; usb_phy_hs_peer_test below also exercises
+// peer-generated HS pins. The supplied CDR intentionally disables HS RX.
 class usb_phy_full_path_test extends usb_phy_base_test;
   `uvm_component_utils(usb_phy_full_path_test)
   function new(string name="usb_phy_full_path_test", uvm_component parent=null);

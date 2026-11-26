@@ -74,8 +74,8 @@
 //  TESTBENCH INTERFACES
   
 
-../intf/usb_phy_if.sv
-../intf/usb_bus_if.sv
+../rtl/usb_phy_if.sv
+../rtl/usb_bus_if.sv
 
 
   

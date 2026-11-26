@@ -47,7 +47,7 @@ interface usb_phy_if #(
   logic analog_d_minus;
   logic analog_enable;
   logic analog_enable_req; // Testbench request, suppressed during local TX.
-  logic analog_serial;
+  logic analog_phy_bfm;
 
 
   // --------------------------------------------------
@@ -115,7 +115,7 @@ interface usb_phy_if #(
 
     // Control analog receiver
     output analog_enable_req;
-    output analog_serial;
+    output analog_phy_bfm;
 
   endclocking
 
@@ -149,7 +149,7 @@ interface usb_phy_if #(
     input analog_d_plus;
     input analog_d_minus;
     input analog_enable;
-    input analog_serial;
+    input analog_phy_bfm;
 
     // SIE RX outputs
     input DataOut;

@@ -13,6 +13,9 @@ class usb_bfm_driver extends uvm_driver #(usb_bfm_transaction);
   virtual usb_phy_if #(8) phy_vif;
   uvm_analysis_port #(usb_bfm_transaction) expected_rx_port;
   bit packet_in_progress;
+  int unsigned peer_symbols_checked;
+  int unsigned peer_packets_sent;
+  int unsigned peer_line_errors;
 
 
   // --------------------------------------------------
@@ -132,6 +135,9 @@ class usb_bfm_driver extends uvm_driver #(usb_bfm_transaction);
 
     // Disable analog input path during initialization
     phy_vif.analog_enable_req = 1'b0;
+
+    // Default phy_bfm input level
+    phy_vif.analog_phy_bfm = 1'b1;
 
   endtask
 
@@ -272,6 +278,17 @@ class usb_bfm_driver extends uvm_driver #(usb_bfm_transaction);
     // CDR must remain enabled across every symbol, EOP and idle.
     phy_vif.cb_bfm_drv.analog_enable_req <= 1'b1;
 
+    // This is a separate CDR input in your RTL.
+    // Do not assume it is equivalent to DP or DM.
+    // Its relationship to the external line signals
+    // must follow the CDR architecture specification.
+    phy_vif.cb_bfm_drv.analog_phy_bfm <= tr.analog_phy_bfm;
+
+    // Check the resolved external pins midway through each bit/line segment.
+    // This also works for HS, whose entire symbol lasts one system clock.
+    @(negedge bus_vif.clk);
+    check_peer_symbol(tr);
+
 
     // ----------------------------------------------
     // Hold the segment for the requested duration
@@ -298,6 +315,9 @@ class usb_bfm_driver extends uvm_driver #(usb_bfm_transaction);
 
       end
 
+      @(negedge bus_vif.clk);
+      check_peer_symbol(tr);
+
     end
 
 
@@ -307,6 +327,10 @@ class usb_bfm_driver extends uvm_driver #(usb_bfm_transaction);
 
     if (tr.packet_end) begin
       packet_in_progress = 0;
+      peer_packets_sent++;
+      `uvm_info("USB_PEER_WIRE",$sformatf(
+        "packet id=%0d speed=%s complete; checked_symbols/clocks=%0d line_errors=%0d",
+        tr.transaction_id,tr.speed.name(),peer_symbols_checked,peer_line_errors),UVM_LOW)
       release_bus();
     end else if (!packet_in_progress) begin
       release_bus(); // Legacy standalone segment.
@@ -344,6 +368,19 @@ class usb_bfm_driver extends uvm_driver #(usb_bfm_transaction);
 
   endtask
 
+  task check_peer_symbol(usb_bfm_transaction tr);
+    if (bus_vif.rst_n !== 1'b1 || !tr.drive_enable) return;
+    peer_symbols_checked++;
+    if (bus_vif.bus_dp !== tr.dp || bus_vif.bus_dm !== tr.dm ||
+        bus_vif.bus_contention !== 1'b0) begin
+      peer_line_errors++;
+      `uvm_error("USB_PEER_WIRE",$sformatf(
+        "peer line mismatch packet=%0d speed=%s expected {DP,DM}=%b%b actual=%b%b contention=%b",
+        tr.transaction_id,tr.speed.name(),tr.dp,tr.dm,
+        bus_vif.bus_dp,bus_vif.bus_dm,bus_vif.bus_contention))
+    end
+  endtask
+
 
   // --------------------------------------------------
   // Release external bus and analog input enable
@@ -354,8 +391,8 @@ class usb_bfm_driver extends uvm_driver #(usb_bfm_transaction);
     @(bus_vif.cb_drv);
 
     bus_vif.cb_drv.device_oe <= 1'b0;
-    // Passive termination restores the speed-dependent J state.
-    // analog_serial follows the resolved bus combinationally in top_tb.
+    // Passive termination restores J. Keep the CDR enabled between packets.
+    phy_vif.cb_bfm_drv.analog_phy_bfm <= 1'b1;
 
   endtask
 
@@ -373,9 +410,11 @@ class usb_bfm_driver extends uvm_driver #(usb_bfm_transaction);
       "USB BFM driver report phase completed",
       UVM_LOW
     )
+    `uvm_info("USB_PEER_WIRE",$sformatf(
+      "peer packets=%0d checked symbol clocks=%0d line errors=%0d",
+      peer_packets_sent,peer_symbols_checked,peer_line_errors),UVM_NONE)
 
   endfunction
 
 endclass
-
 

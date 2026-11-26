@@ -1,4 +1,5 @@
 
+//`timescale 1ns/1fs
 module top_tb;
 
   import uvm_pkg::*;
@@ -67,7 +68,7 @@ module top_tb;
     .analog_d_plus    (phy_if.analog_d_plus),
     .analog_d_minus   (phy_if.analog_d_minus),
     .analog_enable    (phy_if.analog_enable),
-    .analog_serial    (phy_if.analog_serial),
+    .analog_phy_bfm    (phy_if.analog_phy_bfm),
 
     // SIE transmit interface
     .sof_packet       (phy_if.sof_packet),
@@ -107,18 +108,8 @@ assign bus_if.phy_tx_valid = phy_if.tx_valid;
 // Shared bus to DUT RX
 assign phy_if.analog_d_plus  = bus_if.bus_dp;
 assign phy_if.analog_d_minus = bus_if.bus_dm;
-
-// The CDR's rx_serial input is the single-ended representation of the
-// differential J/K line level.  For FS, J is DP=1/DM=0; for LS,
-// J is DP=0/DM=1.  Therefore select the J-positive wire for each speed.
-// This is derived from the RESOLVED bus, not independently driven by BFM.
-assign phy_if.analog_serial =
-       (phy_if.usb_speed == LS) ? bus_if.bus_dm : bus_if.bus_dp;
-
-// Keep the receiver/CDR enabled when requested, but suppress local
-// reception while the DUT itself is transmitting.
-assign phy_if.analog_enable =
-       phy_if.analog_enable_req;// && phy_if.tx_valid;
+// Model the external analog receiver's local-TX squelch.
+assign phy_if.analog_enable = phy_if.analog_enable_req && !phy_if.tx_valid;
 
 
 // Common reset
@@ -223,6 +214,7 @@ assign bus_if.bit_tick = dut.dut_tx.bit_tick;
     phy_if.sie_eop       = 1'b0;
 
     phy_if.analog_enable_req = 1'b0;
+    phy_if.analog_phy_bfm = 1'b1;
 
 
     // ----------------------------------------------
@@ -383,5 +375,4 @@ assign bus_if.bit_tick = dut.dut_tx.bit_tick;
 
 
 endmodule
-
 

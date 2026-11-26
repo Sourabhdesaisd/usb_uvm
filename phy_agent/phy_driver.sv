@@ -222,7 +222,7 @@ class phy_driver extends uvm_driver #(phy_transaction);
     vif.cb_drv.sie_valid  <= 1'b0;
     vif.cb_drv.sie_sop    <= 1'b0;
     vif.cb_drv.sie_eop    <= 1'b0;
-    // EOP generator reads sof_packet after the last byte has been serialized.
+    // EOP generator reads sof_packet after the last byte has been phy_bfmized.
     // Keep it asserted until the complete pad packet, including EOP, ends.
     if (tr.eop) begin
       int unsigned timeout_cycles;

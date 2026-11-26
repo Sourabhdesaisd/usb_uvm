@@ -12,7 +12,7 @@ class usb_phy_scb extends uvm_scoreboard;
   uvm_tlm_analysis_fifo #(phy_transaction) txd_fifo;
   uvm_tlm_analysis_fifo #(phy_transaction) rxd_fifo;
   phy_transaction expected_txd[$];
-  int unsigned serial_tx_bytes_checked;
+  int unsigned phy_bfm_tx_bytes_checked;
   int unsigned slave_rx_bytes_driven;
   bit allow_underrun;
   int unsigned tx_underrun_packets;
@@ -202,7 +202,7 @@ class usb_phy_scb extends uvm_scoreboard;
     fork
 
       process_tx();
-      process_serial_tx();
+      process_phy_bfm_tx();
       process_slave_rx();
 
       process_rx();
@@ -439,7 +439,7 @@ class usb_phy_scb extends uvm_scoreboard;
 
   // Compare bytes reconstructed by the USB slave from the physical TX pins
   // with the bytes actually accepted at the DUT's SIE interface.
-  task process_serial_tx();
+  task process_phy_bfm_tx();
     phy_transaction decoded, expected;
     bit byte_matches;
     forever begin
@@ -457,7 +457,7 @@ class usb_phy_scb extends uvm_scoreboard;
                       (allow_underrun && decoded.eop && !expected.eop));
       `uvm_info("USB_TX_COMPARE",$sformatf(
         "byte[%0d] %s expected=0x%02h actual_wire=0x%02h speed_exp=%s speed_actual=%s SOP_exp/actual=%0b/%0b EOP_exp/actual=%0b/%0b",
-        serial_tx_bytes_checked,byte_matches ? "MATCH" : "MISMATCH",
+        phy_bfm_tx_bytes_checked,byte_matches ? "MATCH" : "MISMATCH",
         expected.data,decoded.data,
         expected.speed.name(),decoded.speed.name(),expected.sop,decoded.sop,
         expected.eop,decoded.eop),UVM_LOW)
@@ -465,7 +465,7 @@ class usb_phy_scb extends uvm_scoreboard;
         total_errors++;
         `uvm_error("USB_SCB_TXD",$sformatf(
           "byte[%0d] expected=0x%02h actual=0x%02h speed_exp/actual=%s/%s SOP_exp/actual=%0b/%0b EOP_exp/actual=%0b/%0b",
-          serial_tx_bytes_checked,expected.data,decoded.data,
+          phy_bfm_tx_bytes_checked,expected.data,decoded.data,
           expected.speed.name(),decoded.speed.name(),expected.sop,decoded.sop,
           expected.eop,decoded.eop))
       end
@@ -473,7 +473,7 @@ class usb_phy_scb extends uvm_scoreboard;
         tx_underrun_packets++;
         tx_packet_active=0;
       end
-      serial_tx_bytes_checked++;
+      phy_bfm_tx_bytes_checked++;
     end
   endtask
 
@@ -1033,7 +1033,7 @@ class usb_phy_scb extends uvm_scoreboard;
       UVM_NONE
     )
     `uvm_info("USB_SCB",$sformatf("SERIAL TX BYTES DECODED/CHECKED : %0d",
-              serial_tx_bytes_checked),UVM_NONE)
+              phy_bfm_tx_bytes_checked),UVM_NONE)
     `uvm_info("USB_SCB",$sformatf("SLAVE RX BYTES DRIVEN           : %0d",
               slave_rx_bytes_driven),UVM_NONE)
     `uvm_info("USB_SCB",$sformatf("TX UNDERRUN PACKETS              : %0d",

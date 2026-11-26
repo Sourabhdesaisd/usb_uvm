@@ -14,7 +14,7 @@ endclass
 class usb_tx_wire_checker extends uvm_component;
   `uvm_component_utils(usb_tx_wire_checker)
   virtual usb_phy_if #(8) vif;
-  // Like UART's txd_rcvd_ap: bytes reconstructed from the DUT's serial pins.
+  // Like UART's txd_rcvd_ap: bytes reconstructed from the DUT's phy_bfm pins.
   uvm_analysis_port #(phy_transaction) txd_rcvd_ap;
   usb_tx_expected_packet building;
   usb_tx_expected_packet pending[$];
@@ -131,7 +131,7 @@ class usb_tx_wire_checker extends uvm_component;
         `uvm_error("TX_WIRE",$sformatf("TX symbol %0d got {DP,DM}=%b expected=%b",i,observed[i],expected[i]))
       end
     end
-    if (!decode_serial_bytes(pkt)) packet_match = 0;
+    if (!decode_phy_bfm_bytes(pkt)) packet_match = 0;
     packets_checked++;
     `uvm_info("USB_TX_WIRE",$sformatf(
       "packet %0d %s speed=%s bytes=%0d symbols_expected=%0d symbols_actual=%0d cycles_expected=%0d cycles_actual=%0d",
@@ -144,7 +144,7 @@ class usb_tx_wire_checker extends uvm_component;
   // Decode the observed pins independently of the expected symbol builder.
   // SYNC and EOP are checked above; recover payload by NRZI and remove each
   // mandatory stuffed zero, including one after the last payload bit.
-  function bit decode_serial_bytes(usb_tx_expected_packet pkt);
+  function bit decode_phy_bfm_bytes(usb_tx_expected_packet pkt);
     byte unsigned decoded[$];
     byte unsigned byte_value;
     phy_transaction tr;
@@ -201,7 +201,7 @@ class usb_tx_wire_checker extends uvm_component;
         `uvm_error("TX_DECODE",$sformatf("Serial byte %0d got %02h expected %02h",
                    i,decoded[i],pkt.bytes[i]))
       end
-      tr = phy_transaction::type_id::create($sformatf("serial_tx_%0d",i));
+      tr = phy_transaction::type_id::create($sformatf("phy_bfm_tx_%0d",i));
       tr.speed = pkt.speed;
       tr.data = decoded[i];
       tr.valid = 1;
@@ -345,11 +345,11 @@ class usb_slave_packet_seq extends uvm_sequence #(usb_bfm_transaction);
 
     if (!(packet_speed inside {LS, FS, HS}))
       `uvm_fatal("USB_SLAVE", "Invalid USB speed")
-    if (packet_speed == HS && score_packet)
-      `uvm_fatal("USB_SLAVE", "HS waveform is supported, but supplied DUT CDR has no HS RX; set score_packet=0 for line-only stimulus")
+    // Scoring is a choice of the integration. With an external HS RX source
+    // wired to phy_rx_top, the same sequence can publish expected HS bytes.
     if (payload.size() == 0)
       `uvm_fatal("USB_SLAVE", "Use at least one byte for a scored packet")
-    if (jitter_cycles > 1)
+    if (jitter_cycles > 1 || (packet_speed == HS && jitter_cycles != 0))
       `uvm_fatal("USB_SLAVE", "This directed CDR test supports at most +/-1 system clock")
     if (dribble_bits > 6 || (packet_speed == HS && dribble_bits != 0))
       `uvm_fatal("USB_SLAVE", "Dribble option is FS/LS only (at most six bits)")
@@ -364,7 +364,7 @@ class usb_slave_packet_seq extends uvm_sequence #(usb_bfm_transaction);
         packet_id,i,payload[i]),UVM_LOW)
 
     // FS/LS source SYNC is 8 symbols; HS source SYNC is 32 symbols.
-    // The last two symbols are K,K. break_sync is an FS/LS fault injection.
+    // The last two symbols are K,K. The same bad-SYNC injection works at HS.
     for (int i = 0; i < (packet_speed == HS ? 31 : 7); i++)
       symbols.push_back((i % 2 == 0) ? SYM_K : SYM_J);
     symbols.push_back(break_sync ? SYM_J : SYM_K);
@@ -405,8 +405,7 @@ class usb_slave_packet_seq extends uvm_sequence #(usb_bfm_transaction);
       req.speed = packet_speed;
       req.dp = p;
       req.dm = m;
-      // analog_serial is derived from the resolved DP/DM bus in top_tb.
-      // Do not drive it independently from the slave sequence.
+      req.analog_phy_bfm = (symbols[i] == SYM_J);
       req.drive_enable = 1;
       req.duration_cycles = bit_clocks(packet_speed) +
                             ((i%2)==0 ? int'(jitter_cycles) : -int'(jitter_cycles));
@@ -434,7 +433,7 @@ class usb_slave_reset_seq extends uvm_sequence #(usb_bfm_transaction);
     start_item(req);
     req.speed = reset_speed;
     req.dp = 0; req.dm = 0;
-    // analog_serial is derived from the resolved DP/DM bus in top_tb.
+    req.analog_phy_bfm = 0;
     req.drive_enable = 1;
     req.duration_cycles = reset_cycles;
     req.idle_cycles = reset_speed == LS ? 640 : 80;
@@ -449,7 +448,9 @@ class usb_slave_response_seq extends uvm_sequence #(usb_bfm_transaction);
   speed_t packet_speed = FS;
   byte unsigned response_bytes[$];
   int unsigned turnaround_bits = 2;
+  bit score_hs_rx = 0;
   int unsigned timeout_clocks = 1_000_000;
+  int unsigned packet_id;
 
   function new(string name = "usb_slave_response_seq");
     super.new(name);
@@ -461,8 +462,10 @@ class usb_slave_response_seq extends uvm_sequence #(usb_bfm_transaction);
     bit seen_tx;
     if (!$cast(seqr, m_sequencer) || seqr.bus_vif == null)
       `uvm_fatal("SLAVE_RESP", "USB bus sequencer/interface missing")
-    if (!(packet_speed inside {LS, FS}))
-      `uvm_fatal("SLAVE_RESP", "HS RX is out of scope for this CDR")
+    if (!(packet_speed inside {LS, FS, HS}))
+      `uvm_fatal("SLAVE_RESP", "Invalid USB speed")
+    if (packet_speed == HS && (turnaround_bits < 8 || turnaround_bits > 192))
+      `uvm_fatal("SLAVE_RESP", "HS opposite-direction turnaround must be 8..192 bit times")
 
     seen_tx = 0;
     for (int t = 0; t < timeout_clocks; t++) begin
@@ -480,11 +483,14 @@ class usb_slave_response_seq extends uvm_sequence #(usb_bfm_transaction);
       if (t == timeout_clocks-1)
         `uvm_fatal("SLAVE_RESP", "Host TX never released the bus")
     end
-    repeat (turnaround_bits * ((packet_speed == LS) ? 320 : 40))
+    repeat (turnaround_bits * ((packet_speed == LS) ? 320 :
+                              (packet_speed == FS) ? 40 : 1))
       @(posedge seqr.bus_vif.clk);
 
     packet = usb_slave_packet_seq::type_id::create("response_packet");
     packet.packet_speed = packet_speed;
+    packet.packet_id = packet_id;
+    packet.score_packet = (packet_speed != HS) || score_hs_rx;
     foreach (response_bytes[i]) packet.payload.push_back(response_bytes[i]);
     packet.start(seqr);
   endtask
@@ -501,6 +507,10 @@ class usb_slave_model extends usb_bfm_agent;
   // Correspond to UART's txd_rcvd_ap and rxd_sent_ap.
   uvm_analysis_port #(phy_transaction) txd_rcvd_ap;
   uvm_analysis_port #(phy_transaction) rxd_sent_ap;
+  // phy_top presently has no HS CDR/bypass. A future HS RX integration may
+  // enable this to compare the generated HS packet at the SIE output.
+  bit score_hs_rx = 0;
+  int unsigned next_packet_id = 1;
 
   function new(string name="usb_slave_model",uvm_component parent=null);
     super.new(name,parent);
@@ -552,28 +562,51 @@ class usb_slave_model extends usb_bfm_agent;
   // The same two simple user-facing operations as the UART slave model:
   // queue a packet toward the DUT or respond after DUT TX bus release.
   task send_packet(input byte unsigned bytes[$],
-                   input int unsigned se0_bits=2);
+                   input int unsigned se0_bits=2,
+                   input bit hs_sof_eop=0);
     usb_slave_packet_seq packet;
     if (sequencer == null) `uvm_fatal("USB_SLAVE","Active slave required")
     packet=usb_slave_packet_seq::type_id::create("slave_packet");
     packet.packet_speed=cfg.speed;
+    packet.packet_id=next_packet_id++;
     packet.eop_se0_bits=se0_bits;
+    packet.hs_sof_eop=hs_sof_eop;
+    packet.score_packet=(cfg.speed != HS) || score_hs_rx;
     foreach (bytes[i]) packet.payload.push_back(bytes[i]);
+    // Same-direction HS packets require a quiet interval. The response
+    // sequence below uses its shorter, opposite-direction turnaround.
+    if (cfg.speed == HS) repeat (88) @(posedge cfg.bus_vif.clk);
     packet.start(sequencer);
   endtask
 
-  // Optional specification-level HS line stimulus. It is intentionally
-  // unscored: phy_top's supplied LS/FS CDR produces no HS RX bit strobe.
-  task send_hs_line_packet(input byte unsigned bytes[$], input bit sof_eop=0);
+  // PHY fault injection at any speed. These packets are intentionally not
+  // scored as successful received bytes; the pin driver still checks every
+  // driven bit time and reports unexpected bus ownership or contention.
+  // 1=SE1 during payload, 2=missing stuffed zero, 3=broken SYNC.
+  task send_fault_packet(input byte unsigned bytes[$],
+                         input int unsigned fault_kind);
     usb_slave_packet_seq packet;
     if (sequencer == null) `uvm_fatal("USB_SLAVE","Active slave required")
-    if (cfg.speed != HS) `uvm_fatal("USB_SLAVE","Set PHY speed to HS while idle")
-    packet=usb_slave_packet_seq::type_id::create("hs_line_packet");
-    packet.packet_speed=HS;
+    if (!(fault_kind inside {1,2,3}))
+      `uvm_fatal("USB_SLAVE","Fault kind must be 1 (SE1), 2 (stuff), or 3 (SYNC)")
+    packet=usb_slave_packet_seq::type_id::create("slave_fault_packet");
+    packet.packet_speed=cfg.speed;
+    packet.packet_id=next_packet_id++;
     packet.score_packet=0;
-    packet.hs_sof_eop=sof_eop;
+    packet.inject_se1=(fault_kind==1);
+    packet.omit_stuffed_zero=(fault_kind==2);
+    packet.break_sync=(fault_kind==3);
     foreach (bytes[i]) packet.payload.push_back(bytes[i]);
+    if (cfg.speed==HS) repeat (88) @(posedge cfg.bus_vif.clk);
     packet.start(sequencer);
+  endtask
+
+  // HS line stimulus is unscored by default for the supplied phy_top.
+  // score_hs_rx can be enabled when a separate HS RX source is integrated.
+  task send_hs_line_packet(input byte unsigned bytes[$], input bit sof_eop=0);
+    if (sequencer == null) `uvm_fatal("USB_SLAVE","Active slave required")
+    if (cfg.speed != HS) `uvm_fatal("USB_SLAVE","Set PHY speed to HS while idle")
+    send_packet(bytes,2,sof_eop);
   endtask
 
   task respond_after_tx(input byte unsigned bytes[$]);
@@ -581,8 +614,10 @@ class usb_slave_model extends usb_bfm_agent;
     if (sequencer == null) `uvm_fatal("USB_SLAVE","Active slave required")
     response=usb_slave_response_seq::type_id::create("slave_response");
     response.packet_speed=cfg.speed;
+    response.packet_id=next_packet_id++;
+    response.turnaround_bits=(cfg.speed == HS) ? 16 : 2;
+    response.score_hs_rx=score_hs_rx;
     foreach (bytes[i]) response.response_bytes.push_back(bytes[i]);
     response.start(sequencer);
   endtask
 endclass
-

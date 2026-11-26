@@ -21,8 +21,6 @@ package usb_phy_tb_pkg;
   } usb_line_state_e;
 
 
-
-    
   // --------------------------------------------------
   // PHY AGENT
   // --------------------------------------------------
@@ -48,7 +46,12 @@ package usb_phy_tb_pkg;
   `include "../phy_bfm_agent/usb_bfm_agent.sv"
 
 
- 
+  // --------------------------------------------------
+  // REFERENCE MODEL
+  // --------------------------------------------------
+
+  // The peer source contains the independent TX wire oracle and RX packet sequences.
+
 
   // --------------------------------------------------
   // SCOREBOARD

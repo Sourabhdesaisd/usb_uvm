@@ -134,7 +134,7 @@ class usb_bfm_monitor extends uvm_monitor;
     logic previous_device_oe;
     logic previous_phy_oe;
 
-    logic previous_serial;
+    logic previous_phy_bfm;
     logic previous_analog_enable;
 
     logic previous_contention;
@@ -149,7 +149,7 @@ class usb_bfm_monitor extends uvm_monitor;
     logic current_device_oe;
     logic current_phy_oe;
 
-    logic current_serial;
+    logic current_phy_bfm;
     logic current_analog_enable;
 
     logic current_contention;
@@ -173,7 +173,7 @@ class usb_bfm_monitor extends uvm_monitor;
     previous_device_oe       = 1'bx;
     previous_phy_oe          = 1'bx;
 
-    previous_serial          = 1'bx;
+    previous_phy_bfm          = 1'bx;
     previous_analog_enable   = 1'bx;
 
     previous_contention      = 1'bx;
@@ -254,8 +254,8 @@ class usb_bfm_monitor extends uvm_monitor;
       // Sample PHY analog/CDR signals
       // ----------------------------------------------
 
-      current_serial =
-        phy_vif.cb_mon.analog_serial;
+      current_phy_bfm =
+        phy_vif.cb_mon.analog_phy_bfm;
 
       current_analog_enable =
         phy_vif.cb_mon.analog_enable;
@@ -281,7 +281,7 @@ class usb_bfm_monitor extends uvm_monitor;
         previous_device_oe     = current_device_oe;
         previous_phy_oe        = current_phy_oe;
 
-        previous_serial        = current_serial;
+        previous_phy_bfm        = current_phy_bfm;
         previous_analog_enable = current_analog_enable;
 
         previous_contention    = current_contention;
@@ -309,7 +309,7 @@ class usb_bfm_monitor extends uvm_monitor;
 
         || (current_phy_oe !== previous_phy_oe)
 
-        || (current_serial !== previous_serial)
+        || (current_phy_bfm !== previous_phy_bfm)
 
         || (current_analog_enable !== previous_analog_enable)
 
@@ -329,7 +329,7 @@ class usb_bfm_monitor extends uvm_monitor;
 
           previous_contention,
 
-          previous_serial,
+          previous_phy_bfm,
           previous_analog_enable,
 
           previous_speed,
@@ -345,7 +345,7 @@ class usb_bfm_monitor extends uvm_monitor;
         previous_device_oe     = current_device_oe;
         previous_phy_oe        = current_phy_oe;
 
-        previous_serial        = current_serial;
+        previous_phy_bfm        = current_phy_bfm;
         previous_analog_enable = current_analog_enable;
 
         previous_contention    = current_contention;
@@ -386,7 +386,7 @@ class usb_bfm_monitor extends uvm_monitor;
 
     input logic contention_value,
 
-    input logic serial_value,
+    input logic phy_bfm_value,
     input logic analog_enable_value,
 
     input speed_t speed_value,
@@ -440,7 +440,7 @@ class usb_bfm_monitor extends uvm_monitor;
     // Analog/CDR signals
     // ----------------------------------------------
 
-    tr.analog_serial = serial_value;
+    tr.analog_phy_bfm = phy_bfm_value;
     tr.analog_enable = analog_enable_value;
 
 

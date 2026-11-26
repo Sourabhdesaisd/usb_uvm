@@ -7,7 +7,7 @@
 //
 //  Control summary
 //   * One bit_tick for everything.  Every stage moves only on bit_tick.
-//   * serial_sop / serial_last travel with the bit through stuffer and NRZI
+//   * phy_bfm_sop / phy_bfm_last travel with the bit through stuffer and NRZI
 //     (the 'last' tag moves onto a trailing stuffed bit if one is needed).
 //   * eop_start = nrzi_valid & nrzi_last : the last data symbol is on the
 //     line now; the EOP generator takes over on the very next bit_tick.
@@ -44,7 +44,7 @@ module phy_tx_top
     logic             tx_underrun;
     logic [WIDTH-1:0] fifo_data;
     logic fifo_valid, fifo_sop, fifo_eop, fifo_pop;
-    logic serial_out, serial_valid, serial_sop, serial_last;
+    logic phy_bfm_out, phy_bfm_valid, phy_bfm_sop, phy_bfm_last;
     logic stuff_ready;
     logic stuffed_bit, stuffed_valid, stuffed_sop, stuffed_last;
     logic nrzi_bit, nrzi_valid, nrzi_last;
@@ -83,7 +83,7 @@ module phy_tx_top
         		   .fifo_full	(fifo_full), 
 				   .fifo_empty	(fifo_empty)
     );
-	//tx byte serializer
+	//tx byte phy_bfmizer
     usb_piso #(.WIDTH(WIDTH)
 			  ) u_piso (
         	   .clk			(clk), 
@@ -97,10 +97,10 @@ module phy_tx_top
 			   .fifo_pop	(fifo_pop),
         	   .stuff_ready	(stuff_ready), 
 			   .eop_done	(eop_done),
-        	   .serial_out	(serial_out), 
-			   .serial_valid(serial_valid),
-        	   .serial_sop	(serial_sop), 
-			   .serial_last	(serial_last),
+        	   .phy_bfm_out	(phy_bfm_out), 
+			   .phy_bfm_valid(phy_bfm_valid),
+        	   .phy_bfm_sop	(phy_bfm_sop), 
+			   .phy_bfm_last	(phy_bfm_last),
         	   .busy		(tx_busy), 
 			   .underrun	(tx_underrun)
     );
@@ -109,10 +109,10 @@ module phy_tx_top
         	   .clk				(clk), 
 			   .rst_n			(rst_n), 
 			   .bit_tick		(bit_tick),
-        	   .bit_in			(serial_out), 
-			   .bit_in_valid	(serial_valid),
-        	   .bit_in_sop		(serial_sop), 
-			   .bit_in_last		(serial_last),
+        	   .bit_in			(phy_bfm_out), 
+			   .bit_in_valid	(phy_bfm_valid),
+        	   .bit_in_sop		(phy_bfm_sop), 
+			   .bit_in_last		(phy_bfm_last),
         	   .bit_in_ready	(stuff_ready),
         	   .bit_out			(stuffed_bit), 
 			   .bit_out_valid	(stuffed_valid),

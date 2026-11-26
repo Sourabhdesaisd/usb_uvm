@@ -3,7 +3,7 @@
 // Author : Santosh Bhosale
 // Data   : 14/09/2026
 //==================== Design Description =========================|
-// Serial-In Parallel-Out.  Collects serial_valid bits (LSB first) and
+// Serial-In Parallel-Out.  Collects phy_bfm_valid bits (LSB first) and
 // gives a WIDTH-bit word with a 1-clock parallel_valid.
 //
 // Added for the RX path (existing ports are unchanged):
@@ -19,8 +19,8 @@ module usb_sipo #(
 )(
     input  logic                 clk,
     input  logic                 rst_n,
-    input  logic                 serial_in,
-    input  logic                 serial_valid,
+    input  logic                 phy_bfm_in,
+    input  logic                 phy_bfm_valid,
     output logic [WIDTH-1:0]     parallel_out,
     output logic                 parallel_valid,
     output logic                 busy,
@@ -49,12 +49,12 @@ module usb_sipo #(
                 bit_count <= '0;
                 busy      <= 1'b0;
             end
-            else if (serial_valid) begin
+            else if (phy_bfm_valid) begin
                 busy      <= 1'b1;
-                shift_reg <= {serial_in, shift_reg[WIDTH-1:1]};
+                shift_reg <= {phy_bfm_in, shift_reg[WIDTH-1:1]};
 
                 if (bit_count == WIDTH-1) begin
-                    parallel_out   <= {serial_in, shift_reg[WIDTH-1:1]};
+                    parallel_out   <= {phy_bfm_in, shift_reg[WIDTH-1:1]};
                     parallel_valid <= 1'b1;
                     bit_count      <= '0;
                 end
