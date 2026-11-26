@@ -109,7 +109,7 @@ assign bus_if.phy_tx_valid = phy_if.tx_valid;
 assign phy_if.analog_d_plus  = bus_if.bus_dp;
 assign phy_if.analog_d_minus = bus_if.bus_dm;
 // Model the external analog receiver's local-TX squelch.
-assign phy_if.analog_enable = phy_if.analog_enable_req && !phy_if.tx_valid;
+assign phy_if.analog_enable = phy_if.analog_enable_req ;// && !phy_if.tx_valid;
 
 
 // Common reset

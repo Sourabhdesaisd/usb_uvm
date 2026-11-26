@@ -2,7 +2,7 @@
 // File created by:  xrun
 // Do not modify this file
 //
-+USB_SPEED=1
++USB_SPEED=0
 +USB_FAULT=1
 +RESET_CASE=0
 +UVM_VERBOSITY=UVM_MEDIUM

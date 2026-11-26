@@ -23,7 +23,7 @@
 1795670362 /home/sgeuser8/Desktop/usb_phy_sim/rtl/sync_deglitch.sv
 1795670071 /home/sgeuser8/Desktop/usb_phy_sim/rtl/bus_reset.sv
 1795670071 /home/sgeuser8/Desktop/usb_phy_sim/rtl/rx_ctrl.sv
-1795670362 /home/sgeuser8/Desktop/usb_phy_sim/env/top_tb.sv
+1795670630 /home/sgeuser8/Desktop/usb_phy_sim/env/top_tb.sv
 1795670071 /home/sgeuser8/Desktop/usb_phy_sim/rtl/loop_filter.sv
 1795670071 /home/sgeuser8/Desktop/usb_phy_sim/rtl/eop.sv
 1795670071 /home/sgeuser8/Desktop/usb_phy_sim/rtl/nrzi_decoder.sv
